@@ -13,18 +13,18 @@ const Header = () => {
       </div>
 
       {/* column 2 */}
-      <div className="hidden items-center space-x-4 md:flex">
-        <div className="search-container flex h-10  items-center ">
+      <div className="hidden w-2/5 items-center space-x-4 md:flex">
+        <div className="search-container flex h-11  w-full items-center border-2 border-gray-300 rounded-3xl">
           <input
             type="text"
             placeholder="Search"
-            className="flex h-full w-full  rounded-l-3xl border px-4  focus:outline-none  "
+            className="flex h-full w-full  rounded-l-3xl  px-4    mr-px "
           />
-          <div className=" flex h-full  items-center justify-center  rounded-r-3xl bg-gray-200 px-4">
+          <div className=" flex h-full  items-center justify-center  border-gray-300  rounded-r-3xl bg-gray-300 px-4">
             <IoIosSearch size={26} />
           </div>
         </div>
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-sm">
+        <div className="flex p-3 items-center justify-center rounded-full bg-gray-300 text-sm">
           <BsMicFill size={20} />
         </div>
       </div>
