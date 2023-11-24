@@ -9,28 +9,28 @@ import Hamburger from "./Hamburger";
 const Header = () => {
   const [menu, setMenu] = useState(false);
   return (
-    <div className="mx-4 mt-3 flex items-center justify-between">
+    <div className=" mx-4 mt-3 flex items-center justify-between">
       {/* Column 1 */}
-      <div className={`flex space-x-4 ${menu && 'pl-4 space-x-9 '}`}>
+      <div className={` flex  space-x-9 ${menu && " space-x-9 "} `}>
         {menu ? (
           <FaRegWindowClose
             size={28}
             onClick={() => setMenu((prev) => !prev)}
-            className="z-20"
+            className=" z-20"
           />
         ) : (
           <RxHamburgerMenu
             size={26}
             onClick={() => setMenu((prev) => !prev)}
-            className="z-20"
+            className=" z-20"
           />
         )}
 
-        <img src="/assets/logo.svg" alt="logo" className="z-20 w-24" />
+        <img src="/assets/logo.svg" alt="logo" className=" z-20 w-24" />
       </div>
 
       {/* column 2 */}
-      <div className="hidden w-2/5 items-center space-x-4 md:flex">
+      <div className=" hidden w-2/5 items-center space-x-4 md:flex">
         <div className="search-container flex h-11  w-full items-center rounded-3xl border-2 border-gray-300">
           <input
             type="text"
@@ -48,7 +48,7 @@ const Header = () => {
 
       {/* column 3 */}
 
-      <div className="flex space-x-4">
+      <div className=" flex space-x-4">
         <IoIosSearch size={26} className="md:hidden" />
 
         <BsMicFill size={24} className="hidden sm:block md:hidden" />
