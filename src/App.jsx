@@ -1,14 +1,17 @@
-import React  from "react";
+import React from "react";
 import Header from "./components/Header";
-import HomePage from "./pages/HomePage";
-
+import Home from "./pages/Home";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import VideoPlayerPage from "./pages/VideoPlayerPage";
 const App = () => {
- 
   return (
-    <div>
+    <Router>
       <Header />
-      <HomePage />
-    </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/videoID" element={<VideoPlayerPage/>} />
+      </Routes>
+    </Router>
   );
 };
 
