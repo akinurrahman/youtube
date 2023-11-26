@@ -5,7 +5,7 @@ import { HiDownload } from "react-icons/hi";
 import { HiOutlineScissors } from "react-icons/hi2";
 import { CiSaveDown1 } from "react-icons/ci";
 
-const VideoPlayer = () => {
+const FirstColumn = () => {
   return (
     <div>
       {/* Video Player */}
@@ -17,12 +17,13 @@ const VideoPlayer = () => {
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen
       ></iframe>
+
       {/* Video Title */}
       <h2 className="line-clamp-2 px-4 font-bold text-gray-900 ">
         Yeh Ladka Hai Allah - Vishakha Mahore | Asha Bhosle & Mohammad Rafi |
         Yeh Ladka Hai Allah - Vishakha Mahore | Asha Bhosle & Mohammad Rafi |
       </h2>
-      
+
       {/* channel info - like - share etc. */}
       <div className="flex flex-col md:mr-2 md:flex md:flex-row md:justify-between">
         <div className="mt-3 flex items-center space-x-4">
@@ -43,8 +44,8 @@ const VideoPlayer = () => {
           </button>
         </div>
 
-        {/* Like - share - download etc. */}
-        <div className="ml-2 mt-4 flex items-center space-x-1   ">
+        {/* Like - share - download etc. container */}
+        <div className="ml-2 mt-4 flex items-center space-x-1">
           {/* Like/Dislike */}
           <div className="flex items-center  ">
             <button className="flex items-center  space-x-2 rounded-l-full bg-gray-100 py-2 pl-5 pr-3 hover:bg-gray-200">
@@ -55,31 +56,35 @@ const VideoPlayer = () => {
               <BiDislike size={20} />
             </button>
           </div>
+
           {/* Share */}
-          <div className="flex items-center space-x-2 rounded-full bg-gray-100 px-3  py-2 hover:bg-gray-200">
+          <button className="flex  items-center space-x-2 rounded-full bg-gray-100 px-3  py-2 hover:bg-gray-200">
             <TbShare3 size={20} /> <span className="">Share</span>
-          </div>
+          </button>
+
           {/* Download */}
-          <div className="flex items-center space-x-2   rounded-full bg-gray-100 px-3  py-2  hover:bg-gray-200">
+          <button className="flex  items-center  space-x-2 rounded-full bg-gray-100 px-3  py-2  hover:bg-gray-200">
             <HiDownload size={20} /> <span>Download</span>
-          </div>
+          </button>
+
           {/* clip */}
-          <div className="hidden items-center space-x-2 rounded-full bg-gray-100 px-3 py-2 hover:bg-gray-200 sm:flex md:hidden  ">
+          <button className="hidden cursor-pointer items-center space-x-2 rounded-full bg-gray-100 px-3 py-2 hover:bg-gray-200 sm:flex md:hidden  ">
             <HiOutlineScissors size={20} /> <span>Clip</span>
-          </div>
+          </button>
+
           {/* watch later */}
-          <div className="hidden items-center 2xl:flex space-x-2 rounded-full bg-gray-100 px-3 py-2 hover:bg-gray-200 sm:flex  md:hidden">
+          <button className="hidden cursor-pointer items-center space-x-2 rounded-full bg-gray-100 px-3 py-2 hover:bg-gray-200 sm:flex md:hidden  2xl:flex">
             <CiSaveDown1 size={20} /> <span>Save</span>
-          </div>
+          </button>
 
           {/* others */}
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
+          <button className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
             <span>•••</span>
-          </div>
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-export default VideoPlayer;
+export default FirstColumn;
