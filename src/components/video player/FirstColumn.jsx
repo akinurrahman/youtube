@@ -10,12 +10,12 @@ const FirstColumn = () => {
     <div>
       {/* Video Player */}
       <iframe
-        className="md:[440px] h-[260px] w-full rounded-[31px] p-4 sm:h-[375px] lg:h-[397px]  xl:h-[500px] 2xl:h-[600px] "
-        src="https://www.youtube.com/embed/klX1lKyEO9U?si=H-JY_dQH66BdKUFl"
+        className="md:[440px] h-[260px] w-full rounded-[31px] p-4 outline-none sm:h-[375px] lg:h-[397px]  xl:h-[500px] 2xl:h-[600px] "
+        src="https://www.youtube.com/embed/klX1lKyEO9U"
         title="YouTube video player"
         frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
+        // allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;  web-share"
+        allowFullScreen  
       ></iframe>
 
       {/* Video Title */}
