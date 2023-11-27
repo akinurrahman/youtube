@@ -3,6 +3,7 @@ import FirstColumn from "../components/video player/FirstColumn";
 import SecondColumn from "../components/video player/SecondColumn";
 
 const VideoPlayer = () => {
+ 
   return (
     <div className="lg:flex ">
       <div className="column-1  lg:w-[70%]  ">

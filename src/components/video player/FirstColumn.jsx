@@ -4,24 +4,27 @@ import { TbShare3 } from "react-icons/tb";
 import { HiDownload } from "react-icons/hi";
 import { HiOutlineScissors } from "react-icons/hi2";
 import { CiSaveDown1 } from "react-icons/ci";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const FirstColumn = () => {
+  const { videoID } = useParams();
+  const videoDetails = useSelector((state)=>state.video.videoDetails)
+  // console.log(videoDetails.title)
+  
   return (
     <div>
       {/* Video Player */}
       <iframe
         className="md:[440px] h-[260px] w-full rounded-[31px] p-4 outline-none sm:h-[375px] lg:h-[397px]  xl:h-[500px] 2xl:h-[600px] "
-        src="https://www.youtube.com/embed/klX1lKyEO9U"
+        src={`https://www.youtube.com/embed/${videoID}`}
         title="YouTube video player"
-        frameborder="0"
-        // allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;  web-share"
-        allowFullScreen  
+        allowFullScreen
       ></iframe>
 
       {/* Video Title */}
       <h2 className="line-clamp-2 px-4 font-bold text-gray-900 ">
-        Yeh Ladka Hai Allah - Vishakha Mahore | Asha Bhosle & Mohammad Rafi |
-        Yeh Ladka Hai Allah - Vishakha Mahore | Asha Bhosle & Mohammad Rafi |
+        {videoDetails.title}
       </h2>
 
       {/* channel info - like - share etc. */}
@@ -30,14 +33,14 @@ const FirstColumn = () => {
           <li></li>
           <div>
             <img
-              src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+              src={videoDetails.channelAvatar}
               alt="channel logo"
-              className="w-[35px]"
+              className="max-w-[40px] rounded-full"
             />
           </div>
           <div>
-            <h2 className="font-bold">Zee Music Company</h2>
-            <p className="text-sm text-gray-800">102M subscribers</p>
+            <h2 className="font-bold">{videoDetails.channelName}</h2>
+            <p className="text-sm text-gray-800">{videoDetails.subscriberCount} subscribers</p>
           </div>
           <button className="rounded-full bg-black px-4 py-2 font-bold text-white">
             Subscribe
@@ -50,7 +53,7 @@ const FirstColumn = () => {
           <div className="flex items-center  ">
             <button className="flex items-center  space-x-2 rounded-l-full bg-gray-100 py-2 pl-5 pr-3 hover:bg-gray-200">
               <BiLike size={20} />
-              <span className="text-sm">400</span>
+              <span className="text-sm">{videoDetails.likeCount}</span>
             </button>
             <button className=" rounded-r-full border-l-2 border-gray-200 bg-gray-100  py-2 pl-3 pr-5 hover:bg-gray-200">
               <BiDislike size={20} />
