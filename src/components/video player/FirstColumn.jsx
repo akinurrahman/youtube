@@ -8,10 +8,11 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const FirstColumn = () => {
+  const { title, likeCount, subsCount, avatar, channelName } = useSelector(
+    (state) => state.video.videoDetails,
+  );
+
   const { videoID } = useParams();
-  const videoDetails = useSelector((state)=>state.video.videoDetails)
-  // console.log(videoDetails.title)
-  
   return (
     <div>
       {/* Video Player */}
@@ -23,9 +24,7 @@ const FirstColumn = () => {
       ></iframe>
 
       {/* Video Title */}
-      <h2 className="line-clamp-2 px-4 font-bold text-gray-900 ">
-        {videoDetails.title}
-      </h2>
+      <h2 className="line-clamp-2 px-4 font-bold text-gray-900 ">{title}</h2>
 
       {/* channel info - like - share etc. */}
       <div className="flex flex-col md:mr-2 md:flex md:flex-row md:justify-between">
@@ -33,14 +32,14 @@ const FirstColumn = () => {
           <li></li>
           <div>
             <img
-              src={videoDetails.channelAvatar}
+              src={avatar}
               alt="channel logo"
               className="max-w-[40px] rounded-full"
             />
           </div>
           <div>
-            <h2 className="font-bold">{videoDetails.channelName}</h2>
-            <p className="text-sm text-gray-800">{videoDetails.subscriberCount} subscribers</p>
+            <h2 className="font-bold">{channelName}</h2>
+            <p className="text-sm text-gray-800">{subsCount} subscribers</p>
           </div>
           <button className="rounded-full bg-black px-4 py-2 font-bold text-white">
             Subscribe
@@ -53,7 +52,7 @@ const FirstColumn = () => {
           <div className="flex items-center  ">
             <button className="flex items-center  space-x-2 rounded-l-full bg-gray-100 py-2 pl-5 pr-3 hover:bg-gray-200">
               <BiLike size={20} />
-              <span className="text-sm">{videoDetails.likeCount}</span>
+              <span className="text-sm">{likeCount}</span>
             </button>
             <button className=" rounded-r-full border-l-2 border-gray-200 bg-gray-100  py-2 pl-3 pr-5 hover:bg-gray-200">
               <BiDislike size={20} />
