@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { calculateTimeAgo } from "../utils/calculateTimeAgo";
-import { fetchDataFromApi } from "../utils/api";
 import { formatCount } from "../utils/formatCount";
 import { useDispatch } from "react-redux";
 import { setVideoDetails } from "../redux/features/VideoSlice";
-
+import useFetch from "../utils/useFetch";
 const ThumnailCard = ({ video }) => {
   const dispatch = useDispatch();
 
@@ -21,34 +20,19 @@ const ThumnailCard = ({ video }) => {
   const viewCount = formatCount(video.statistics.viewCount);
   const likeCount = formatCount(video.statistics.likeCount);
 
-  const [channelInfo, setChannelInfo] = useState({
-    avatar: "...",
-    subscriberCount: 0,
+  // Api call for channel avatar and subscount
+  const { data, loading } = useFetch("channels", {
+    part: "snippet,statistics",
+    id: channelId,
   });
-  
-  // Api call for channel avatar and subscriber count
-  useEffect(() => {
-    fetchDataFromApi("channels", {
-      part: "snippet,statistics",
-      id: channelId,
-    }).then((res) => {
-      if (res.items.length > 0) {
-        const channelData = res.items[0];
-        const avatar = channelData.snippet.thumbnails.default.url;
-        const subscriberCount = channelData.statistics
-          ? channelData.statistics.subscriberCount
-          : "N/A";
-
-        setChannelInfo({
-          avatar,
-          subscriberCount,
-        });
-      }
-    });
-  }, [channelId]);
-
-  const subsCount = formatCount(channelInfo.subscriberCount);
-  const avatar = channelInfo.avatar;
+// console.log(data?.items)
+  let avatar = data?.items[0]?.snippet?.thumbnails?.default?.url;
+  let subsCount;
+  if (data?.items[0]?.statistics?.subscriberCount !== undefined) {
+    subsCount = formatCount(data.items[0].statistics.subscriberCount);
+  } else {
+    subsCount = "N/A";
+  }
 
   // Dispatching video-related data to the Redux store
   const videoInfo = {

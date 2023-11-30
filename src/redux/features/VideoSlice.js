@@ -18,7 +18,10 @@ const VideoSlice = createSlice({
     setVideoDetails(state, action) {
       state.videoDetails = { ...state.videoDetails, ...action.payload };
     },
+    clearVideoDetails(state) {
+      state.videoDetails = initialState.videoDetails;
+    },
   },
 });
 export default VideoSlice.reducer;
-export const { setVideoDetails } = VideoSlice.actions;
+export const { setVideoDetails,clearVideoDetails } = VideoSlice.actions;
