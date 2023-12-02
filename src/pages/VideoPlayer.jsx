@@ -1,7 +1,6 @@
 import React from "react";
 import FirstColumn from "../components/video player/FirstColumn";
 import SecondColumn from "../components/video player/SecondColumn";
-import useFetch from "../utils/useFetch";
 
 const VideoPlayer = () => {
   

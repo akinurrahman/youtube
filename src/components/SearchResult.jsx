@@ -1,61 +1,105 @@
 import React from "react";
+import { calculateTimeAgo } from "../utils/calculateTimeAgo";
+import { formatCount } from "../utils/formatCount";
+import useFetch from "../utils/useFetch";
+import { NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { clearVideoDetails, setVideoDetails } from "../redux/features/VideoSlice";
 
-const SearchResult = () => {
+const SearchResult = ({ video }) => {
+  const dispatch = useDispatch()
+  const thumbnail = video?.snippet?.thumbnails?.medium?.url;
+  const channelName = video?.snippet?.channelTitle;
+  const title = video?.snippet?.title;
+  const videoID = video?.id?.videoId;
+  const channelId = video?.snippet?.channelId;
+
+  const publishedAt = video?.snippet?.publishedAt;
+  const timeAgo = calculateTimeAgo(publishedAt);
+
+  // api call to get views
+  const { data: views } = useFetch("videos", {
+    part: "statistics",
+    id: videoID,
+  });
+  const RawView = views?.items?.[0]?.statistics?.viewCount;
+  const viewCount = RawView && formatCount(RawView);
+
+  const RowLike = views?.items?.[0]?.statistics?.viewCount;
+  const likeCount = RowLike && formatCount(RowLike);
+
+  // Api call for channel avatar and subscount
+  const { data } = useFetch("channels", {
+    part: "snippet,statistics",
+    id: channelId,
+  });
+
+  let description = data?.items[0]?.snippet?.localized?.description;
+  let avatar = data?.items[0]?.snippet?.thumbnails?.default?.url;
+  let subsCount;
+  if (data?.items[0]?.statistics?.subscriberCount !== undefined) {
+    subsCount = formatCount(data.items[0].statistics.subscriberCount);
+  } else {
+    subsCount = "N/A";
+  }
+
+  // Dispatching video-related data to the Redux store
+  const videoInfo = {
+    title,
+    avatar,
+    channelName,
+    subsCount,
+    likeCount,
+  };
+  const handleClick =()=>{
+    dispatch(clearVideoDetails())
+    dispatch(setVideoDetails(videoInfo))
+  }
   return (
-    <div className="mt-3 gap-4 sm:flex md:mx-5 lg:mx-[187px]">
-      {/* col - 1  */}
-      <div className=" md:max-w-[400px]">
-        <img
-          src="/assets/thumnail.jpg"
-          alt=""
-          className=" border-2 border-red-400 sm:rounded-xl "
-        />
-      </div>
-      {/* col-2 */}
-      <div className="mx-2 mt-2 flex items-center sm:hidden">
-        <div>
+    <NavLink to={`/watch/${videoID}`} onClick={handleClick}>
+      <div className="mt-4 gap-4 sm:flex md:mx-5 lg:mx-[187px]">
+        {/* col - 1  */}
+        <div className=" img-container">
           <img
-            src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+            src={thumbnail}
             alt=""
-            className="mr-3 max-w-[40px] rounded-full "
+            className=" w-full sm:min-w-[295px] sm:rounded-xl "
           />
         </div>
-        <div>
-          <h2 className="line-clamp-2 font-semibold leading-none">
-            How to Avoid Procrastination ? 4 Steps to reduce Procrastination |
-            Late Night Talk How to Avoid Procrastination ? 4 Steps to reduce
-            Procrastination | Late Night Talk
-          </h2>
-          <p className="line-clamp-1 text-gray-700">
-            Aman Dhatarwal • 3.5M views • 4 months ago
+        {/* col-2 */}
+        <div className="mx-2 mt-2 flex items-center sm:hidden">
+          <div>
+            <img
+              src={avatar}
+              alt=""
+              className="mr-3 max-w-[40px] rounded-full "
+            />
+          </div>
+          <div>
+            <h2 className="line-clamp-2 font-semibold leading-none">{title}</h2>
+            <p className="line-clamp-1 text-gray-700">
+              {channelName} • {viewCount} • {timeAgo}
+            </p>
+          </div>
+        </div>
+        {/* show this for column 2 when size is small */}
+        <div className="mt-1 hidden flex-col sm:flex ">
+          <h2 className="mb-1 line-clamp-2 font-semibold ">{title}</h2>
+          <p className="mb-2 line-clamp-1 text-gray-700">
+            {viewCount} • {timeAgo}
           </p>
+          <p className="mb-2 line-clamp-1  flex items-center text-gray-700">
+            <img
+              src={avatar}
+              alt=""
+              className="mr-3 max-w-[25px] rounded-full "
+            />
+            {channelName}
+          </p>
+          <p className="line-clamp-2 text-gray-600 ">{description}</p>
         </div>
       </div>
-      {/* show this for column 2 when size is small */}
-      <div className="mt-1 hidden flex-col sm:flex ">
-        <h2 className="mb-1 line-clamp-2 font-semibold ">
-          How to Avoid Procrastination ? 4 Steps to reduce Procrastination |
-          Late Night Talk How to Avoid Procrastination ? 4 Steps to reduce
-          Procrastination | Late Night Talk
-        </h2>
-        <p className="mb-2 line-clamp-1 text-gray-700">
-          3.5M views • 4 months ago
-        </p>
-        <p className="mb-2 line-clamp-1  flex items-center text-gray-700">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-            alt=""
-            className="mr-3 max-w-[25px] rounded-full "
-          />{" "}
-          Aman Dhatarwal
-        </p>
-        <p className="line-clamp-2 text-gray-600 md:line-clamp-3">
-          How to Avoid Procrastination ? 4 Steps to reduce Procrastination |
-          Late Night Talk How to Avoid Procrastination ? 4 Steps to reduce
-          Procrastination | Late Night Talk
-        </p>
-      </div>
-    </div>
+    </NavLink>
   );
 };
 
