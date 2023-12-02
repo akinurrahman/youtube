@@ -7,8 +7,11 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import Hamburger from "./Hamburger";
 import { NavLink } from "react-router-dom";
 
+
 const Header = () => {
   const [menu, setMenu] = useState(false);
+  const [query, setQuery] = useState('');
+  console.log(query)
   return (
     <div className=" mx-4 mt-3 flex items-center justify-between">
       {/* Column 1 */}
@@ -26,8 +29,8 @@ const Header = () => {
             className=" z-20"
           />
         )}
-        <NavLink to='/' className=" z-20 w-24">
-          <img src="/assets/logo.svg" alt="logo"  />
+        <NavLink to="/" className=" z-20 w-24">
+          <img src="/assets/logo.svg" alt="logo" />
         </NavLink>
       </div>
 
@@ -38,10 +41,12 @@ const Header = () => {
             type="text"
             placeholder="Search"
             className="mr-px flex h-full  w-full  rounded-l-3xl    px-4 "
+            onChange={(e)=>setQuery(e.target.value)}
+            value={query}
           />
-          <div className=" flex h-full  items-center justify-center  rounded-r-3xl  border-gray-300 bg-gray-300 px-4">
+          <NavLink to={`/search/${query}`} className=" flex h-full  items-center justify-center  rounded-r-3xl  border-gray-300 bg-gray-300 px-4">
             <IoIosSearch size={26} />
-          </div>
+          </NavLink>
         </div>
         <div className="flex items-center justify-center rounded-full bg-gray-300 p-3 text-sm">
           <BsMicFill size={20} />
