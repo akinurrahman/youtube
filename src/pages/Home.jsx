@@ -1,6 +1,6 @@
 import React from "react";
 import ThumnailCard from "../components/ThumnailCard";
-import SkeletonLoader from "../components/SkeletonLoader";
+import HomeSkeleton from "../components/HomeSkeleton";
 import useFetch from "../utils/useFetch";
 const HomePage = () => {
   const { data: videos, loading } = useFetch("videos", {
@@ -14,8 +14,8 @@ const HomePage = () => {
     <div className="m-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {loading || !videos
         ? // Show skeleton loader or loading placeholder
-          Array.from({ length: 10 }).map((_, index) => (
-            <SkeletonLoader key={index} />
+          Array.from({ length: 20 }).map((_, index) => (
+            <HomeSkeleton key={index} />
           ))
         : // Display fetched data or "No videos available" text
           videos?.items?.map((video, index) => (
