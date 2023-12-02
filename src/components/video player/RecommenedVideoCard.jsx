@@ -1,38 +1,60 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { calculateTimeAgo } from "../../utils/calculateTimeAgo";
+import { formatCount } from "../../utils/formatCount";
 import useFetch from "../../utils/useFetch";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { clearVideoDetails, setVideoDetails } from "../../redux/features/VideoSlice";
+import {
+  clearVideoDetails,
+  setVideoDetails,
+} from "../../redux/features/VideoSlice";
 
 const RecommenedVideoCard = ({ video }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const thumbnail = video?.snippet?.thumbnails?.medium?.url;
   const channelName = video?.snippet?.channelTitle;
   const title = video?.snippet?.title;
   const videoID = video?.id?.videoId;
+  const channelId = video?.snippet?.channelId;
 
   const publishedAt = video?.snippet?.publishedAt;
   const timeAgo = calculateTimeAgo(publishedAt);
 
   // api call to get views
-  // const { data, loading } = useFetch("videos", {
-  //   part: "statistics",
-  //   id: videoID,
-  // });
-  // console.log(data?.items);
-  
+  const { data : views } = useFetch("videos", {
+    part: "statistics",
+    id: videoID,
+  });
+  const RawView = views?.items?.[0]?.statistics?.viewCount
+  const viewCount = RawView && formatCount(RawView) ;
+
+  const RowLike = views?.items?.[0]?.statistics?.viewCount
+  const likeCount = RowLike && formatCount(RowLike) ;
+
+  // Api call for channel avatar and subscount
+  const { data } = useFetch("channels", {
+    part: "snippet,statistics",
+    id: channelId,
+  });
+
+  let avatar = data?.items[0]?.snippet?.thumbnails?.default?.url;
+  let subsCount;
+  if (data?.items[0]?.statistics?.subscriberCount !== undefined) {
+    subsCount = formatCount(data.items[0].statistics.subscriberCount);
+  } else {
+    subsCount = "N/A";
+  }
 
   // Dispatching video-related data to the Redux store
   const videoInfo = {
     title,
-    // avatar,
+    avatar,
     channelName,
-    // likeCount,
-
+    subsCount,
+    likeCount,
   };
   const handleClick = () => {
-    dispatch(clearVideoDetails())
+    dispatch(clearVideoDetails());
     dispatch(setVideoDetails(videoInfo));
   };
 
@@ -52,7 +74,7 @@ const RecommenedVideoCard = ({ video }) => {
           <h2 className="line-clamp-2  font-bold text-gray-900 ">{title}</h2>
           <p className="line-clamp-1 text-sm text-gray-700">{channelName}</p>
           <p className="line-clamp-1 text-sm text-gray-700">
-            13M views • {timeAgo}
+            {viewCount} views • {timeAgo}
           </p>
         </div>
       </div>

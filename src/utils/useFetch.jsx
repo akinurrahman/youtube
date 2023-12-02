@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 const BASE_URL = "https://www.googleapis.com/youtube/v3/";
 const API_KEY = `AIzaSyCVke47M1LNOqWrM4TPgV_zMs8dSP0tHjs`;
 
-const useFetch = (url, params) => {
+const useFetch = (url, params,  dependencies = []) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -42,7 +42,7 @@ const useFetch = (url, params) => {
     return () => {
       isMounted = false;
     };
-  }, [url]);
+  }, [...dependencies, url]);
 
   return { data, loading, error };
 };

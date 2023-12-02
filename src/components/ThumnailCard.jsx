@@ -50,7 +50,7 @@ const ThumnailCard = ({ video }) => {
   return (
     <NavLink to={`/watch/${videoID}`} onClick={handleClick}>
       <div className="thumnail-container ">
-        <img src={thumbnail} alt="thumnail" className="w-[375px] rounded-xl" />
+        <img src={thumbnail} alt="thumnail" className="w-full rounded-xl" />
       </div>
 
       {/* statistics */}
