@@ -7,7 +7,7 @@ const HomePage = () => {
     part: "snippet,statistics",
     chart: "mostPopular",
     regionCode: "IN",
-    maxResults: 3,
+    maxResults: 20,
   });
 // console.log(videos?.items)
   return (

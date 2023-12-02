@@ -51,8 +51,8 @@ const SearchResult = ({ video }) => {
     subsCount,
     likeCount,
   };
+  dispatch(clearVideoDetails())
   const handleClick =()=>{
-    dispatch(clearVideoDetails())
     dispatch(setVideoDetails(videoInfo))
   }
   return (
