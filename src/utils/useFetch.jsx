@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 const BASE_URL = "https://www.googleapis.com/youtube/v3/";
-const API_KEY = `AIzaSyDlTrmu7b3wiFRKykr7pNe1xsyqOX5wnpg`;
+const API_KEY = `AIzaSyBq4KaPAVnuz9TityDTLEs_3CwewQUQSEk`;
 
 const useFetch = (url, params,  dependencies = []) => {
   const [data, setData] = useState(null);

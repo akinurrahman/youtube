@@ -17,8 +17,14 @@ const ThumnailCard = ({ video }) => {
   const publishedAt = video.snippet.publishedAt;
   const timeAgo = calculateTimeAgo(publishedAt);
 
-  const viewCount = formatCount(video.statistics.viewCount);
-  const likeCount = formatCount(video.statistics.likeCount);
+  const viewCount =
+    video.statistics && video.statistics.viewCount
+      ? formatCount(video.statistics.viewCount)
+      : "N/A";
+  const likeCount =
+    video.statistics && video.statistics.likeCount
+      ? formatCount(video.statistics.likeCount)
+      : "N/A";
 
   // Api call for channel avatar and subscount
   const { data, loading } = useFetch("channels", {
@@ -42,17 +48,20 @@ const ThumnailCard = ({ video }) => {
     likeCount,
     viewCount,
     subsCount,
-    channelId,
   };
   const handleClick = () => {
     dispatch(setVideoDetails(videoInfo));
   };
 
   return (
-    <NavLink to={`/watch/${videoID}`} onClick={handleClick}>
-      <div className="thumnail-container ">
+    <div>
+      <NavLink
+        to={`/watch/${videoID}`}
+        onClick={handleClick}
+        className="thumnail-container "
+      >
         <img src={thumbnail} alt="thumnail" className="w-full rounded-xl" />
-      </div>
+      </NavLink>
 
       {/* statistics */}
       <div className="info my-2 flex space-x-4 px-1">
@@ -73,7 +82,7 @@ const ThumnailCard = ({ video }) => {
           </p>
         </div>
       </div>
-    </NavLink>
+    </div>
   );
 };
 

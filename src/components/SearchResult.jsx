@@ -59,27 +59,37 @@ const SearchResult = ({ video }) => {
     dispatch(setVideoDetails(videoInfo));
   };
   return (
-    <NavLink to={`/watch/${videoID}`} onClick={handleClick}>
+    <div>
       <div className="mt-4 gap-4 sm:flex md:mx-5 lg:mx-[187px]">
         {/* col - 1  */}
-        <div className=" img-container">
+        <NavLink
+          to={`/watch/${videoID}`}
+          onClick={handleClick}
+          className=" img-container"
+        >
           <img
             src={thumbnail}
             alt=""
             className=" w-full sm:min-w-[320px] sm:rounded-xl "
           />
-        </div>
+        </NavLink>
         {/* col-2 */}
         <div className="mx-2 mt-2 flex items-center sm:hidden">
-          <div>
+          <NavLink to="/channel">
             <img
               src={avatar}
               alt=""
               className="mr-3 max-w-[40px] rounded-full "
             />
-          </div>
+          </NavLink>
           <div>
-            <h2 className="line-clamp-2 font-semibold leading-none">{title}</h2>
+            <NavLink
+              to={`/watch/${videoID}`}
+              onClick={handleClick}
+              className="line-clamp-2 font-semibold leading-none"
+            >
+              {title}
+            </NavLink>
             <p className="line-clamp-1 text-gray-700">
               {channelName} • {viewCount} • {timeAgo}
             </p>
@@ -91,7 +101,10 @@ const SearchResult = ({ video }) => {
           <p className="mb-2 line-clamp-1 text-gray-700">
             {viewCount} • {timeAgo}
           </p>
-          <NavLink to='/channel' className="mb-2 line-clamp-1  flex items-center text-gray-700">
+          <NavLink
+            to="/channel"
+            className="mb-2 line-clamp-1  flex items-center text-gray-700"
+          >
             <img
               src={avatar}
               alt=""
@@ -102,7 +115,7 @@ const SearchResult = ({ video }) => {
           <p className="line-clamp-2 text-gray-600 ">{description}</p>
         </div>
       </div>
-    </NavLink>
+    </div>
   );
 };
 
