@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const ChannelSidebar = () => {
   const [activeTab, setActiveTab] = useState("Home");
@@ -9,7 +10,7 @@ const ChannelSidebar = () => {
 
   return (
     <ul className="flex justify-between sm:w-4/5 md:w-3/5 lg:w-1/2 xl:w-2/5">
-      <li
+      <NavLink to='/'
         className={`cursor-pointer ${
           activeTab === "Home"
             ? "border-b-2 border-black text-black"
@@ -18,8 +19,8 @@ const ChannelSidebar = () => {
         onClick={() => handleTabClick("Home")}
       >
         Home
-      </li>
-      <li
+      </NavLink>
+      <NavLink to='/'
         className={`cursor-pointer ${
           activeTab === "Videos"
             ? "border-b-2 border-black text-black"
@@ -28,8 +29,8 @@ const ChannelSidebar = () => {
         onClick={() => handleTabClick("Videos")}
       >
         Videos
-      </li>
-      <li
+      </NavLink>
+      <NavLink to='/'
         className={`hidden sm:block cursor-pointer ${
           activeTab === "Shorts"
             ? "border-b-2 border-black text-black"
@@ -38,8 +39,8 @@ const ChannelSidebar = () => {
         onClick={() => handleTabClick("Shorts")}
       >
         Shorts
-      </li>
-      <li
+      </NavLink>
+      <NavLink to='/'
         className={`cursor-pointer ${
           activeTab === "Live"
             ? "border-b-2 border-black text-black"
@@ -48,8 +49,8 @@ const ChannelSidebar = () => {
         onClick={() => handleTabClick("Live")}
       >
         Live
-      </li>
-      <li
+      </NavLink>
+      <NavLink to='/'
         className={`cursor-pointer ${
           activeTab === "PlayList"
             ? "border-b-2 border-black text-black"
@@ -58,8 +59,8 @@ const ChannelSidebar = () => {
         onClick={() => handleTabClick("PlayList")}
       >
         PlayList
-      </li>
-      <li
+      </NavLink>
+      <NavLink to='/'
         className={`cursor-pointer ${
           activeTab === "Search"
             ? "border-b-2 border-black text-black"
@@ -68,8 +69,8 @@ const ChannelSidebar = () => {
         onClick={() => handleTabClick("Search")}
       >
         Search
-      </li>
-      <li
+      </NavLink>
+      <NavLink to='/'
         className={`hidden sm:block cursor-pointer  ${
           activeTab === "Community"
             ? "border-b-2 border-black text-black"
@@ -78,7 +79,7 @@ const ChannelSidebar = () => {
         onClick={() => handleTabClick("Community")}
       >
         Community
-      </li>
+      </NavLink>
     </ul>
   );
 };

@@ -53,29 +53,26 @@ const SearchResult = ({ video }) => {
     channelName,
     subsCount,
     likeCount,
+    channelId,
   };
   dispatch(clearVideoDetails());
   const handleClick = () => {
     dispatch(setVideoDetails(videoInfo));
   };
   return (
-    <div>
+    <NavLink to={`/watch/${videoID}`} onClick={handleClick}>
       <div className="mt-4 gap-4 sm:flex md:mx-5 lg:mx-[187px]">
         {/* col - 1  */}
-        <NavLink
-          to={`/watch/${videoID}`}
-          onClick={handleClick}
-          className=" img-container"
-        >
+        <div className=" img-container">
           <img
             src={thumbnail}
             alt=""
             className=" w-full sm:min-w-[320px] sm:rounded-xl "
           />
-        </NavLink>
+        </div>
         {/* col-2 */}
         <div className="mx-2 mt-2 flex items-center sm:hidden">
-          <NavLink to="/channel">
+          <NavLink to={`/channel/${channelId}`}>
             <img
               src={avatar}
               alt=""
@@ -83,15 +80,12 @@ const SearchResult = ({ video }) => {
             />
           </NavLink>
           <div>
-            <NavLink
-              to={`/watch/${videoID}`}
-              onClick={handleClick}
-              className="line-clamp-2 font-semibold leading-none"
-            >
+            <div className="line-clamp-2 font-semibold leading-none">
               {title}
-            </NavLink>
+            </div>
             <p className="line-clamp-1 text-gray-700">
-              {channelName} • {viewCount} • {timeAgo}
+              <NavLink to={`/channel/${channelId}`}>{channelName}</NavLink> •{" "}
+              {viewCount} • {timeAgo}
             </p>
           </div>
         </div>
@@ -102,7 +96,7 @@ const SearchResult = ({ video }) => {
             {viewCount} • {timeAgo}
           </p>
           <NavLink
-            to="/channel"
+            to={`/channel/${channelId}`}
             className="mb-2 line-clamp-1  flex items-center text-gray-700"
           >
             <img
@@ -115,7 +109,7 @@ const SearchResult = ({ video }) => {
           <p className="line-clamp-2 text-gray-600 ">{description}</p>
         </div>
       </div>
-    </div>
+    </NavLink>
   );
 };
 

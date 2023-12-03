@@ -48,24 +48,21 @@ const ThumnailCard = ({ video }) => {
     likeCount,
     viewCount,
     subsCount,
+    channelId,
   };
   const handleClick = () => {
     dispatch(setVideoDetails(videoInfo));
   };
 
   return (
-    <div>
-      <NavLink
-        to={`/watch/${videoID}`}
-        onClick={handleClick}
-        className="thumnail-container "
-      >
+    <NavLink to={`/watch/${videoID}`} onClick={handleClick}>
+      <div className="thumnail-container ">
         <img src={thumbnail} alt="thumnail" className="w-full rounded-xl" />
-      </NavLink>
+      </div>
 
       {/* statistics */}
       <div className="info my-2 flex space-x-4 px-1">
-        <NavLink to="/channel" className="logo-container">
+        <NavLink to={`/channel/${channelId}`} className="logo-container">
           <img
             src={avatar}
             alt="channel avatar"
@@ -74,7 +71,10 @@ const ThumnailCard = ({ video }) => {
         </NavLink>
         <div>
           <h2 className="line-clamp-2 font-bold  text-gray-900 ">{title}</h2>
-          <NavLink to="/channel" className="line-clamp-1 text-gray-700">
+          <NavLink
+            to={`/channel/${channelId}`}
+            className="line-clamp-1 text-gray-700"
+          >
             {channelName}
           </NavLink>
           <p className="text-gray-700">
@@ -82,7 +82,7 @@ const ThumnailCard = ({ video }) => {
           </p>
         </div>
       </div>
-    </div>
+    </NavLink>
   );
 };
 

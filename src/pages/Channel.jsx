@@ -8,7 +8,7 @@ const Channel = () => {
   const { channelId } = useSelector((state) => state.video.videoDetails);
   const { data, loding } = useFetch("channels", {
     part: "snippet,contentDetails,statistics,brandingSettings",
-    id: "UCn4rEMqKtwBQ6-oEwbd4PcA",
+    id: channelId,
   });
   return (
     <div className="mx-[15px] mt-5 space-y-3">
