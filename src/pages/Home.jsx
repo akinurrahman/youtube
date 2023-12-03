@@ -1,13 +1,13 @@
 import React from "react";
 import ThumnailCard from "../components/ThumnailCard";
-import HomeSkeleton from "../components/HomeSkeleton";
+import HomeSkeleton from "../components/skeletons/HomeSkeleton";
 import useFetch from "../utils/useFetch";
 const HomePage = () => {
   const { data: videos, loading } = useFetch("videos", {
     part: "snippet,statistics",
     chart: "mostPopular",
     regionCode: "IN",
-    maxResults: 20,
+    maxResults: 2,
   });
 // console.log(videos?.items)
   return (

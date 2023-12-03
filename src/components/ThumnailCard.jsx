@@ -25,7 +25,7 @@ const ThumnailCard = ({ video }) => {
     part: "snippet,statistics",
     id: channelId,
   });
-// console.log(data?.items)
+  // console.log(data?.items)
   let avatar = data?.items[0]?.snippet?.thumbnails?.default?.url;
   let subsCount;
   if (data?.items[0]?.statistics?.subscriberCount !== undefined) {
@@ -42,6 +42,7 @@ const ThumnailCard = ({ video }) => {
     likeCount,
     viewCount,
     subsCount,
+    channelId,
   };
   const handleClick = () => {
     dispatch(setVideoDetails(videoInfo));
@@ -55,16 +56,18 @@ const ThumnailCard = ({ video }) => {
 
       {/* statistics */}
       <div className="info my-2 flex space-x-4 px-1">
-        <div className="logo-container">
+        <NavLink to="/channel" className="logo-container">
           <img
             src={avatar}
             alt="channel avatar"
             className="user-logo max-w-[40px] rounded-full"
           />
-        </div>
+        </NavLink>
         <div>
           <h2 className="line-clamp-2 font-bold  text-gray-900 ">{title}</h2>
-          <p className="line-clamp-1 text-gray-700">{channelName}</p>
+          <NavLink to="/channel" className="line-clamp-1 text-gray-700">
+            {channelName}
+          </NavLink>
           <p className="text-gray-700">
             {viewCount} • {timeAgo}
           </p>

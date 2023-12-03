@@ -8,6 +8,7 @@ const initialState = {
     likeCount: null,
     subsCount: null,
     viewCount: null,
+    channelId: "",
   },
 };
 
@@ -24,4 +25,4 @@ const VideoSlice = createSlice({
   },
 });
 export default VideoSlice.reducer;
-export const { setVideoDetails,clearVideoDetails } = VideoSlice.actions;
+export const { setVideoDetails, clearVideoDetails } = VideoSlice.actions;

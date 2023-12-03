@@ -4,10 +4,13 @@ import { formatCount } from "../utils/formatCount";
 import useFetch from "../utils/useFetch";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { clearVideoDetails, setVideoDetails } from "../redux/features/VideoSlice";
+import {
+  clearVideoDetails,
+  setVideoDetails,
+} from "../redux/features/VideoSlice";
 
 const SearchResult = ({ video }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const thumbnail = video?.snippet?.thumbnails?.medium?.url;
   const channelName = video?.snippet?.channelTitle;
   const title = video?.snippet?.title;
@@ -51,10 +54,10 @@ const SearchResult = ({ video }) => {
     subsCount,
     likeCount,
   };
-  dispatch(clearVideoDetails())
-  const handleClick =()=>{
-    dispatch(setVideoDetails(videoInfo))
-  }
+  dispatch(clearVideoDetails());
+  const handleClick = () => {
+    dispatch(setVideoDetails(videoInfo));
+  };
   return (
     <NavLink to={`/watch/${videoID}`} onClick={handleClick}>
       <div className="mt-4 gap-4 sm:flex md:mx-5 lg:mx-[187px]">
@@ -63,7 +66,7 @@ const SearchResult = ({ video }) => {
           <img
             src={thumbnail}
             alt=""
-            className=" w-full sm:min-w-[295px] sm:rounded-xl "
+            className=" w-full sm:min-w-[320px] sm:rounded-xl "
           />
         </div>
         {/* col-2 */}
@@ -88,14 +91,14 @@ const SearchResult = ({ video }) => {
           <p className="mb-2 line-clamp-1 text-gray-700">
             {viewCount} • {timeAgo}
           </p>
-          <p className="mb-2 line-clamp-1  flex items-center text-gray-700">
+          <NavLink to='/channel' className="mb-2 line-clamp-1  flex items-center text-gray-700">
             <img
               src={avatar}
               alt=""
               className="mr-3 max-w-[25px] rounded-full "
             />
-            {channelName}
-          </p>
+            <span>{channelName}</span>
+          </NavLink>
           <p className="line-clamp-2 text-gray-600 ">{description}</p>
         </div>
       </div>
