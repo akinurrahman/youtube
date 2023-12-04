@@ -25,11 +25,12 @@ const SearchResult = ({ video }) => {
     part: "statistics",
     id: videoID,
   });
-  const RawView = views?.items?.[0]?.statistics?.viewCount;
-  const viewCount = RawView && formatCount(RawView);
 
-  const RowLike = views?.items?.[0]?.statistics?.viewCount;
-  const likeCount = RowLike && formatCount(RowLike);
+  // formatting view and like count
+  const viewCount =
+    views?.items?.[0] && formatCount(views?.items?.[0]?.statistics?.viewCount);
+  const likeCount =
+    views?.items?.[0] && formatCount(views?.items?.[0]?.statistics?.likeCount);
 
   // Api call for channel avatar and subscount
   const { data } = useFetch("channels", {

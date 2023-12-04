@@ -4,11 +4,11 @@ import { TbShare3 } from "react-icons/tb";
 import { HiDownload } from "react-icons/hi";
 import { HiOutlineScissors } from "react-icons/hi2";
 import { CiSaveDown1 } from "react-icons/ci";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const FirstColumn = () => {
-  const { title, likeCount, subsCount, avatar, channelName } = useSelector(
+  const { title, likeCount, subsCount, avatar, channelName,customUrl } = useSelector(
     (state) => state.video.videoDetails,
   );
 
@@ -29,15 +29,15 @@ const FirstColumn = () => {
       {/* channel info - like - share etc. */}
       <div className="flex flex-col md:mr-2 md:flex md:flex-row md:justify-between">
         <div className="mt-3 flex items-center space-x-4">
-          <div className="ml-4">
+          <NavLink  to={`/channel/${customUrl}`} className="ml-4">
             <img
               src={avatar}
               alt="channel logo"
               className="max-w-[40px] rounded-full"
             />
-          </div>
+          </NavLink>
           <div>
-            <h2 className="font-bold">{channelName}</h2>
+            <NavLink  to={`/channel/${customUrl}`} className="font-bold">{channelName}</NavLink>
             <p className="text-sm text-gray-800">{subsCount} subscribers</p>
           </div>
           <button className="rounded-full bg-black px-4 py-2 font-bold text-white">
