@@ -34,7 +34,7 @@ const ChannelTopSection = () => {
         <img
           src={coverImg}
           alt="Channel Cover"
-          className="h-[72px] w-full rounded-lg object-cover sm:h-[115px] md:h-[128px] lg:h-[176px] xl:h-[213px] "
+          className="h-[60px] w-full rounded-lg object-cover sm:h-[115px] md:h-[128px] lg:h-[176px] xl:h-[213px] "
         />
       </div>
 
@@ -48,7 +48,7 @@ const ChannelTopSection = () => {
         </div>
         <div className="">
           <h2 className="text-[24px] font-bold">{channelName}</h2>
-          <p className="text-sm text-gray-700">{`${customUrl} • ${subsCount} Subscribers • ${videoCount} Videos`}</p>
+          <p className="text-xs text-gray-700 sm:text-sm">{`${customUrl} • ${subsCount} Subscribers • ${videoCount} Videos`}</p>
           <div className="  mr-[16.5rem] hidden items-center sm:flex">
             <p className="mt-2 line-clamp-2 text-sm text-gray-700">
               {description}
