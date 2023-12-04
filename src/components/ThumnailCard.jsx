@@ -75,7 +75,7 @@ const ThumnailCard = ({ video }) => {
 
       {/* statistics */}
       <div className="info my-2 flex space-x-4 px-1">
-        <NavLink to={`/channel/${channelId}`} className="logo-container">
+        <NavLink to={`/channel/${customUrl}`} className="logo-container">
           <img
             src={avatar}
             alt="channel avatar"
@@ -85,7 +85,7 @@ const ThumnailCard = ({ video }) => {
         <div>
           <h2 className="line-clamp-2 font-bold  text-gray-900 ">{title}</h2>
           <NavLink
-            to={`/channel/${channelId}`}
+            to={`/channel/${customUrl}`}
             className="line-clamp-1 text-gray-700"
           >
             {channelName}

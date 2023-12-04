@@ -29,8 +29,7 @@ const FirstColumn = () => {
       {/* channel info - like - share etc. */}
       <div className="flex flex-col md:mr-2 md:flex md:flex-row md:justify-between">
         <div className="mt-3 flex items-center space-x-4">
-          <li></li>
-          <div>
+          <div className="ml-4">
             <img
               src={avatar}
               alt="channel logo"

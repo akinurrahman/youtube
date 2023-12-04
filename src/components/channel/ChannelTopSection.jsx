@@ -3,31 +3,15 @@ import { FaGreaterThan } from "react-icons/fa";
 import { useSelector } from "react-redux";
 const ChannelTopSection = () => {
   const {
-    title,
     avatar,
     channelName,
-    likeCount,
     subsCount,
-    viewCount,
-    channelId,
     coverImg,
     customUrl,
     description,
     videoCount,
   } = useSelector((state) => state.video.videoDetails);
-  console.log(
-    // title,
-    avatar,
-    channelName,
-    // likeCount,
-    subsCount,
-    // viewCount,
-    // channelId,
-    coverImg,
-    customUrl,
-    description,
-    videoCount,
-  );
+
   return (
     <div className="space-y-3">
       <div>
