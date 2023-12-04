@@ -8,7 +8,7 @@ const HomePage = () => {
     part: "snippet,statistics",
     chart: "mostPopular",
     regionCode: "IN",
-    maxResults: 2,
+    maxResults: 3,
   });
 
   const [videosLoaded, setVideosLoaded] = useState(false);

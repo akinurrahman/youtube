@@ -1,24 +1,33 @@
 import React from "react";
-import { formatCount } from "../../utils/formatCount";
-import { FaGreaterThan } from "react-icons/fa6";
-const ChannelTopSection = ({ data }) => {
-  const coverImg = data?.items[0]?.brandingSettings?.image?.bannerExternalUrl;
-  const avatar = data?.items[0]?.snippet?.thumbnails?.medium?.url;
-  const channelName = data?.items[0]?.snippet?.title;
-  const customUrl = data?.items[0]?.snippet?.customUrl;
-  const description = data?.items[0]?.snippet?.localized?.description;
-  const subscriberCount = data?.items[0]?.statistics?.subscriberCount;
-  const RawvideoCount = data?.items[0]?.statistics?.videoCount;
-
-  let subsCount;
-  if (subscriberCount !== undefined) {
-    subsCount = formatCount(subscriberCount);
-  }
-  let videoCount;
-  if (RawvideoCount !== undefined) {
-    videoCount = formatCount(RawvideoCount);
-  }
-
+import { FaGreaterThan } from "react-icons/fa";
+import { useSelector } from "react-redux";
+const ChannelTopSection = () => {
+  const {
+    title,
+    avatar,
+    channelName,
+    likeCount,
+    subsCount,
+    viewCount,
+    channelId,
+    coverImg,
+    customUrl,
+    description,
+    videoCount,
+  } = useSelector((state) => state.video.videoDetails);
+  console.log(
+    // title,
+    avatar,
+    channelName,
+    // likeCount,
+    subsCount,
+    // viewCount,
+    // channelId,
+    coverImg,
+    customUrl,
+    description,
+    videoCount,
+  );
   return (
     <div className="space-y-3">
       <div>
@@ -39,7 +48,7 @@ const ChannelTopSection = ({ data }) => {
         </div>
         <div className="">
           <h2 className="text-[24px] font-bold">{channelName}</h2>
-          <p className="text-sm text-gray-700">{`${customUrl} • ${subsCount} Subscribers • ${videoCount}`}</p>
+          <p className="text-sm text-gray-700">{`${customUrl} • ${subsCount} Subscribers • ${videoCount} Videos`}</p>
           <div className="  mr-[16.5rem] hidden items-center sm:flex">
             <p className="mt-2 line-clamp-2 text-sm text-gray-700">
               {description}

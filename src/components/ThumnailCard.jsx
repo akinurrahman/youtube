@@ -28,7 +28,7 @@ const ThumnailCard = ({ video }) => {
 
   // Api call for channel avatar and subscount
   const { data, loading } = useFetch("channels", {
-    part: "snippet,statistics",
+    part: "snippet,statistics,brandingSettings",
     id: channelId,
   });
   // console.log(data?.items)
@@ -40,6 +40,15 @@ const ThumnailCard = ({ video }) => {
     subsCount = "N/A";
   }
 
+  const coverImg = data?.items[0]?.brandingSettings?.image?.bannerExternalUrl;
+  const customUrl = data?.items[0]?.snippet?.customUrl;
+  const description = data?.items[0]?.snippet?.localized?.description;
+  const RawvideoCount = data?.items[0]?.statistics?.videoCount;
+  let videoCount;
+  if (RawvideoCount !== undefined) {
+    videoCount = formatCount(RawvideoCount);
+  }
+
   // Dispatching video-related data to the Redux store
   const videoInfo = {
     title,
@@ -49,6 +58,10 @@ const ThumnailCard = ({ video }) => {
     viewCount,
     subsCount,
     channelId,
+    coverImg,
+    customUrl,
+    description,
+    videoCount,
   };
   const handleClick = () => {
     dispatch(setVideoDetails(videoInfo));

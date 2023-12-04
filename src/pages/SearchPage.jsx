@@ -9,7 +9,7 @@ const SearchPage = () => {
     "search",
     {
       part: "snippet",
-      maxResults: 6,
+      maxResults: 3,
       q: query,
       type: "video",
       videoDuration: "medium",

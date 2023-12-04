@@ -10,7 +10,7 @@ const ChannelSidebar = () => {
 
   return (
     <ul className="flex justify-between sm:w-4/5 md:w-3/5 lg:w-1/2 xl:w-2/5">
-      <NavLink to='/'
+      <NavLink to=''
         className={`cursor-pointer ${
           activeTab === "Home"
             ? "border-b-2 border-black text-black"
@@ -20,7 +20,7 @@ const ChannelSidebar = () => {
       >
         Home
       </NavLink>
-      <NavLink to='/'
+      <NavLink to=''
         className={`cursor-pointer ${
           activeTab === "Videos"
             ? "border-b-2 border-black text-black"
@@ -30,7 +30,7 @@ const ChannelSidebar = () => {
       >
         Videos
       </NavLink>
-      <NavLink to='/'
+      <NavLink to=''
         className={`hidden sm:block cursor-pointer ${
           activeTab === "Shorts"
             ? "border-b-2 border-black text-black"
@@ -40,7 +40,7 @@ const ChannelSidebar = () => {
       >
         Shorts
       </NavLink>
-      <NavLink to='/'
+      <NavLink to=''
         className={`cursor-pointer ${
           activeTab === "Live"
             ? "border-b-2 border-black text-black"
@@ -50,7 +50,7 @@ const ChannelSidebar = () => {
       >
         Live
       </NavLink>
-      <NavLink to='/'
+      <NavLink to=''
         className={`cursor-pointer ${
           activeTab === "PlayList"
             ? "border-b-2 border-black text-black"
@@ -60,7 +60,7 @@ const ChannelSidebar = () => {
       >
         PlayList
       </NavLink>
-      <NavLink to='/'
+      <NavLink to=''
         className={`cursor-pointer ${
           activeTab === "Search"
             ? "border-b-2 border-black text-black"
@@ -70,7 +70,7 @@ const ChannelSidebar = () => {
       >
         Search
       </NavLink>
-      <NavLink to='/'
+      <NavLink to=''
         className={`hidden sm:block cursor-pointer  ${
           activeTab === "Community"
             ? "border-b-2 border-black text-black"

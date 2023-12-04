@@ -9,6 +9,10 @@ const initialState = {
     subsCount: null,
     viewCount: null,
     channelId: "",
+    coverImg: "",
+    customUrl: "",
+    description: "",
+    videoCount: null,
   },
 };
 
