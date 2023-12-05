@@ -31,23 +31,15 @@ const ThumnailCard = ({ video }) => {
     part: "snippet,statistics,brandingSettings",
     id: channelId,
   });
-  // console.log(data?.items)
   let avatar = data?.items[0]?.snippet?.thumbnails?.default?.url;
-  let subsCount;
-  if (data?.items[0]?.statistics?.subscriberCount !== undefined) {
-    subsCount = formatCount(data.items[0].statistics.subscriberCount);
-  } else {
-    subsCount = "N/A";
-  }
+  let subsCount =
+    data?.items[0] && formatCount(data?.items[0]?.statistics?.subscriberCount);
 
   const coverImg = data?.items[0]?.brandingSettings?.image?.bannerExternalUrl;
   const customUrl = data?.items[0]?.snippet?.customUrl;
   const description = data?.items[0]?.snippet?.localized?.description;
-  const RawvideoCount = data?.items[0]?.statistics?.videoCount;
-  let videoCount;
-  if (RawvideoCount !== undefined) {
-    videoCount = formatCount(RawvideoCount);
-  }
+  let videoCount =
+    data?.items[0] && formatCount(data?.items[0]?.statistics?.videoCount);
 
   // Dispatching video-related data to the Redux store
   const videoInfo = {
@@ -75,7 +67,7 @@ const ThumnailCard = ({ video }) => {
 
       {/* statistics */}
       <div className="info my-2 flex space-x-4 px-1">
-        <NavLink to={`/channel/${customUrl}`} className="logo-container">
+        <NavLink to={`/channel/${channelId}`} className="logo-container">
           <img
             src={avatar}
             alt="channel avatar"
@@ -85,7 +77,7 @@ const ThumnailCard = ({ video }) => {
         <div>
           <h2 className="line-clamp-2 font-bold  text-gray-900 ">{title}</h2>
           <NavLink
-            to={`/channel/${customUrl}`}
+            to={`/channel/${channelId}`}
             className="line-clamp-1 text-gray-700"
           >
             {channelName}

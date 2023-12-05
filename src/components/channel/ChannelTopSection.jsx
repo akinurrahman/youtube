@@ -1,16 +1,20 @@
 import React from "react";
 import { FaGreaterThan } from "react-icons/fa";
-import { useSelector } from "react-redux";
-const ChannelTopSection = () => {
-  const {
-    avatar,
-    channelName,
-    subsCount,
-    coverImg,
-    customUrl,
-    description,
-    videoCount,
-  } = useSelector((state) => state.video.videoDetails);
+
+import { formatCount } from "../../utils/formatCount";
+const ChannelTopSection = ({ statistics }) => {
+  const avatar = statistics?.items[0]?.snippet?.thumbnails?.default?.url;
+  const channelName = statistics?.items[0]?.snippet?.title;
+  const subsCount =
+    statistics?.items[0] &&
+    formatCount(statistics?.items[0]?.statistics?.subscriberCount);
+  const coverImg =
+    statistics?.items[0]?.brandingSettings?.image?.bannerExternalUrl;
+  const customUrl = statistics?.items[0]?.snippet?.customUrl;
+  const description = statistics?.items[0]?.snippet?.localized?.description;
+  const videoCount =
+    statistics?.items[0] &&
+    formatCount(statistics?.items[0]?.statistics?.videoCount);
 
   return (
     <div className="space-y-3">
@@ -37,9 +41,9 @@ const ChannelTopSection = () => {
             <p className="mt-2 line-clamp-2 text-sm text-gray-700">
               {description}
             </p>
-            <p className="ml-3">
+            {/* <p className="ml-3">
               <FaGreaterThan size={10} className="text-gray-700 " />
-            </p>
+            </p> */}
           </div>
           <button className="mt-3  hidden w-[33%] rounded-3xl bg-black py-2 text-white sm:block">
             Subscribe
@@ -49,9 +53,9 @@ const ChannelTopSection = () => {
 
       <div className=" flex items-center sm:hidden">
         <p className="line-clamp-2 text-sm text-gray-700">{description}</p>
-        <p className="ml-3">
+        {/* <p className="ml-3">
           <FaGreaterThan size={10} className="text-gray-700 " />
-        </p>
+        </p> */}
       </div>
 
       <div className=" sm:hidden">

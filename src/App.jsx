@@ -15,7 +15,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/watch/:videoID" element={<VideoPlayer />} />
         <Route path="/search/:query" element={<SearchPage/>}/>
-        <Route path="/channel/:customUrl" element={<Channel/>}/>
+        <Route path="/channel/:channelId" element={<Channel/>}/>
       </Routes>
     </Router>
   );

@@ -11,6 +11,7 @@ import {
 
 const SearchResult = ({ video }) => {
   const dispatch = useDispatch();
+  
   const thumbnail = video?.snippet?.thumbnails?.medium?.url;
   const channelName = video?.snippet?.channelTitle;
   const title = video?.snippet?.title;
