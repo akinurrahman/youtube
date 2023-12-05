@@ -60,7 +60,7 @@ const Channel = () => {
   //   maxResults: 8,
   // });
 
-  // API call to get channel PlayList videos
+  // API call to get channel PlayLists
   const { data: playLists } = useFetch("playlists", {
     part: "snippet,contentDetails",
     channelId: channelId,
