@@ -28,7 +28,7 @@ const ChannelSidebar = ({ setActiveTab, activeTab }) => {
         Videos
       </li>
       <li
-        className={`hidden cursor-pointer sm:block ${
+        className={` cursor-pointer sm:block ${
           activeTab === "Shorts"
             ? "border-b-2 border-black text-black"
             : "text-gray-800"
@@ -38,7 +38,7 @@ const ChannelSidebar = ({ setActiveTab, activeTab }) => {
         Shorts
       </li>
       <li
-        className={`cursor-pointer ${
+        className={`hidden cursor-pointer sm:block ${
           activeTab === "Live"
             ? "border-b-2 border-black text-black"
             : "text-gray-800"

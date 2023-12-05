@@ -5,7 +5,6 @@ import ChannelTopSection from "../components/channel/ChannelTopSection";
 import ChannelSidebar from "../components/channel/ChannelSidebar";
 import Home from "../components/channel/channel pages/Home";
 import Videos from "../components/channel/channel pages/Videos";
-import Shorts from "../components/channel/channel pages/Shorts";
 import Live from "../components/channel/channel pages/Live";
 import PlayList from "../components/channel/channel pages/PlayList";
 import Search from "../components/channel/channel pages/Search";
@@ -23,7 +22,7 @@ const Channel = () => {
         return <Videos />;
 
       case "Shorts":
-        return <Shorts />;
+        return <Videos />;
       case "Live":
         return <Live />;
       case "PlayList":
@@ -43,7 +42,7 @@ const Channel = () => {
     id: channelId,
   });
 
-  // API call to get channel videos
+  // API call to get channel Long videos
   const { data: ChannelVideos } = useFetch("search", {
     part: "snippet",
     type: "video",
@@ -52,15 +51,36 @@ const Channel = () => {
     maxResults: 8,
   });
 
+  // API call to get channel Short videos
+  const { data: ChannelShortVideos } = useFetch("search", {
+    part: "snippet",
+    type: "video",
+    videoDuration: "short",
+    channelId: channelId,
+    maxResults: 8,
+  });
+
   return (
     <div className="mx-[15px] mt-5 space-y-3">
-      <ChannelTopSection statistics={statistics}/>
+      <ChannelTopSection statistics={statistics} />
       <ChannelSidebar setActiveTab={setActiveTab} activeTab={activeTab} />
-      {/* {renderActivePage()} */}
+
+      {/* Home Section */}
       {activeTab === "Home" && <Home />}
+
+      {/*Long Video Section */}
       {activeTab === "Videos" && (
         <div className="mt-3 grid gap-4 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4">
           {ChannelVideos?.items?.map((video, index) => {
+            return <Videos video={video} key={index} />;
+          })}
+        </div>
+      )}
+
+      {/* Short video section */}
+      {activeTab === "Shorts" && (
+        <div className="mt-3 grid gap-4 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4">
+          {ChannelShortVideos?.items?.map((video, index) => {
             return <Videos video={video} key={index} />;
           })}
         </div>
