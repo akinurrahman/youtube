@@ -8,8 +8,9 @@ import {
   clearVideoDetails,
   setVideoDetails,
 } from "../../redux/features/VideoSlice";
+import { formatDuration } from "../../utils/formatDuration";
 
-const PlayListBottom = ({ video,channelID }) => {
+const PlayListBottom = ({ video, channelID }) => {
   const dispatch = useDispatch();
   const thumbnail = video?.snippet?.thumbnails?.medium?.url;
   const title = video?.snippet?.title;
@@ -17,19 +18,21 @@ const PlayListBottom = ({ video,channelID }) => {
     video?.snippet && calculateTimeAgo(video?.snippet?.publishedAt);
   const videoID = video?.snippet && video?.snippet?.resourceId?.videoId;
 
-  //   Api call to get view count
+  //   Api call to get view count, duration and like
   const { data: views } = useFetch("videos", {
-    part: "statistics",
+    part: "statistics,contentDetails",
     id: videoID,
   });
 
   // formatting view and like count
+  const duration =
+    views?.items[0] && formatDuration(views?.items[0].contentDetails?.duration);
   const viewCount =
-    views?.items?.[0] && formatCount(views?.items?.[0]?.statistics?.viewCount);
+    views?.items[0] && formatCount(views?.items[0].statistics?.viewCount);
   const likeCount =
-    views?.items?.[0] && formatCount(views?.items?.[0]?.statistics?.likeCount);
+    views?.items[0] && formatCount(views?.items[0].statistics?.likeCount);
 
-    // Api call for channel avatar and subscount
+  // Api call for channel avatar and subscount
   const { data } = useFetch("channels", {
     part: "snippet,statistics,brandingSettings",
     id: channelID,
@@ -41,7 +44,9 @@ const PlayListBottom = ({ video,channelID }) => {
   const videoInfo = {
     viewCount,
     likeCount,
-    title,avatar,subsCount
+    title,
+    avatar,
+    subsCount,
   };
   dispatch(clearVideoDetails());
   const handleClick = () => {
@@ -49,12 +54,15 @@ const PlayListBottom = ({ video,channelID }) => {
   };
   return (
     <NavLink to={`/watch/${videoID}`} className=" flex " onClick={handleClick}>
-      <div>
+      <div className="relative text-white">
         <img
           src={thumbnail}
           alt=""
-          className="mr-3 max-w-[140px] rounded-lg sm:max-w-[200px]"
+          className=" mr-3 max-w-[140px] rounded-lg sm:max-w-[200px] "
         />
+        <p className="absolute bottom-2  right-5 z-10 rounded-md bg-black bg-opacity-70 px-2">
+          {duration}
+        </p>
       </div>
       <div>
         <h2 className="line-clamp-3 font-semibold leading-tight ">{title}</h2>
