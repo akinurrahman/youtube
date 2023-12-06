@@ -8,10 +8,11 @@ import {
   clearVideoDetails,
   setVideoDetails,
 } from "../redux/features/VideoSlice";
+import { formatDuration } from "../utils/formatDuration";
 
 const SearchResult = ({ video }) => {
   const dispatch = useDispatch();
-  
+
   const thumbnail = video?.snippet?.thumbnails?.medium?.url;
   const channelName = video?.snippet?.channelTitle;
   const title = video?.snippet?.title;
@@ -23,11 +24,14 @@ const SearchResult = ({ video }) => {
 
   // api call to get views
   const { data: views } = useFetch("videos", {
-    part: "statistics",
+    part: "statistics,contentDetails",
     id: videoID,
   });
 
   // formatting view and like count
+  const duration =
+    views?.items?.[0] &&
+    formatDuration(views?.items?.[0]?.contentDetails?.duration);
   const viewCount =
     views?.items?.[0] && formatCount(views?.items?.[0]?.statistics?.viewCount);
   const likeCount =
@@ -65,12 +69,15 @@ const SearchResult = ({ video }) => {
     <NavLink to={`/watch/${videoID}`} onClick={handleClick}>
       <div className="mt-4 gap-4 sm:flex md:mx-5 lg:mx-[187px]">
         {/* col - 1  */}
-        <div className=" img-container">
+        <div className=" img-container relative text-white">
           <img
             src={thumbnail}
             alt=""
             className=" w-full sm:min-w-[320px] sm:rounded-xl "
           />
+          <p className="absolute bottom-2  right-3 z-10 rounded-md bg-black bg-opacity-70 px-2">
+            {duration}
+          </p>
         </div>
         {/* col-2 */}
         <div className="mx-2 mt-2 flex items-center sm:hidden">

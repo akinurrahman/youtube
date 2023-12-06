@@ -8,6 +8,7 @@ import {
   clearVideoDetails,
   setVideoDetails,
 } from "../../redux/features/VideoSlice";
+import { formatDuration } from "../../utils/formatDuration";
 
 const RecommenedVideoCard = ({ video }) => {
   const dispatch = useDispatch();
@@ -22,14 +23,19 @@ const RecommenedVideoCard = ({ video }) => {
 
   // api call to get views
   const { data: views } = useFetch("videos", {
-    part: "statistics",
+    part: "statistics,contentDetails",
     id: videoID,
   });
-  const RawView = views?.items?.[0]?.statistics?.viewCount;
-  const viewCount = RawView && formatCount(RawView);
 
-  const RowLike = views?.items?.[0]?.statistics?.viewCount;
-  const likeCount = RowLike && formatCount(RowLike);
+  const duration =
+    views?.items?.[0] &&
+    formatDuration(views?.items?.[0]?.contentDetails?.duration);
+
+  const viewCount =
+    views?.items?.[0] && formatCount(views?.items?.[0]?.statistics?.viewCount);
+
+  const likeCount =
+    views?.items?.[0] && formatCount(views?.items?.[0]?.statistics?.viewCount);
 
   // Api call for channel avatar and subscount
   const { data } = useFetch("channels", {
@@ -62,12 +68,15 @@ const RecommenedVideoCard = ({ video }) => {
   return (
     <NavLink to={`/watch/${videoID}`} onClick={handleClick}>
       <div className="mx-2 my-4 flex space-x-2 sm:mx-3">
-        <div className=" img-container  ">
+        <div className=" img-container relative text-white ">
           <img
             src={thumbnail}
             alt="thumnail"
             className=" img max-w-[191px] rounded-lg sm:max-w-[235px] md:max-w-[290px] lg:max-w-[160px] xl:max-w-[190px]  "
           />
+          <p className="absolute bottom-2  right-3 z-10 rounded-md bg-black bg-opacity-70 px-2">
+            {duration}
+          </p>
         </div>
 
         {/* video title - channel name - views and time */}

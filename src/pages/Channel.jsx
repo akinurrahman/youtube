@@ -13,27 +13,6 @@ import Community from "./channel sections/Community";
 const Channel = () => {
   const [activeTab, setActiveTab] = useState("Home");
   const { channelId } = useParams();
-  const renderActivePage = () => {
-    switch (activeTab) {
-      case "Home":
-        return <Home />;
-      case "Videos":
-        return <Videos />;
-
-      case "Shorts":
-        return <Videos />;
-      case "Live":
-        return <Live />;
-      case "PlayList":
-        return <PlayList />;
-      case "Search":
-        return <Search />;
-      case "Community":
-        return <Community />;
-      default:
-        return <Home />;
-    }
-  };
 
   // Api call for channel top section
   const { data: statistics } = useFetch("channels", {
