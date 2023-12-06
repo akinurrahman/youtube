@@ -4,7 +4,9 @@ import { calculateTimeAgo } from "../utils/calculateTimeAgo";
 import { formatCount } from "../utils/formatCount";
 import { useDispatch } from "react-redux";
 import { setVideoDetails } from "../redux/features/VideoSlice";
+
 import useFetch from "../utils/useFetch";
+import { formatDuration } from "../utils/formatDuration";
 const ThumnailCard = ({ video }) => {
   const dispatch = useDispatch();
 
@@ -13,7 +15,8 @@ const ThumnailCard = ({ video }) => {
   const title = video.snippet.title;
   const channelId = video.snippet.channelId;
   const videoID = video.id;
-
+  const duration = video && formatDuration(video?.contentDetails?.duration);
+  console.log(duration);
   const publishedAt = video.snippet.publishedAt;
   const timeAgo = calculateTimeAgo(publishedAt);
 
@@ -27,7 +30,7 @@ const ThumnailCard = ({ video }) => {
       : "N/A";
 
   // Api call for channel avatar and subscount
-  const { data, loading } = useFetch("channels", {
+  const { data } = useFetch("channels", {
     part: "snippet,statistics,brandingSettings",
     id: channelId,
   });
@@ -61,8 +64,11 @@ const ThumnailCard = ({ video }) => {
 
   return (
     <NavLink to={`/watch/${videoID}`} onClick={handleClick}>
-      <div className="thumnail-container ">
+      <div className="thumnail-container   relative text-white ">
         <img src={thumbnail} alt="thumnail" className="w-full rounded-xl" />
+        <p className="absolute bottom-2  right-3 z-10 rounded-md bg-black bg-opacity-70 px-2">
+          {duration}
+        </p>
       </div>
 
       {/* statistics */}
@@ -71,7 +77,7 @@ const ThumnailCard = ({ video }) => {
           <img
             src={avatar}
             alt="channel avatar"
-            className="user-logo max-w-[40px] rounded-full"
+            className="user-logo max-w-[40px] rounded-full "
           />
         </NavLink>
         <div>

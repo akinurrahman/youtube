@@ -19,7 +19,7 @@ const PlayList = ({ playList }) => {
           className="mr-2 max-w-[155px] rounded-lg sm:w-full sm:max-w-full "
         />
         <div className="absolute bottom-2 right-3 z-10 flex items-center gap-[6px] rounded-sm bg-black bg-opacity-70 px-2 text-white">
-          <RiMenuUnfoldFill  />{" "}
+          <RiMenuUnfoldFill />
           <span className="pb-[2px]">{itemCount}</span>
         </div>
       </div>
