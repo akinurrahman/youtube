@@ -43,22 +43,22 @@ const Channel = () => {
   });
 
   // API call to get channel Long videos
-  // const { data: ChannelVideos } = useFetch("search", {
-  //   part: "snippet",
-  //   type: "video",
-  //   videoDuration: "medium",
-  //   channelId: channelId,
-  //   maxResults: 8,
-  // });
+  const { data: ChannelVideos } = useFetch("search", {
+    part: "snippet",
+    type: "video",
+    videoDuration: "medium",
+    channelId: channelId,
+    maxResults: 8,
+  });
 
   // API call to get channel Short videos
-  // const { data: ChannelShortVideos } = useFetch("search", {
-  //   part: "snippet",
-  //   type: "video",
-  //   videoDuration: "short",
-  //   channelId: channelId,
-  //   maxResults: 8,
-  // });
+  const { data: ChannelShortVideos } = useFetch("search", {
+    part: "snippet",
+    type: "video",
+    videoDuration: "short",
+    channelId: channelId,
+    maxResults: 8,
+  });
 
   // API call to get channel PlayLists
   const { data: playLists } = useFetch("playlists", {
@@ -76,22 +76,22 @@ const Channel = () => {
       {activeTab === "Home" && <Home />}
 
       {/*Long Video Section */}
-      {/* {activeTab === "Videos" && (
+      {activeTab === "Videos" && (
         <div className="mt-3 grid gap-4 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4">
           {ChannelVideos?.items?.map((video, index) => {
             return <Videos video={video} key={index} />;
           })}
         </div>
-      )} */}
+      )}
 
       {/* Short video section */}
-      {/* {activeTab === "Shorts" && (
+      {activeTab === "Shorts" && (
         <div className="mt-3 grid gap-4 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4">
           {ChannelShortVideos?.items?.map((video, index) => {
             return <Videos video={video} key={index} />;
           })}
         </div>
-      )} */}
+      )}
 
       {/* PlayList video section */}
       {activeTab === "PlayList" && (
