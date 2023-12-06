@@ -8,7 +8,7 @@ import { NavLink, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const FirstColumn = () => {
-  const { title, likeCount, subsCount, avatar, channelName,customUrl } = useSelector(
+  const { title, likeCount, subsCount, avatar, channelName,channelId } = useSelector(
     (state) => state.video.videoDetails,
   );
 
@@ -29,7 +29,7 @@ const FirstColumn = () => {
       {/* channel info - like - share etc. */}
       <div className="flex flex-col md:mr-2 md:flex md:flex-row md:justify-between">
         <div className="mt-3 flex items-center space-x-4">
-          <NavLink  to={`/channel/${customUrl}`} className="ml-4">
+          <NavLink  to={`/channel/${channelId}`} className="ml-4">
             <img
               src={avatar}
               alt="channel logo"
@@ -37,7 +37,7 @@ const FirstColumn = () => {
             />
           </NavLink>
           <div>
-            <NavLink  to={`/channel/${customUrl}`} className="font-bold">{channelName}</NavLink>
+            <NavLink  to={`/channel/${channelId}`} className="font-bold">{channelName}</NavLink>
             <p className="text-sm text-gray-800">{subsCount} subscribers</p>
           </div>
           <button className="rounded-full bg-black px-4 py-2 font-bold text-white">

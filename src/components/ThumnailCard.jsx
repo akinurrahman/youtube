@@ -16,7 +16,6 @@ const ThumnailCard = ({ video }) => {
   const channelId = video.snippet.channelId;
   const videoID = video.id;
   const duration = video && formatDuration(video?.contentDetails?.duration);
-  console.log(duration);
   const publishedAt = video.snippet.publishedAt;
   const timeAgo = calculateTimeAgo(publishedAt);
 

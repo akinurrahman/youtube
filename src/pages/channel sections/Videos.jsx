@@ -1,11 +1,11 @@
 import React from "react";
-import { calculateTimeAgo } from "../../../utils/calculateTimeAgo";
-import { formatCount } from "../../../utils/formatCount";
-import useFetch from "../../../utils/useFetch";
+import { calculateTimeAgo } from "../../utils/calculateTimeAgo";
+import { formatCount } from "../../utils/formatCount";
+import useFetch  from "../../utils/useFetch";
 import { NavLink } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { setVideoDetails } from "../../../redux/features/VideoSlice";
-import { formatDuration } from "../../../utils/formatDuration";
+import { useDispatch } from "react-redux";
+import { setVideoDetails } from "../../redux/features/VideoSlice";
+import { formatDuration } from "../../utils/formatDuration";
 
 const Videos = ({ video }) => {
   const snippet = video?.snippet;
@@ -14,7 +14,7 @@ const Videos = ({ video }) => {
   const timeAgo = calculateTimeAgo(snippet?.publishedAt);
   const videoID = video?.id?.videoId;
   const dispatch = useDispatch();
-  const { channelId } = useSelector((state) => state.video.videoDetails);
+  // const { channelId } = useSelector((state) => state.video.videoDetails);
 
   // API call to get views
   const { data: views } = useFetch("videos", {

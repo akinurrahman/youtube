@@ -21,15 +21,15 @@ const RecommenedVideoCard = ({ video }) => {
   const timeAgo = calculateTimeAgo(publishedAt);
 
   // api call to get views
-  const { data : views } = useFetch("videos", {
+  const { data: views } = useFetch("videos", {
     part: "statistics",
     id: videoID,
   });
-  const RawView = views?.items?.[0]?.statistics?.viewCount
-  const viewCount = RawView && formatCount(RawView) ;
+  const RawView = views?.items?.[0]?.statistics?.viewCount;
+  const viewCount = RawView && formatCount(RawView);
 
-  const RowLike = views?.items?.[0]?.statistics?.viewCount
-  const likeCount = RowLike && formatCount(RowLike) ;
+  const RowLike = views?.items?.[0]?.statistics?.viewCount;
+  const likeCount = RowLike && formatCount(RowLike);
 
   // Api call for channel avatar and subscount
   const { data } = useFetch("channels", {
@@ -52,6 +52,7 @@ const RecommenedVideoCard = ({ video }) => {
     channelName,
     subsCount,
     likeCount,
+    channelId,
   };
   const handleClick = () => {
     dispatch(clearVideoDetails());

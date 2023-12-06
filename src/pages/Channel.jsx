@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-
 import useFetch from "../utils/useFetch";
 import ChannelTopSection from "../components/channel/ChannelTopSection";
 import ChannelSidebar from "../components/channel/ChannelSidebar";
-import Home from "../components/channel/channel pages/Home";
-import Videos from "../components/channel/channel pages/Videos";
-import Live from "../components/channel/channel pages/Live";
-import PlayList from "../components/channel/channel pages/PlayList";
-import Search from "../components/channel/channel pages/Search";
-import Community from "../components/channel/channel pages/Community";
 import { useParams } from "react-router-dom";
+import Videos from "./channel sections/Videos";
+import Home from "./channel sections/Home";
+import Live from "./channel sections/Live";
+import PlayList from "./channel sections/PlayList";
+import Search from "./channel sections/Search";
+import Community from "./channel sections/Community";
 
 const Channel = () => {
   const [activeTab, setActiveTab] = useState("Home");
@@ -101,7 +100,6 @@ const Channel = () => {
           })}
         </div>
       )}
-
     </div>
   );
 };
