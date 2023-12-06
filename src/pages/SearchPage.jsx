@@ -5,11 +5,11 @@ import { useParams } from "react-router-dom";
 
 const SearchPage = () => {
   const { query } = useParams();
-  const { data: videos, loading } = useFetch(
+  const { data: videos } = useFetch(
     "search",
     {
       part: "snippet",
-      maxResults: 3,
+      maxResults: 20,
       q: query,
       type: "video",
       videoDuration: "medium",

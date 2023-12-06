@@ -11,7 +11,7 @@ const SecondColumn = () => {
     "search",
     {
       part: "snippet",
-      maxResults: 3,
+      maxResults: 50,
       q: title,
       type: "video",
       videoDuration: "medium",

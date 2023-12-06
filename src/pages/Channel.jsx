@@ -26,7 +26,7 @@ const Channel = () => {
     type: "video",
     videoDuration: "medium",
     channelId: channelId,
-    maxResults: 8,
+    maxResults: 50,
   });
 
   // API call to get channel Short videos
@@ -35,14 +35,14 @@ const Channel = () => {
     type: "video",
     videoDuration: "short",
     channelId: channelId,
-    maxResults: 8,
+    maxResults: 50,
   });
 
   // API call to get channel PlayLists
   const { data: playLists } = useFetch("playlists", {
     part: "snippet,contentDetails",
     channelId: channelId,
-    maxResults: 8,
+    maxResults: 50,
   });
 
   return (
