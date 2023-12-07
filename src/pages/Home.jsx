@@ -59,7 +59,7 @@ const HomePage = () => {
       hasMore={hasMore}
       loader={
         <div className="m-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, index) => (
+          {Array.from({ length: 12 }).map((_, index) => (
             <HomeSkeleton key={index} />
           ))}
         </div>
