@@ -27,7 +27,19 @@ const HomePage = () => {
   useEffect(() => {
     setLoading(fetchLoading);
     if (fetchedVideos && fetchedVideos.items) {
-      setVideos((prevVideos) => [...prevVideos, ...fetchedVideos.items]);
+      setVideos((prevVideos) => {
+        // Extract video IDs from the existing videos
+        const existingVideoIds = new Set(prevVideos.map((video) => video.id));
+
+        // Filter out duplicate videos by checking against existing IDs
+        const newUniqueVideos = fetchedVideos.items.filter(
+          (newVideo) => !existingVideoIds.has(newVideo.id),
+        );
+
+        // Combine previous videos with the new unique videos
+        return [...prevVideos, ...newUniqueVideos];
+      });
+
       setHasMore(!!fetchedVideos?.nextPageToken);
     }
   }, [fetchLoading, fetchedVideos]);
@@ -38,7 +50,7 @@ const HomePage = () => {
       setPageToken(fetchedVideos.nextPageToken);
     }
   };
-  console.log(pageToken);
+
   return (
     // InfiniteScroll component for handling infinite scrolling
     <InfiniteScroll
@@ -47,7 +59,7 @@ const HomePage = () => {
       hasMore={hasMore}
       loader={
         <div className="m-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {Array.from({ length: 20 }).map((_, index) => (
+          {Array.from({ length: 4 }).map((_, index) => (
             <HomeSkeleton key={index} />
           ))}
         </div>
