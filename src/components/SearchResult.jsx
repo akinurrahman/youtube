@@ -1,6 +1,6 @@
 import React from "react";
-import { calculateTimeAgo } from "../utils/calculateTimeAgo";
-import { formatCount } from "../utils/formatCount";
+import { calculateTimeAgo } from "../helpers/calculateTimeAgo";
+import { formatCount } from "../helpers/formatCount";
 import useFetch from "../utils/useFetch";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -8,7 +8,7 @@ import {
   clearVideoDetails,
   setVideoDetails,
 } from "../redux/features/VideoSlice";
-import { formatDuration } from "../utils/formatDuration";
+import { formatDuration } from "../helpers/formatDuration";
 
 const SearchResult = ({ video }) => {
   const dispatch = useDispatch();

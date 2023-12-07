@@ -1,14 +1,14 @@
 import React from "react";
-import { calculateTimeAgo } from "../../utils/calculateTimeAgo";
+import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
 import { NavLink } from "react-router-dom";
-import { formatCount } from "../../utils/formatCount";
+import { formatCount } from "../../helpers/formatCount";
 import useFetch from "../../utils/useFetch";
 import { useDispatch } from "react-redux";
 import {
   clearVideoDetails,
   setVideoDetails,
 } from "../../redux/features/VideoSlice";
-import { formatDuration } from "../../utils/formatDuration";
+import { formatDuration } from "../../helpers/formatDuration";
 
 const PlayListBottom = ({ video, channelID }) => {
   const dispatch = useDispatch();

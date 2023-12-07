@@ -1,7 +1,7 @@
 import React from "react";
 import { FaGreaterThan } from "react-icons/fa";
 
-import { formatCount } from "../../utils/formatCount";
+import { formatCount } from "../../helpers/formatCount";
 const ChannelTopSection = ({ statistics }) => {
   const avatar = statistics?.items[0]?.snippet?.thumbnails?.default?.url;
   const channelName = statistics?.items[0]?.snippet?.title;
