@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { calculateTimeAgo } from "../helpers/calculateTimeAgo";
 import { formatCount } from "../helpers/formatCount";
-import useFetch from "../utils/useFetch";
+import useFetch from "../hooks/useFetch";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
@@ -13,44 +13,75 @@ import { formatDuration } from "../helpers/formatDuration";
 const SearchResult = ({ video }) => {
   const dispatch = useDispatch();
 
-  const thumbnail = video?.snippet?.thumbnails?.medium?.url;
-  const channelName = video?.snippet?.channelTitle;
-  const title = video?.snippet?.title;
-  const videoID = video?.id?.videoId;
-  const channelId = video?.snippet?.channelId;
+  // Destructuring video object
+  const {
+    snippet: {
+      thumbnails: { medium: { url: thumbnail } = {} } = {},
+      channelTitle: channelName,
+      title,
+      publishedAt,
+      channelId,
+    } = {},
+    id: { videoId: videoID } = {},
+  } = video || {};
 
-  const publishedAt = video?.snippet?.publishedAt;
-  const timeAgo = calculateTimeAgo(publishedAt);
+  const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "";
 
-  // api call to get views
-  const { data: views } = useFetch("videos", {
+  // API call to get video details
+  const { data: videoStats } = useFetch("videos", {
     part: "statistics,contentDetails",
     id: videoID,
   });
 
-  // formatting view and like count
-  const duration =
-    views?.items?.[0] &&
-    formatDuration(views?.items?.[0]?.contentDetails?.duration);
-  const viewCount =
-    views?.items?.[0] && formatCount(views?.items?.[0]?.statistics?.viewCount);
-  const likeCount =
-    views?.items?.[0] && formatCount(views?.items?.[0]?.statistics?.likeCount);
+  const [videoData, setVideoData] = useState(null);
+  useEffect(() => {
+    if (videoStats && videoStats.items && videoStats.items.length > 0) {
+      setVideoData(videoStats);
+    }
+  }, [videoStats]);
 
-  // Api call for channel avatar and subscount
-  const { data } = useFetch("channels", {
+  // Destructuring the required values from videoData
+  const {
+    items: [
+      {
+        contentDetails: { duration: rawDuration } = {},
+        statistics: { viewCount: rawViewCount, likeCount: rawLikeCount } = {},
+      } = {},
+    ] = [],
+  } = videoData || {};
+
+  // Formatting values
+  const duration = rawDuration && formatDuration(rawDuration);
+  const viewCount = rawViewCount && formatCount(rawViewCount);
+  const likeCount = rawLikeCount && formatCount(rawLikeCount);
+
+  // API call to get channel info
+  const { data: channelStats } = useFetch("channels", {
     part: "snippet,statistics",
     id: channelId,
   });
 
-  let description = data?.items[0]?.snippet?.localized?.description;
-  let avatar = data?.items[0]?.snippet?.thumbnails?.default?.url;
-  let subsCount;
-  if (data?.items[0]?.statistics?.subscriberCount !== undefined) {
-    subsCount = formatCount(data.items[0].statistics.subscriberCount);
-  } else {
-    subsCount = "N/A";
-  }
+  const [channelData, setChannelData] = useState(null);
+  useEffect(() => {
+    if (channelStats && channelStats.items && channelStats.items.length > 0) {
+      setChannelData(channelStats);
+    }
+  }, [channelStats]);
+
+  // Destructuring the required values from channelData
+  const {
+    items: [
+      {
+        snippet: {
+          localized: { description } = {},
+          thumbnails: { default: { url: avatar } = {} } = {},
+        } = {},
+        statistics: { subscriberCount } = {},
+      } = {},
+    ] = [],
+  } = channelData || {};
+
+  const subsCount = subscriberCount ? formatCount(subscriberCount) : "";
 
   // Dispatching video-related data to the Redux store
   const videoInfo = {

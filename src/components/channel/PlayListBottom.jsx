@@ -2,7 +2,7 @@ import React from "react";
 import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
 import { NavLink } from "react-router-dom";
 import { formatCount } from "../../helpers/formatCount";
-import useFetch from "../../utils/useFetch";
+import useFetch from "../../hooks/useFetch";
 import { useDispatch } from "react-redux";
 import {
   clearVideoDetails,

@@ -1,6 +1,6 @@
 import React from "react";
 import SearchResult from "../components/SearchResult";
-import useFetch from "../utils/useFetch";
+import useFetch from "../hooks/useFetch";
 import { useParams } from "react-router-dom";
 
 const SearchPage = () => {
@@ -9,7 +9,7 @@ const SearchPage = () => {
     "search",
     {
       part: "snippet",
-      maxResults: 20,
+      maxResults: 5,
       q: query,
       type: "video",
       videoDuration: "medium",

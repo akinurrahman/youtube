@@ -2,16 +2,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 const BASE_URL = "https://www.googleapis.com/youtube/v3/";
-const API_KEY = `AIzaSyBq4KaPAVnuz9TityDTLEs_3CwewQUQSEk`;
+const API_KEY = `AIzaSyCVke47M1LNOqWrM4TPgV_zMs8dSP0tHjs`;
 
-const useFetch = (url, params,  dependencies = []) => {
+const useFetch = (url, params, dependencies = []) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    let isMounted = true;
-
     const fetchData = async () => {
       setLoading(true);
       setError(null);
@@ -24,24 +22,16 @@ const useFetch = (url, params,  dependencies = []) => {
           },
         });
 
-        if (isMounted) {
-          setData(responseData);
-          setLoading(false);
-        }
+        setData(responseData);
+        setLoading(false);
       } catch (err) {
-        if (isMounted) {
-          setLoading(false);
-          setError("Something went wrong!");
-          console.error(err);
-        }
+        setLoading(false);
+        setError("Something went wrong!");
+        console.error(err);
       }
     };
 
     fetchData();
-
-    return () => {
-      isMounted = false;
-    };
   }, [...dependencies, url]);
 
   return { data, loading, error };

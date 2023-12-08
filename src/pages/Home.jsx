@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ThumnailCard from "../components/ThumnailCard";
 import HomeSkeleton from "../components/skeletons/HomeSkeleton";
-import useFetch from "../utils/useFetch";
+import useFetch from "../hooks/useFetch";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const HomePage = () => {

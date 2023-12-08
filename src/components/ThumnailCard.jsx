@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import useFetch from "../hooks/useFetch";
+
+// Helper functions
 import { calculateTimeAgo } from "../helpers/calculateTimeAgo";
 import { formatCount } from "../helpers/formatCount";
+import { formatDuration } from "../helpers/formatDuration";
+
+// Redux-related
 import { useDispatch } from "react-redux";
 import { setVideoDetails } from "../redux/features/VideoSlice";
 
-import useFetch from "../utils/useFetch";
-import { formatDuration } from "../helpers/formatDuration";
-
+// Lazy load image and blur effect
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 
@@ -25,7 +29,7 @@ const ThumbnailCard = ({ video }) => {
       channelId,
       publishedAt,
     },
-    id : videoID,
+    id: videoID,
     statistics: { viewCount: rawViewCount, likeCount: rawLikeCount },
     contentDetails: { duration: rawDuration },
   } = video;
@@ -36,24 +40,38 @@ const ThumbnailCard = ({ video }) => {
   const viewCount = rawViewCount ? formatCount(rawViewCount) : "N/A";
   const likeCount = rawLikeCount ? formatCount(rawLikeCount) : "N/A";
 
+  const [channelData, setChannelData] = useState(null);
+
   // Fetching channel data
-  const { data } = useFetch("channels", {
-    part: "snippet,statistics,brandingSettings",
-    id: channelId,
-  });
+  const { data } = useFetch(
+    "channels",
+    {
+      part: "snippet,statistics,brandingSettings",
+      id: channelId,
+    },
+    [channelId],
+  );
+
+  useEffect(() => {
+    if (data && data.items && data.items.length > 0) {
+      setChannelData(data.items[0]);
+    }
+  }, [data, channelId]);
+
+  // Rendering a div for error handling
+  if (!channelData) return <div></div>;
 
   // Extracting channel data
-  const channelData = data && data.items && data.items.length > 0 ? data.items[0] : {};
-
-  const avatar = channelData.snippet?.thumbnails?.default?.url || null;
+  const avatar = channelData?.snippet?.thumbnails?.default?.url || null;
   const subsCount =
-    formatCount(channelData.statistics?.subscriberCount ?? 0) ?? null;
-  const coverImg = channelData.brandingSettings?.image?.bannerExternalUrl || null;
-  const customUrl = channelData.snippet?.customUrl || null;
-  const description = channelData.snippet?.localized?.description || null;
+    formatCount(channelData?.statistics?.subscriberCount ?? 0) ?? null;
+  const coverImg =
+    channelData?.brandingSettings?.image?.bannerExternalUrl || null;
+  const customUrl = channelData?.snippet?.customUrl || null;
+  const description = channelData?.snippet?.localized?.description || null;
   const videoCount =
-    formatCount(channelData.statistics?.videoCount ?? 0) ?? null;
-  
+    formatCount(channelData?.statistics?.videoCount ?? 0) ?? null;
+
   // Dispatching video-related data to the Redux store
   const videoInfo = {
     title,

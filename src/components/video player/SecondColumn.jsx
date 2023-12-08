@@ -1,5 +1,5 @@
 import React from "react";
-import useFetch from "../../utils/useFetch";
+import useFetch from "../../hooks/useFetch";
 import { useSelector } from "react-redux";
 import RecommenedVideoCard from "./RecommenedVideoCard";
 

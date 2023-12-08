@@ -1,7 +1,7 @@
 import React from "react";
 import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
 import { formatCount } from "../../helpers/formatCount";
-import useFetch from "../../utils/useFetch";
+import useFetch from "../../hooks/useFetch";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
@@ -12,14 +12,23 @@ import { formatDuration } from "../../helpers/formatDuration";
 
 const RecommenedVideoCard = ({ video }) => {
   const dispatch = useDispatch();
-  const thumbnail = video?.snippet?.thumbnails?.medium?.url;
-  const channelName = video?.snippet?.channelTitle;
-  const title = video?.snippet?.title;
-  const videoID = video?.id?.videoId;
-  const channelId = video?.snippet?.channelId;
 
-  const publishedAt = video?.snippet?.publishedAt;
-  const timeAgo = calculateTimeAgo(publishedAt);
+  
+  // Destructuring video data
+  const {
+    snippet: {
+      thumbnails: {
+        medium: { url: thumbnail },
+      },
+      channelTitle: channelName,
+      title,
+      publishedAt,
+      channelId,
+    },
+    id: { videoId: videoID },
+  } = video;
+
+  const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "N/A";
 
   // api call to get views
   const { data: views } = useFetch("videos", {
