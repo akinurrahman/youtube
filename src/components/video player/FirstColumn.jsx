@@ -9,10 +9,13 @@ import { CiSaveDown1 } from "react-icons/ci";
 
 import { NavLink, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Comment from "../Comment";
 
 const FirstColumn = () => {
   const { title, likeCount, subsCount, avatar, channelName, channelId } =
     useSelector((state) => state.video.videoDetails);
+
+    
 
   const { videoID } = useParams();
   return (
@@ -88,6 +91,7 @@ const FirstColumn = () => {
           </button>
         </div>
       </div>
+      <Comment />
     </div>
   );
 };
