@@ -12,15 +12,27 @@ const Comment = () => {
   const [showComment, setShowComment] = useState(false);
   const { videoID } = useParams();
 
-  const [comments, setComments] = useState(null);
   const { data: commentsData } = useFetch("commentThreads", {
     part: "snippet",
     videoId: videoID,
   });
 
+  const [comments, setComments] = useState(null);
+  const [topComment, setTopComment] = useState({
+    comment: "",
+    avatar: "",
+  });
+
   useEffect(() => {
     if (commentsData && commentsData.items && commentsData.items.length > 0) {
       setComments(commentsData);
+      setTopComment({
+        comment:
+          commentsData.items[0].snippet.topLevelComment.snippet.textOriginal,
+        avatar:
+          commentsData.items[0].snippet.topLevelComment.snippet
+            .authorProfileImageUrl,
+      });
     }
   }, [commentsData]);
 
@@ -36,13 +48,11 @@ const Comment = () => {
         <p className="font-medium">Comments 2.2k</p>
         <div className="mt-2 flex items-center gap-5">
           <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTitWq1r4a-luuWlmEJxHZZKGdBLDGP1439qQ&usqp=CAU"
+            src={topComment.avatar}
             alt=""
             className="w-[35px] rounded-full"
           />
-          <p className="leading-none">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit
-          </p>
+          <p className="leading-none">{topComment.comment}</p>
         </div>
       </div>
 
@@ -83,6 +93,7 @@ const Comment = () => {
 
         {/* Display comments */}
         {comments?.items?.map((currComment, index) => {
+          // Checks for necessary data; skips this iteration if absent.
           if (
             !currComment ||
             !currComment.snippet ||
@@ -90,21 +101,30 @@ const Comment = () => {
           )
             return null;
 
+          // Destructures currComment's nested data.
           const {
-            textOriginal,
-            authorDisplayName,
-            authorProfileImageUrl: avatar,
-            likeCount,
-            publishedAt,
-            authorChannelId: { value: channelId },
-          } = currComment.snippet.topLevelComment.snippet;
+            snippet: {
+              topLevelComment: {
+                snippet: {
+                  textOriginal,
+                  authorDisplayName,
+                  authorProfileImageUrl: avatar,
+                  likeCount,
+                  publishedAt,
+                  authorChannelId: { value: channelId },
+                },
+              },
+              totalReplyCount,
+            },
+          } = currComment;
 
-          const { totalReplyCount } = currComment.snippet;
+          // Formats like count, total reply count, and calculates time ago
           const formattedLikeCount = likeCount && formatCount(likeCount);
           const formattedTotalReplyCount =
             totalReplyCount && formatCount(totalReplyCount);
           const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "N/A";
 
+          // Returns JSX for each comment
           return (
             <div className="mx-2 my-6 flex gap-3" key={index}>
               <NavLink to={`/channel/${channelId}`} className="h-fit w-[45px]">
