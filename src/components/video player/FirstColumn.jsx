@@ -21,9 +21,10 @@ const FirstColumn = () => {
       {/* Video Player */}
       <iframe
         className="md:[440px] h-[260px] w-full rounded-[31px] p-4 outline-none sm:h-[375px] lg:h-[397px]  xl:h-[500px] 2xl:h-[600px] "
-        src={`https://www.youtube.com/embed/${videoID}`}
+        src={`https://www.youtube.com/embed/${videoID}?autoplay=1`}
         title="YouTube video player"
         allowFullScreen
+        
       ></iframe>
 
       {/* Video Title */}
