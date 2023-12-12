@@ -15,8 +15,6 @@ const FirstColumn = () => {
   const { title, likeCount, subsCount, avatar, channelName, channelId } =
     useSelector((state) => state.video.videoDetails);
 
-    
-
   const { videoID } = useParams();
   return (
     <div>
@@ -91,7 +89,7 @@ const FirstColumn = () => {
           </button>
         </div>
       </div>
-      <Comment />
+      <Comment/>
     </div>
   );
 };
