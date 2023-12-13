@@ -11,8 +11,8 @@ const SearchPage = () => {
       part: "snippet",
       maxResults: 5,
       q: query,
-      type: "video",
-      videoDuration: "medium",
+      // type: "video",
+      // videoDuration: "medium",
     },
     [query],
   );

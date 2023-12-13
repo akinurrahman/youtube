@@ -57,7 +57,7 @@ const Comment = () => {
       fetchMoreData();
     }
   };
-  console.log("pageToken is ", pageToken);
+  // console.log("pageToken is ", pageToken);
 
   return (
     <>
