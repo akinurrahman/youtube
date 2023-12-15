@@ -39,7 +39,8 @@ const SearchResult = ({ video }) => {
   const rawViewCount = videoStats?.items?.[0]?.statistics?.viewCount || "";
 
   // Formatting values
-  const duration = rawDuration && formatDuration(rawDuration);
+  const duration =
+    rawDuration === "P0D" ? "Live" : rawDuration && formatDuration(rawDuration);
   const viewCount = rawViewCount && formatCount(rawViewCount);
 
   // -------------------------Video stats Ends here-------------------------
