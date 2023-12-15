@@ -1,105 +1,75 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { calculateTimeAgo } from "../helpers/calculateTimeAgo";
 import { formatCount } from "../helpers/formatCount";
-import useFetch from "../hooks/useFetch";
+import useApi from "../hooks/useApi";
 import { NavLink } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import {
-  clearVideoDetails,
-  setVideoDetails,
-} from "../redux/features/VideoSlice";
+
 import { formatDuration } from "../helpers/formatDuration";
 
 const SearchResult = ({ video }) => {
-  const dispatch = useDispatch();
+  const { fetchData: fetchVideoStats, data: videoStats } = useApi();
+  const { fetchData: fetchChannelStats, data: channelStats } = useApi();
 
-  // Destructuring video object
-  const {
-    snippet: {
-      thumbnails: { medium: { url: thumbnail } = {} } = {},
-      channelTitle: channelName,
-      title,
-      publishedAt,
-      channelId,
-    } = {},
-    id: { videoId: videoID, channelId: channelID } = {},
-  } = video || {};
+  // todo : try using a dummy cannel cover if not avaible using nullish operator
+  // Destructure video data
+  const thumbnail = video?.snippet?.thumbnails?.medium?.url || "";
+  const channelName = video?.snippet?.channelTitle || "";
+  const title = video?.snippet?.title || "";
+  const channelId = video?.snippet?.channelId || "";
+  const publishedAt = video?.snippet?.publishedAt || "";
+  const timeAgo = publishedAt && calculateTimeAgo(publishedAt);
+  // we will get either videoID or channelID or PlayListID from video.id
+  const isVideo = video?.id?.videoId || "";
+  const isChannel = video?.id?.channelId || "";
 
-  const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "";
-
-  // API call to get video details
-  const { data: videoStats } = useFetch("videos", {
-    part: "statistics,contentDetails",
-    id: videoID,
-  });
-
-  const [videoData, setVideoData] = useState(null);
+  // API call to get videoStats like : duration, viewCount, likeCount
   useEffect(() => {
-    if (videoStats && videoStats.items && videoStats.items.length > 0) {
-      setVideoData(videoStats);
+    if (isVideo) {
+      const url = "videos";
+      const params = {
+        part: "statistics,contentDetails",
+        id: isVideo,
+      };
+      fetchVideoStats(url, params);
     }
-  }, [videoStats]);
+  }, [isVideo]);
 
-  // Destructuring the required values from videoData
-  const {
-    items: [
-      {
-        contentDetails: { duration: rawDuration } = {},
-        statistics: { viewCount: rawViewCount, likeCount: rawLikeCount } = {},
-      } = {},
-    ] = [],
-  } = videoData || {};
+  // Destructure videoStats
+  const rawDuration = videoStats?.items?.[0]?.contentDetails?.duration || "";
+  const rawViewCount = videoStats?.items?.[0]?.statistics?.viewCount || "";
 
   // Formatting values
   const duration = rawDuration && formatDuration(rawDuration);
   const viewCount = rawViewCount && formatCount(rawViewCount);
-  const likeCount = rawLikeCount && formatCount(rawLikeCount);
 
-  // API call to get channel info
-  const { data: channelStats } = useFetch("channels", {
-    part: "snippet,statistics",
-    id: channelId,
-  });
+  // -------------------------Video stats Ends here-------------------------
 
-  const [channelData, setChannelData] = useState(null);
+  // API call to get channelStats : customUrl, description, avatar, subsCount
   useEffect(() => {
-    if (channelStats && channelStats.items && channelStats.items.length > 0) {
-      setChannelData(channelStats);
+    if (channelId) {
+      const url = "channels";
+      const params = {
+        part: "snippet,statistics",
+        id: channelId,
+      };
+      fetchChannelStats(url, params);
     }
-  }, [channelStats]);
+  }, [channelId]);
 
-  // Destructuring the required values from channelData
-  const {
-    items: [
-      {
-        snippet: {
-          customUrl,
-          localized: { description } = {},
-          thumbnails: { default: { url: avatar } = {} } = {},
-        } = {},
-        statistics: { subscriberCount } = {},
-      } = {},
-    ] = [],
-  } = channelData || {};
-
+  // Destructure channelStats
+  const customUrl = channelStats?.items?.[0]?.snippet?.customUrl || "";
+  const description =
+    channelStats?.items?.[0]?.snippet?.localized?.description || "";
+  const avatar =
+    channelStats?.items?.[0]?.snippet?.thumbnails?.default?.url || "";
+  const subscriberCount =
+    channelStats?.items?.[0]?.statistics?.subscriberCount || "";
   const subsCount = subscriberCount ? formatCount(subscriberCount) : "";
+  // ---------------------------Channel Stats Ends Here-------------------------------------
 
-  // Dispatching video-related data to the Redux store
-  const videoInfo = {
-    title,
-    avatar,
-    channelName,
-    subsCount,
-    likeCount,
-    channelId,
-  };
-  dispatch(clearVideoDetails());
-  const handleClick = () => {
-    dispatch(setVideoDetails(videoInfo));
-  };
   return (
     <div>
-      {channelID ? (
+      {isChannel ? (
         <NavLink
           to={`/channel/${channelId}`}
           className="mx-8 my-4  flex gap-2 space-x-10 sm:mx-5 sm:justify-start  lg:mx-[187px]"
@@ -107,20 +77,23 @@ const SearchResult = ({ video }) => {
           <img
             src={thumbnail}
             alt=""
-            className="aspect-square h-[100px] sm:h-[125px] rounded-full"
+            className="aspect-square h-[100px] rounded-full sm:h-[125px]"
           />
           <div className="space-y-1">
             <h2 className="text-lg font-medium">{title}</h2>
             <p className=" text-sm leading-none">{customUrl}</p>
             <p className=" text-sm leading-none ">{subsCount} subscriber</p>
 
-            <button className="rounded-3xl bg-black px-5 py-2 text-white " style={{ marginTop: '8px' }}>
+            <button
+              className="rounded-3xl bg-black px-5 py-2 text-white "
+              style={{ marginTop: "8px" }}
+            >
               Subscribe
             </button>
           </div>
         </NavLink>
       ) : (
-        <NavLink to={`/watch/${videoID}`} onClick={handleClick}>
+        <NavLink to={`/watch/${isVideo}`}>
           <div className="mt-4 gap-4 sm:flex md:mx-5 lg:mx-[187px]">
             {/* col - 1  */}
             <div className=" img-container relative text-white">

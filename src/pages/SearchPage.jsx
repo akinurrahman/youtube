@@ -14,13 +14,14 @@ const SearchPage = () => {
       part: "snippet",
       maxResults: 4,
       q: query,
+      type: "video,channel",
     };
     fetchData(url, params);
   }, [query]);
   return (
     <div className="mt-2">
       {videos?.items?.map((video, index) => {
-        return <SearchResult video={video} key={index} />;
+        return <SearchResult video={video} key={index}  />;
       })}
     </div>
   );

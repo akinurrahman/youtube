@@ -2,7 +2,7 @@ import axios from "axios";
 import {  useState } from "react";
 
 const BASE_URL = "https://www.googleapis.com/youtube/v3/";
-const API_KEY = `AIzaSyAbxOXmGottdOsRlf_ZIcUK-Hoxz4LdDWs`;
+const API_KEY = `AIzaSyDlTrmu7b3wiFRKykr7pNe1xsyqOX5wnpg`;
 
 const useApi = () => {
   const [data, setData] = useState(null);
@@ -25,7 +25,7 @@ const useApi = () => {
       setLoading(false);
     } catch (err) {
       setLoading(false);
-      setError("Something went wrong!");
+      setError(err);
       console.error(err);
     }
   };
