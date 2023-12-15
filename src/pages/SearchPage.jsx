@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import SearchResult from "../components/SearchResult";
-import useFetch from "../hooks/useFetch";
+import Search from "../components/search/Search";
 import { useParams } from "react-router-dom";
 import useApi from "../hooks/useApi";
 
@@ -14,14 +13,13 @@ const SearchPage = () => {
       part: "snippet",
       maxResults: 4,
       q: query,
-      type: "video,channel",
     };
     fetchData(url, params);
   }, [query]);
   return (
     <div className="mt-2">
       {videos?.items?.map((video, index) => {
-        return <SearchResult video={video} key={index}  />;
+        return <Search video={video} key={index} />;
       })}
     </div>
   );
