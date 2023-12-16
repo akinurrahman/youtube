@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
 import { formatCount } from "../../helpers/formatCount";
 import useApi from "../../hooks/useApi";
-import { NavLink } from "react-router-dom";
 
 import { formatDuration } from "../../helpers/formatDuration";
 import Channel from "./Channel";
