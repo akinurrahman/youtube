@@ -32,7 +32,9 @@ const SearchPage = () => {
     if (!loading && videos) {
       // Check for duplicate video IDs before adding them
       const uniqueVideos = videos.items.filter((video) => {
-        return !allVideos.some((existingVideo) => existingVideo.id === video.id);
+        return !allVideos.some(
+          (existingVideo) => existingVideo.id === video.id,
+        );
       });
 
       setAllVideos((prevVideos) => [...prevVideos, ...uniqueVideos]);
@@ -49,8 +51,6 @@ const SearchPage = () => {
 
   return (
     <div className="mt-2">
-      {error && <p>Error fetching data. Please try again.</p>}
-
       <InfiniteScroll
         dataLength={allVideos.length}
         next={loadMore}
