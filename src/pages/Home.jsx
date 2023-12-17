@@ -28,12 +28,17 @@ const HomePage = () => {
 
   useEffect(() => {
     if (!loading && videos) {
-      const uniqueVideo = videos.items.filter((video) => {
-        return !allVideos.some(
-          (existingVideo) => existingVideo.id === video.id,
-        );
-      });
-      setAllVideos((prevVideos) => [...prevVideos, ...uniqueVideo]);
+      const newVideos = videos.items;
+
+      // Extracting video IDs from allVideos into a Set
+      const existingVideoIds = new Set(allVideos.map((video) => video.id));
+
+      // Filtering out videos that are not already present in allVideos
+      const uniqueVideos = newVideos.filter(
+        (video) => !existingVideoIds.has(video.id),
+      );
+
+      setAllVideos((prevVideos) => [...prevVideos, ...uniqueVideos]);
       setPageToken(videos.nextPageToken);
     }
   }, [loading, videos]);

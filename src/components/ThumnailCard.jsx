@@ -1,98 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import useFetch from "../hooks/useFetch";
-
-// Helper functions
 import { calculateTimeAgo } from "../helpers/calculateTimeAgo";
 import { formatCount } from "../helpers/formatCount";
-import { formatDuration } from "../helpers/formatDuration";
-
-// Redux-related
-import { useDispatch } from "react-redux";
-import { setVideoDetails } from "../redux/features/VideoSlice";
+import useApi from "../hooks/useApi";
 
 // Lazy load image and blur effect
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import { formatDuration } from "../helpers/formatDuration";
 
 const ThumbnailCard = ({ video }) => {
-  const dispatch = useDispatch();
-
-  // Destructuring video data
-  const {
-    snippet: {
-      thumbnails: {
-        medium: { url: thumbnail },
-      },
-      channelTitle: channelName,
-      title,
-      channelId,
-      publishedAt,
-    },
-    id: videoID,
-    statistics: { viewCount: rawViewCount, likeCount: rawLikeCount },
-    contentDetails: { duration: rawDuration },
-  } = video;
+  const thumbnail = video?.snippet?.thumbnails?.medium?.url || "";
+  const channelName = video?.snippet?.channelTitle || "N/A";
+  const title = video?.snippet?.title || "N/A";
+  const channelId = video?.snippet?.channelId || "";
+  const publishedAt = video?.snippet?.publishedAt || "N/A";
+  const videoID = video?.id || "";
+  const rawViewCount = video?.statistics?.viewCount || "N/A";
+  const rawDuration = video?.contentDetails?.duration || "N/A";
 
   // Formatting video details
-  const duration = rawDuration ? formatDuration(rawDuration) : "N/A";
-  const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "N/A";
-  const viewCount = rawViewCount ? formatCount(rawViewCount) : "N/A";
-  const likeCount = rawLikeCount ? formatCount(rawLikeCount) : "N/A";
+  const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "";
+  const viewCount = rawViewCount ? formatCount(rawViewCount) : null;
+  const duration = rawDuration ? formatDuration(rawDuration) : "";
 
-  const [channelData, setChannelData] = useState(null);
-
-  // Fetching channel data
-  const { data } = useFetch(
-    "channels",
-    {
-      part: "snippet,statistics,brandingSettings",
-      id: channelId,
-    },
-    [channelId],
-  );
+  // API call
+  const { fetchData: fetchChannelData, data: channelData } = useApi();
 
   useEffect(() => {
-    if (data && data.items && data.items.length > 0) {
-      setChannelData(data.items[0]);
+    if (channelId) {
+      const url = "channels";
+      const params = {
+        part: "snippet",
+        id: channelId,
+      };
+      fetchChannelData(url, params);
     }
-  }, [data, channelId]);
+  }, [channelId]);
+  const avatar = channelData?.items?.[0]?.snippet?.thumbnails?.default?.url || null;
 
-  // Rendering a div for error handling
-  if (!channelData) return <div></div>;
-
-  // Extracting channel data
-  const avatar = channelData?.snippet?.thumbnails?.default?.url || null;
-  const subsCount =
-    formatCount(channelData?.statistics?.subscriberCount ?? 0) ?? null;
-  const coverImg =
-    channelData?.brandingSettings?.image?.bannerExternalUrl || null;
-  const customUrl = channelData?.snippet?.customUrl || null;
-  const description = channelData?.snippet?.localized?.description || null;
-  const videoCount =
-    formatCount(channelData?.statistics?.videoCount ?? 0) ?? null;
-
-  // Dispatching video-related data to the Redux store
-  const videoInfo = {
-    title,
-    avatar,
-    channelName,
-    likeCount,
-    viewCount,
-    subsCount,
-    channelId,
-    coverImg,
-    customUrl,
-    description,
-    videoCount,
-  };
-  const handleClick = () => {
-    dispatch(setVideoDetails(videoInfo));
-  };
 
   return (
     // NavLink to video details page
-    <NavLink to={`/watch/${videoID}`} onClick={handleClick}>
+    <NavLink to={`/watch/${videoID}`}>
       {/* Thumbnail container */}
       <div className="thumbnail-container relative text-white">
         <LazyLoadImage
