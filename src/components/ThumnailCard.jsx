@@ -24,7 +24,7 @@ const ThumbnailCard = ({ video }) => {
   const viewCount = rawViewCount ? formatCount(rawViewCount) : null;
   const duration = rawDuration ? formatDuration(rawDuration) : "";
 
-  // API call
+  // API call to get channel avatar
   const { fetchData: fetchChannelData, data: channelData } = useApi();
 
   useEffect(() => {

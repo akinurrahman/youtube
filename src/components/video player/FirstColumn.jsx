@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 // react icons
 import { BiLike, BiDislike } from "react-icons/bi";
@@ -8,14 +8,48 @@ import { HiOutlineScissors } from "react-icons/hi2";
 import { CiSaveDown1 } from "react-icons/ci";
 
 import { NavLink, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 import Comment from "../Comment";
+import useApi from "../../hooks/useApi";
+import { formatCount } from "../../helpers/formatCount";
 
 const FirstColumn = () => {
-  const { title, likeCount, subsCount, avatar, channelName, channelId } =
-    useSelector((state) => state.video.videoDetails);
-
   const { videoID } = useParams();
+
+  // API call to get videoInfo like - title, likeCount, channelName, channelId
+  const { data: videoInfo, fetchData: fetchVideoInfo } = useApi();
+  useEffect(() => {
+    if (videoID) {
+      const url = "videos";
+      const params = {
+        part: "snippet,contentDetails,statistics",
+        id: videoID,
+      };
+      fetchVideoInfo(url, params);
+    }
+  }, [videoID]);
+  const title = videoInfo?.items?.[0]?.snippet?.title || "N/A";
+  const rawLikeCount = videoInfo?.items?.[0]?.statistics?.likeCount || "N/A";
+  const likeCount = rawLikeCount ? formatCount(rawLikeCount) : "N/A";
+  const channelName = videoInfo?.items?.[0]?.snippet?.channelTitle || "N/A";
+  const channelId = videoInfo?.items?.[0]?.snippet?.channelId || "";
+
+  // API call to get channelInfo like - subsCount, avatar
+  const { data: channelInfo, fetchData: fetchChannelInfo } = useApi();
+  useEffect(() => {
+    if (videoID && channelId) {
+      const url = "channels";
+      const params = {
+        part: "snippet,statistics",
+        id: channelId,
+      };
+      fetchChannelInfo(url, params);
+    }
+  }, [videoID, channelId]);
+  const avatar =
+    channelInfo?.items?.[0]?.snippet?.thumbnails?.default?.url || null;
+  const rawSubs = channelInfo?.items?.[0]?.statistics?.subscriberCount || null;
+  const subsCount = rawSubs ? formatCount(rawSubs) : null;
+
   return (
     <div>
       {/* Video Player */}
@@ -24,7 +58,6 @@ const FirstColumn = () => {
         src={`https://www.youtube.com/embed/${videoID}?autoplay=1`}
         title="YouTube video player"
         allowFullScreen
-        
       ></iframe>
 
       {/* Video Title */}
@@ -90,7 +123,7 @@ const FirstColumn = () => {
           </button>
         </div>
       </div>
-      <Comment/>
+      <Comment />
     </div>
   );
 };
