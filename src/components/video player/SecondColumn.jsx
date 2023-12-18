@@ -1,41 +1,72 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useApi from "../../hooks/useApi";
 import { useSelector } from "react-redux";
 import RecommenedVideoCard from "./RecommenedVideoCard";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const SecondColumn = () => {
-  // api call for recommended videos
   const { title } = useSelector((state) => state.video.videoDetails);
+  const [pageToken, setPageToken] = useState(null);
+  const [allVideos, setAllVideos] = useState([]);
+  const { data: videos, fetchData, loading } = useApi();
 
-  const {
-    data: recommendedVideos,
-    fetchData: fetchRecommendedVideos,
-    loading,
-  } = useApi();
   useEffect(() => {
-    if (title) {
-      const url = "search";
-      const params = {
-        part: "snippet",
-        maxResults: 50,
-        q: title,
-        type: "video",
-        videoDuration: "medium",
-      };
-      fetchRecommendedVideos(url, params);
+    setPageToken(null);
+    setAllVideos([]);
+    fetchDataFromApi();
+  }, []);
+
+  const fetchDataFromApi = () => {
+    const url = "search";
+    const params = {
+      part: "snippet",
+      maxResults: 8,
+      q: title,
+      type: "video",
+      videoDuration: "medium",
+    };
+    fetchData(url, params);
+  };
+
+  useEffect(() => {
+    if (!loading && videos) {
+      const newVideos = videos.items;
+
+      // extracting  videoId's from all videos into a set
+      const existingVideoIds = new Set(allVideos.map((video) => video.id));
+
+      // Filtering out videos that are not already present in all videos
+      const uniqueVideos = newVideos.filter(
+        (video) => !existingVideoIds.has(video.id),
+      );
+      setAllVideos((prevVideos) => [...prevVideos, ...uniqueVideos]);
+      setPageToken(videos.nextPageToken);
     }
-  }, [title]);
+  }, [loading, videos]);
+
+  const loadMore = () => {
+    if (!loading && pageToken) {
+      fetchDataFromApi();
+    }
+  };
 
   return (
-    <div>
-      {loading || !recommendedVideos ? (
-        <h1>loading</h1>
-      ) : (
-        recommendedVideos?.items?.map((video, index) => (
-          <RecommenedVideoCard video={video} key={index} />
-        ))
-      )}
-    </div>
+   <InfiniteScroll
+   dataLength={allVideos.length}
+   next={loadMore}
+   hasMore={!!pageToken}
+   loader={
+    (<div>loading</div>)
+   }
+   endMessage={(<p>No more videos available</p>)}
+   >
+
+{
+  allVideos.map((video,index)=>(
+    <RecommenedVideoCard video={video} key={index}/>
+  ))
+}
+   </InfiniteScroll>
   );
 };
 
