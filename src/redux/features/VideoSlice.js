@@ -26,16 +26,7 @@ const saveState = (state) => {
 const initialState = {
   videoDetails: {
     title: "",
-    avatar: "",
-    channelName: "",
-    likeCount: null,
-    subsCount: null,
-    viewCount: null,
-    channelId: "",
-    coverImg: "",
-    customUrl: "",
-    description: "",
-    videoCount: null,
+    
   },
 };
 

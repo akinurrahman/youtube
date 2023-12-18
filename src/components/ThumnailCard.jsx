@@ -37,8 +37,8 @@ const ThumbnailCard = ({ video }) => {
       fetchChannelData(url, params);
     }
   }, [channelId]);
-  const avatar = channelData?.items?.[0]?.snippet?.thumbnails?.default?.url || null;
-
+  const avatar =
+    channelData?.items?.[0]?.snippet?.thumbnails?.default?.url || null;
 
   return (
     // NavLink to video details page

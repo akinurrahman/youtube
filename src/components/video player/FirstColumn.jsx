@@ -11,9 +11,12 @@ import { NavLink, useParams } from "react-router-dom";
 import Comment from "../Comment";
 import useApi from "../../hooks/useApi";
 import { formatCount } from "../../helpers/formatCount";
+import { useDispatch } from "react-redux";
+import { setVideoDetails } from "../../redux/features/VideoSlice";
 
 const FirstColumn = () => {
   const { videoID } = useParams();
+  const dispatch = useDispatch();
 
   // API call to get videoInfo like - title, likeCount, channelName, channelId
   const { data: videoInfo, fetchData: fetchVideoInfo } = useApi();
@@ -49,6 +52,13 @@ const FirstColumn = () => {
     channelInfo?.items?.[0]?.snippet?.thumbnails?.default?.url || null;
   const rawSubs = channelInfo?.items?.[0]?.statistics?.subscriberCount || null;
   const subsCount = rawSubs ? formatCount(rawSubs) : null;
+
+  // Dispatching title for recommened videos
+  useEffect(() => {
+    if (videoInfo) {
+      dispatch(setVideoDetails({ title }));
+    }
+  }, [videoInfo]);
 
   return (
     <div>
