@@ -1,81 +1,72 @@
+import { NavLink, useParams } from "react-router-dom";
 import React from "react";
 
-const ChannelSidebar = ({ setActiveTab, activeTab }) => {
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
-
+const ChannelSidebar = () => {
+  const { channelId } = useParams();
   return (
     <ul className="flex justify-between sm:w-4/5 md:w-3/5 lg:w-1/2 xl:w-2/5">
-      <li
-        className={`cursor-pointer ${
-          activeTab === "Home"
-            ? "border-b-2 border-black text-black"
-            : "text-gray-800"
-        }`}
-        onClick={() => handleTabClick("Home")}
-      >
-        Home
+      <li>
+        <NavLink
+          to={`/channel/${channelId}`}
+          // activeClassName="border-b-2 border-black text-black"
+          className="cursor-pointer text-gray-800"
+        >
+          Home
+        </NavLink>
       </li>
-      <li
-        className={`cursor-pointer ${
-          activeTab === "Videos"
-            ? "border-b-2 border-black text-black"
-            : "text-gray-800"
-        }`}
-        onClick={() => handleTabClick("Videos")}
-      >
-        Videos
+      <li>
+        <NavLink
+          to={`/channel/${channelId}/videos`}
+          // activeClassName="border-b-2 border-black text-black"
+          className="cursor-pointer text-gray-800"
+        >
+          Videos
+        </NavLink>
       </li>
-      <li
-        className={` cursor-pointer sm:block ${
-          activeTab === "Shorts"
-            ? "border-b-2 border-black text-black"
-            : "text-gray-800"
-        }`}
-        onClick={() => handleTabClick("Shorts")}
-      >
-        Shorts
+      <li>
+        <NavLink
+          to={`/channel/${channelId}/shorts`}
+          // activeClassName="border-b-2 border-black text-black"
+          className="cursor-pointer text-gray-800"
+        >
+          Shorts
+        </NavLink>
       </li>
-      <li
-        className={`hidden cursor-pointer sm:block ${
-          activeTab === "Live"
-            ? "border-b-2 border-black text-black"
-            : "text-gray-800"
-        }`}
-        onClick={() => handleTabClick("Live")}
-      >
-        Live
+      <li>
+        <NavLink
+          to={`/channel/${channelId}/live`}
+          // activeClassName="border-b-2 border-black text-black"
+          className="cursor-pointer text-gray-800"
+        >
+          Live
+        </NavLink>
       </li>
-      <li
-        className={`cursor-pointer ${
-          activeTab === "PlayList"
-            ? "border-b-2 border-black text-black"
-            : "text-gray-800"
-        }`}
-        onClick={() => handleTabClick("PlayList")}
-      >
-        PlayList
+      <li>
+        <NavLink
+          to={`/channel/${channelId}/playlist`}
+          // activeClassName="border-b-2 border-black text-black"
+          className="cursor-pointer text-gray-800"
+        >
+          Playlist
+        </NavLink>
       </li>
-      <li
-        className={`cursor-pointer ${
-          activeTab === "Search"
-            ? "border-b-2 border-black text-black"
-            : "text-gray-800"
-        }`}
-        onClick={() => handleTabClick("Search")}
-      >
-        Search
+      <li>
+        <NavLink
+          to={`/channel/${channelId}/search`}
+          // activeClassName="border-b-2 border-black text-black"
+          className="cursor-pointer text-gray-800"
+        >
+          Search
+        </NavLink>
       </li>
-      <li
-        className={`hidden cursor-pointer sm:block  ${
-          activeTab === "Community"
-            ? "border-b-2 border-black text-black"
-            : "text-gray-800"
-        }`}
-        onClick={() => handleTabClick("Community")}
-      >
-        Community
+      <li>
+        <NavLink
+          to={`/channel/${channelId}/community`}
+          // activeClassName="border-b-2 border-black text-black"
+          className="cursor-pointer text-gray-800"
+        >
+          Community
+        </NavLink>
       </li>
     </ul>
   );

@@ -65,7 +65,7 @@ const Comment = () => {
       <div
         className={`mx-2 mt-4 rounded-xl bg-gray-100 px-2 py-3 ${
           showComment && "hidden"
-        }`}
+        } `}
         onClick={() => setShowComment((prev) => !prev)}
       >
         <p className="font-medium">Comments 2.2k</p>

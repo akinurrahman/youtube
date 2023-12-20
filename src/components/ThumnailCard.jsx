@@ -10,6 +10,8 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 import { formatDuration } from "../helpers/formatDuration";
 
 const ThumbnailCard = ({ video }) => {
+  
+  
   const thumbnail = video?.snippet?.thumbnails?.medium?.url || "";
   const channelName = video?.snippet?.channelTitle || "N/A";
   const title = video?.snippet?.title || "N/A";

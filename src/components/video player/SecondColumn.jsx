@@ -14,7 +14,7 @@ const SecondColumn = () => {
     setPageToken(null);
     setAllVideos([]);
     fetchDataFromApi();
-  }, []);
+  }, [title]);
 
   const fetchDataFromApi = () => {
     const url = "search";
@@ -51,22 +51,17 @@ const SecondColumn = () => {
   };
 
   return (
-   <InfiniteScroll
-   dataLength={allVideos.length}
-   next={loadMore}
-   hasMore={!!pageToken}
-   loader={
-    (<div>loading</div>)
-   }
-   endMessage={(<p>No more videos available</p>)}
-   >
-
-{
-  allVideos.map((video,index)=>(
-    <RecommenedVideoCard video={video} key={index}/>
-  ))
-}
-   </InfiniteScroll>
+    <InfiniteScroll
+      dataLength={allVideos.length}
+      next={loadMore}
+      hasMore={!!pageToken}
+      loader={<div className="mb-40">loading</div>}
+      endMessage={<p className="mb-40">No more videos available</p>}
+    >
+      {allVideos.map((video, index) => (
+        <RecommenedVideoCard video={video} key={index} />
+      ))}
+    </InfiniteScroll>
   );
 };
 
