@@ -1,50 +1,14 @@
-import React, { useEffect } from "react";
-import ChannelLayout from "../ChannelLayout";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import useApi from "../../../hooks/useApi";
-import {
-  fetchStatisticsSuccess,
-  setStatisticsFetched,
-} from "../../../redux/features/ChannelStatisticsSlice";
+import React from 'react'
+import ChannelLayout from '../ChannelLayout'
+import useChannelStatistics from '../../../hooks/useChannelStatistics'
 
 const Search = () => {
-  const dispatch = useDispatch();
-  const { channelId } = useParams();
-  const { statisticsFetched } = useSelector((state) => state.channelStatistics);
+  useChannelStatistics()
+  return (
+    <ChannelLayout>
+      thsi is search
+    </ChannelLayout>
+  )
+}
 
-  const {
-    fetchData: fetchChannelTop,
-    data: statistics,
-    error: statisticsError,
-  } = useApi();
-
-  // Fetch channel statistics on channelId change
-  useEffect(() => {
-    if (!statisticsFetched && channelId) {
-      // Dispatch an action to set the flag
-      dispatch(setStatisticsFetched());
-
-      // Fetch statistics
-      const url = "channels";
-      const params = {
-        part: "snippet,statistics,brandingSettings",
-        id: channelId,
-      };
-      fetchChannelTop(url, params);
-    }
-  }, [channelId, dispatch, statisticsFetched]);
-
-  // Dispatch actions based on fetched statistics or errors
-  useEffect(() => {
-    if (statistics) {
-      dispatch(fetchStatisticsSuccess(statistics));
-    } else if (statisticsError) {
-      dispatch(fetchStatisticsFailure(statisticsError));
-    }
-  }, [statistics, statisticsError, dispatch]);
-
-  return <ChannelLayout>this is search</ChannelLayout>;
-};
-
-export default Search;
+export default Search

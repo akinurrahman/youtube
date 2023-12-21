@@ -3,8 +3,18 @@ import React from "react";
 
 const ChannelSidebar = () => {
   const { channelId } = useParams();
+
+  // Removing scrollbar
+  const scrollContainerStyle = {
+    overflowX: "auto",
+    scrollbarWidth: "none",
+    msOverflowStyle: "none",
+  };
   return (
-    <ul className="flex justify-between sm:w-4/5 md:w-3/5 lg:w-1/2 xl:w-2/5">
+    <ul
+      className="mx-2 flex justify-between space-x-7 overflow-x-auto sm:w-4/5 md:w-3/5 lg:w-1/2 xl:w-2/5"
+      style={scrollContainerStyle}
+    >
       <li>
         <NavLink
           to={`/channel/${channelId}`}

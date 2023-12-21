@@ -1,48 +1,45 @@
 import React, { useEffect } from "react";
 import ChannelLayout from "../ChannelLayout";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import useApi from "../../../hooks/useApi";
-import {
-  fetchStatisticsSuccess,
-  setStatisticsFetched,
-} from "../../../redux/features/ChannelStatisticsSlice";
 
 const Videos = () => {
-  const dispatch = useDispatch();
   const { channelId } = useParams();
-  const { statisticsFetched } = useSelector((state) => state.channelStatistics);
 
   const {
-    fetchData: fetchChannelTop,
-    data: statistics,
-    error: statisticsError,
+    fetchData: fetchChannelVideo,
+    data: channelVideos,
+    error: videoError,
   } = useApi();
 
-  // Fetch channel statistics on channelId change
-  useEffect(() => {
-    if (!statisticsFetched && channelId) {
-      // Dispatch an action to set the flag
-      dispatch(setStatisticsFetched());
 
-      // Fetch statistics
-      const url = "channels";
+ 
+
+  const location = useLocation();
+  const path = location.pathname;
+
+  let videoDuration;
+
+  if (path === `/channel/${channelId}/shorts`) {
+    videoDuration = "short";
+  } else if (path === `/channel/${channelId}/videos`) {
+    videoDuration = "medium";
+  }
+
+  useEffect(() => {
+    if (channelId && videoDuration) {
+      const url = "search";
       const params = {
-        part: "snippet,statistics,brandingSettings",
-        id: channelId,
+        part: "snippet",
+        type: "video",
+        videoDuration: videoDuration,
+        channelId: channelId,
+        maxResults: 5,
       };
-      fetchChannelTop(url, params);
+      fetchChannelVideo(url, params);
     }
-  }, [channelId, dispatch, statisticsFetched]);
-
-  // Dispatch actions based on fetched statistics or errors
-  useEffect(() => {
-    if (statistics) {
-      dispatch(fetchStatisticsSuccess(statistics));
-    } else if (statisticsError) {
-      dispatch(fetchStatisticsFailure(statisticsError));
-    }
-  }, [statistics, statisticsError, dispatch]);
+  }, [videoDuration, channelId]);
+  console.log(channelVideos);
 
   return <ChannelLayout>this is videos</ChannelLayout>;
 };

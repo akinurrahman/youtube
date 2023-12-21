@@ -4,6 +4,7 @@ const initialState = {
   statistics: null,
   error: null,
   statisticsFetched: false,
+  lastChannelId: null, // Track the last channelId
 };
 
 const channelStatisticsSlice = createSlice({
@@ -18,12 +19,20 @@ const channelStatisticsSlice = createSlice({
       state.statistics = null;
       state.error = action.payload;
     },
-    setStatisticsFetched(state) {
-      state.statisticsFetched = true;
+    setStatisticsFetched(state, action) {
+      state.statisticsFetched = action.payload;
+    },
+
+    setLastChannelId(state, action) {
+      state.lastChannelId = action.payload;
     },
   },
 });
 
-export const { fetchStatisticsSuccess, fetchStatisticsFailure, setStatisticsFetched } =
-  channelStatisticsSlice.actions;
+export const {
+  fetchStatisticsSuccess,
+  fetchStatisticsFailure,
+  setStatisticsFetched,
+  setLastChannelId,
+} = channelStatisticsSlice.actions;
 export default channelStatisticsSlice.reducer;

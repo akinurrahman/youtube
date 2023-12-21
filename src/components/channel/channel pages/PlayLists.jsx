@@ -3,46 +3,12 @@ import ChannelLayout from "../ChannelLayout";
 import useApi from "../../../hooks/useApi";
 import { NavLink, useParams } from "react-router-dom";
 import { RiMenuUnfoldFill } from "react-icons/ri";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchStatisticsFailure, fetchStatisticsSuccess, setStatisticsFetched } from "../../../redux/features/ChannelStatisticsSlice";
 
 const PlayLists = () => {
   const { channelId } = useParams();
-  const dispatch = useDispatch();
-
-  // Fetching statistics status from the Redux store
-  const { statisticsFetched } = useSelector((state) => state.channelStatistics);
 
   // Fetching playlists data from an API
   const { fetchData: fetchPlayLists, data: playLists } = useApi();
-
-  // Fetching channel statistics data from an API
-  const { fetchData: fetchChannelTop, data: statistics, error: statisticsError } = useApi();
-
-  // Fetch channel statistics only once when channelId changes and statistics haven't been fetched yet
-  useEffect(() => {
-    if (!statisticsFetched && channelId) {
-      // Dispatch an action to set the flag for statistics fetching
-      dispatch(setStatisticsFetched());
-      
-      // Fetch statistics data from the API
-      const url = "channels";
-      const params = {
-        part: "snippet,statistics,brandingSettings",
-        id: channelId,
-      };
-      fetchChannelTop(url, params);
-    }
-  }, [channelId, dispatch, statisticsFetched]);
-
-  // Dispatch actions based on fetched statistics or errors
-  useEffect(() => {
-    if (statistics) {
-      dispatch(fetchStatisticsSuccess(statistics)); 
-    } else if (statisticsError) {
-      dispatch(fetchStatisticsFailure(statisticsError)); 
-    }
-  }, [statistics, statisticsError, dispatch]);
 
   // Fetch playlists on channelId change
   useEffect(() => {
