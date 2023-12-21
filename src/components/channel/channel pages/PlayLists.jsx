@@ -3,16 +3,31 @@ import ChannelLayout from "../ChannelLayout";
 import useApi from "../../../hooks/useApi";
 import { NavLink, useParams } from "react-router-dom";
 import { RiMenuUnfoldFill } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
+import { setPlayListsFetched } from "../../../redux/features/ChannelPlaylistSlice";
+import { setLastChannelId } from "../../../redux/features/ChannelStatisticsSlice";
+import useChannelStatistics from "../../../hooks/useChannelStatistics";
 
 const PlayLists = () => {
+  useChannelStatistics();
+  const dispatch = useDispatch();
   const { channelId } = useParams();
+  const { playListsFetched, lastChannelId } = useSelector(
+    (state) => state.channelPlaylists,
+  );
 
   // Fetching playlists data from an API
   const { fetchData: fetchPlayLists, data: playLists } = useApi();
 
-  // Fetch playlists on channelId change
   useEffect(() => {
-    if (channelId) {
+    if (lastChannelId !== channelId) {
+      dispatch(setPlayListsFetched(false));
+      dispatch(setLastChannelId(channelId));
+    }
+  }, [channelId, lastChannelId, dispatch]);
+  useEffect(() => {
+    if (channelId && !playListsFetched) {
+      dispatch(setPlayListsFetched(true));
       const url = "playlists";
       const params = {
         part: "snippet,contentDetails",
@@ -73,7 +88,6 @@ const PlayLists = () => {
 
   return (
     <ChannelLayout>
-      {/* Display playlists */}
       <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {renderPlaylists()}
       </div>

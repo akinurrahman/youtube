@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import useChannelStatistics from "../../../hooks/useChannelStatistics";
 import ChannelLayout from "../ChannelLayout";
 
