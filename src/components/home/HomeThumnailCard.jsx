@@ -2,55 +2,37 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
 import { formatCount } from "../../helpers/formatCount";
-
-// Lazy load image and blur effect
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { formatDuration } from "../../helpers/formatDuration";
-import { useChannelsQuery } from "../../api/youtubeService";
 
-const HomeThumnailCard = ({ video }) => {
+const HomeThumnailCard = ({ video, channel }) => {
   const navigate = useNavigate();
-  // Destructuing video info
-  const thumbnail = video?.snippet?.thumbnails?.medium?.url || "";
+
+  const thumbnail = video?.snippet?.thumbnails?.medium?.url ?? "";
   const channelName = video?.snippet?.channelTitle || "N/A";
   const title = video?.snippet?.title || "N/A";
-  const channelId = video?.snippet?.channelId || "";
   const publishedAt = video?.snippet?.publishedAt || "N/A";
+  const channelId = video?.snippet?.channelId || "";
   const videoID = video?.id || "";
-  const rawViewCount = video?.statistics?.viewCount || "N/A";
-  const rawDuration = video?.contentDetails?.duration || "N/A";
+  
+  // Nested destructuring for statistics and contentDetails with defaults
+  const { viewCount: rawViewCount = "N/A" } = video?.statistics ?? {};
+  const { duration: rawDuration = "N/A" } = video?.contentDetails ?? {};
+  
 
   // Formatting video details
   const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "";
   const viewCount = rawViewCount ? formatCount(rawViewCount) : null;
   const duration = rawDuration ? formatDuration(rawDuration) : "";
 
-  // API call to get Channel info -  Avatar
-  const {
-    data: channelData,
-    error,
-    isLoading,
-  } = useChannelsQuery({
-    part: "snippet",
-    id: channelId,
-  });
-
-  const avatar =
-    channelData?.items?.[0]?.snippet?.thumbnails?.default?.url || null;
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  const avatar = channel?.snippet?.thumbnails?.default?.url || null;
 
   const handleNavigate = (destination, e) => {
     e.stopPropagation();
     navigate(destination);
   };
+
   return (
     <div onClick={() => navigate(`/watch/${videoID}`)}>
       {/* Thumbnail container */}
