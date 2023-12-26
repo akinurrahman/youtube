@@ -4,39 +4,48 @@ import useApi from "../../../hooks/useApi";
 import { NavLink, useParams } from "react-router-dom";
 import { RiMenuUnfoldFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
-import { setPlayListsFetched } from "../../../redux/features/ChannelPlaylistSlice";
-import { setLastChannelId } from "../../../redux/features/ChannelStatisticsSlice";
+import {
+  setLastChannelId,
+  setIsPlayListFetched,
+  setPlayLists,
+} from "../../../redux/features/ChannelPlaylistSlice";
 import useChannelStatistics from "../../../hooks/useChannelStatistics";
 
 const PlayLists = () => {
   useChannelStatistics();
   const dispatch = useDispatch();
   const { channelId } = useParams();
-  const { playListsFetched, lastChannelId } = useSelector(
+  const { isPlayListFetched, lastChannelId, playLists } = useSelector(
     (state) => state.channelPlaylists,
   );
 
   // Fetching playlists data from an API
-  const { fetchData: fetchPlayLists, data: playLists } = useApi();
+  const { fetchData: fetchPlaylistFromApi, data: fetchedPlaylists } = useApi();
 
   useEffect(() => {
     if (lastChannelId !== channelId) {
-      dispatch(setPlayListsFetched(false));
+      dispatch(setIsPlayListFetched(false));
       dispatch(setLastChannelId(channelId));
     }
   }, [channelId, lastChannelId, dispatch]);
   useEffect(() => {
-    if (channelId && !playListsFetched) {
-      dispatch(setPlayListsFetched(true));
+    if (channelId && !isPlayListFetched) {
+      dispatch(setIsPlayListFetched(true));
       const url = "playlists";
       const params = {
         part: "snippet,contentDetails",
         channelId: channelId,
-        maxResults: 5,
+        maxResults: 20,
       };
-      fetchPlayLists(url, params);
+      fetchPlaylistFromApi(url, params);
     }
-  }, [channelId]);
+  }, [channelId, isPlayListFetched]);
+
+  useEffect(() => {
+    if (fetchedPlaylists) {
+      dispatch(setPlayLists(fetchedPlaylists));
+    }
+  }, [fetchedPlaylists]);
 
   // Render playlists based on the fetched data
   const renderPlaylists = () => {

@@ -1,15 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  playListsFetched: false,
+  isPlayListFetched: false,
   lastChannelId: null,
+  playLists: null,
 };
 const ChannelPlaylistSlice = createSlice({
   name: "playlists",
   initialState,
   reducers: {
-    setPlayListsFetched(state, action) {
-      state.playListsFetched = action.payload;
+    setPlayLists(state, action) {
+      state.playLists = action.payload;
+    },
+    setIsPlayListFetched(state, action) {
+      state.isPlayListFetched = action.payload;
     },
     setLastChannelId(state, action) {
       state.lastChannelId = action.payload;
@@ -17,4 +21,5 @@ const ChannelPlaylistSlice = createSlice({
   },
 });
 export default ChannelPlaylistSlice.reducer;
-export const { setPlayListsFetched,setLastChannelId } = ChannelPlaylistSlice.actions;
+export const { setIsPlayListFetched, setLastChannelId, setPlayLists } =
+  ChannelPlaylistSlice.actions;

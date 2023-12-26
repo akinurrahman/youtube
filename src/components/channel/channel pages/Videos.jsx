@@ -39,7 +39,6 @@ const Videos = () => {
       fetchChannelVideo(url, params);
     }
   }, [videoDuration, channelId]);
-  console.log(channelVideos);
 
   return <ChannelLayout>this is videos</ChannelLayout>;
 };
