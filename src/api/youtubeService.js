@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const BASE_URL = "https://www.googleapis.com/youtube/v3/";
-const API_KEY = "AIzaSyBq4KaPAVnuz9TityDTLEs_3CwewQUQSEk";
+const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 
 export const youtubeService = createApi({
   reducerPath: "youtubeService",
@@ -54,5 +54,5 @@ export const {
   useSearchQuery,
   useCommentThreadsQuery,
   usePlaylistsQuery,
-  usePlaylistItemsQuery
+  usePlaylistItemsQuery,
 } = youtubeService;
