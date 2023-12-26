@@ -3,7 +3,7 @@ import { formatCount } from "../../helpers/formatCount";
 import { useSelector } from "react-redux";
 
 const ChannelTopSection = () => {
-  const { statistics } = useSelector((state) => state.channelStatistics);
+  // const { statistics } = useSelector((state) => state.channelStatistics);
   const avatar =
     statistics?.items?.[0]?.snippet?.thumbnails?.default?.url || "N/A";
   const channelName = statistics?.items?.[0]?.snippet?.title || "N/A";

@@ -8,11 +8,16 @@ import { TiArrowShuffle } from "react-icons/ti";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 
 import PlayListBottom from "./PlayListBottom";
+import {
+  usePlaylistItemsQuery,
+  usePlaylistsQuery,
+} from "../../api/youtubeService";
 
 const PlayListTop = () => {
   const { playListId } = useParams();
   // API call to get  PlayList videos
-  const { data: playListVideos } = useFetch("playlistItems", {
+
+  const { data: playListVideos } = usePlaylistItemsQuery({
     part: "snippet",
     playlistId: playListId,
     maxResults: 18,
@@ -22,7 +27,8 @@ const PlayListTop = () => {
   const channelName = playListVideos?.items[0]?.snippet?.channelTitle;
 
   // API call to get PlayList info like playlist title, video count and publish at
-  const { data: playListInfo } = useFetch("playlists", {
+
+  const { data: playListInfo } = usePlaylistsQuery({
     part: "snippet,contentDetails",
     id: playListId,
   });
@@ -42,7 +48,7 @@ const PlayListTop = () => {
 
   return (
     <div className="mt-4 lg:flex ">
-      <div className="flex flex-col lg:max-w-[40%] xl:max-w-[30%] bg-gray-700 p-4 text-white sm:flex-row sm:gap-3 lg:flex-col lg:rounded-xl">
+      <div className="flex flex-col bg-gray-700 p-4 text-white sm:flex-row sm:gap-3 lg:max-w-[40%] lg:flex-col lg:rounded-xl xl:max-w-[30%]">
         <img src={cover} alt="" className="rounded-xl" />
 
         <div className=" w-full">

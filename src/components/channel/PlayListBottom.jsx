@@ -9,6 +9,7 @@ import {
   setVideoDetails,
 } from "../../redux/features/VideoSlice";
 import { formatDuration } from "../../helpers/formatDuration";
+import { useChannelsQuery, useVideosQuery } from "../../api/youtubeService";
 
 const PlayListBottom = ({ video, channelID }) => {
   const dispatch = useDispatch();
@@ -18,42 +19,34 @@ const PlayListBottom = ({ video, channelID }) => {
     video?.snippet && calculateTimeAgo(video?.snippet?.publishedAt);
   const videoID = video?.snippet && video?.snippet?.resourceId?.videoId;
 
-  //   Api call to get view count, duration and like
-  const { data: views } = useFetch("videos", {
+  const { data: videoData } = useVideosQuery({
     part: "statistics,contentDetails",
     id: videoID,
   });
 
   // formatting view and like count
   const duration =
-    views?.items[0] && formatDuration(views?.items[0].contentDetails?.duration);
+    videoData?.items[0] &&
+    formatDuration(videoData?.items[0].contentDetails?.duration);
   const viewCount =
-    views?.items[0] && formatCount(views?.items[0].statistics?.viewCount);
+    videoData?.items[0] &&
+    formatCount(videoData?.items[0].statistics?.viewCount);
   const likeCount =
-    views?.items[0] && formatCount(views?.items[0].statistics?.likeCount);
+    videoData?.items[0] &&
+    formatCount(videoData?.items[0].statistics?.likeCount);
 
-  // Api call for channel avatar and subscount
-  const { data } = useFetch("channels", {
+  const { data: channelData } = useChannelsQuery({
     part: "snippet,statistics,brandingSettings",
     id: channelID,
   });
-  let avatar = data?.items[0]?.snippet?.thumbnails?.default?.url;
+  let avatar = channelData?.items[0]?.snippet?.thumbnails?.default?.url;
   let subsCount =
-    data?.items[0] && formatCount(data?.items[0]?.statistics?.subscriberCount);
+    channelData?.items[0] &&
+    formatCount(channelData?.items[0]?.statistics?.subscriberCount);
 
-  const videoInfo = {
-    viewCount,
-    likeCount,
-    title,
-    avatar,
-    subsCount,
-  };
-  dispatch(clearVideoDetails());
-  const handleClick = () => {
-    dispatch(setVideoDetails(videoInfo));
-  };
+
   return (
-    <NavLink to={`/watch/${videoID}`} className=" flex " onClick={handleClick}>
+    <NavLink to={`/watch/${videoID}`} className=" flex " >
       <div className="relative text-white">
         <img
           src={thumbnail}

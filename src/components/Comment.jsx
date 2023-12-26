@@ -1,64 +1,51 @@
 import React, { useEffect, useState } from "react";
+import { useCommentThreadsQuery } from "../api/youtubeService";
+import { NavLink, useParams } from "react-router-dom";
 import { RxCross2 } from "react-icons/rx";
 import { AiOutlineLike, AiOutlineDislike } from "react-icons/ai";
 import { MdInsertComment } from "react-icons/md";
 import { CiMenuKebab } from "react-icons/ci";
-import useFetch from "../hooks/useFetch";
-import { NavLink, useParams } from "react-router-dom";
+
 import { formatCount } from "../helpers/formatCount";
 import { calculateTimeAgo } from "../helpers/calculateTimeAgo";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 const Comment = () => {
-  const [comments, setComments] = useState([]);
-  const [showComment, setShowComment] = useState(false);
-  // const [loading, setLoading] = useState(true);
-  // const [hasMore, setHasMore] = useState(true);
-  const [pageToken, setPageToken] = useState("");
   const { videoID } = useParams();
+  const [showComment, setShowComment] = useState(false);
+  const [firstCommentText, setFirstCommentText] = useState("");
+  const [userAvatarUrl, setUserAvatarUrl] = useState("");
 
-  const { data: fetchedComment, loading: fetchedLoding } = useFetch(
-    "commentThreads",
-    {
-      part: "snippet",
-      videoId: videoID,
-      maxResults: 20,
-      pageToken: pageToken,
-    },
-    [pageToken],
-  );
-  const [topComment, setTopComment] = useState({
-    comment: "",
-    avatar: "",
+  const {
+    data: comments,
+    isLoading,
+    error,
+  } = useCommentThreadsQuery({
+    part: "snippet",
+    videoId: videoID,
+    maxResults: 20,
   });
 
   useEffect(() => {
-    if (fetchedComment && fetchedComment.items) {
-      setComments((prev) => [...prev, ...fetchedComment?.items]);
-      setTopComment({
-        comment:
-          fetchedComment.items[0].snippet.topLevelComment.snippet.textOriginal,
-        avatar:
-          fetchedComment.items[0].snippet.topLevelComment.snippet
-            .authorProfileImageUrl,
-      });
-    }
-  }, [fetchedComment]);
+    if (comments?.items?.length > 0) {
+      const firstComment = comments.items[0];
+      const commentText =
+        firstComment.snippet.topLevelComment.snippet.textOriginal;
+      const avatarUrl =
+        firstComment.snippet.topLevelComment.snippet.authorProfileImageUrl;
 
-  const fetchMoreData = () => {
-    if (fetchedComment && fetchedComment.nextPageToken) {
-      fetchedComment ? setPageToken(fetchedComment.nextPageToken) : 0;
+      setFirstCommentText(commentText);
+      setUserAvatarUrl(avatarUrl);
     }
-  };
+  }, [comments]);
 
-  const handleCommentScroll = (e) => {
-    const { scrollTop, clientHeight, scrollHeight } = e.target;
-    if (scrollHeight - scrollTop === clientHeight) {
-      fetchMoreData();
-    }
-  };
-  // console.log("pageToken is ", pageToken);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
+  if (error) {
+    console.log(error.message);
+    return <div>Error: {error.message}</div>;
+  }
   return (
     <>
       {/* Toggle comment section */}
@@ -70,12 +57,8 @@ const Comment = () => {
       >
         <p className="font-medium">Comments 2.2k</p>
         <div className="mt-2 flex items-center gap-5">
-          <img
-            src={topComment.avatar}
-            alt=""
-            className="w-[35px] rounded-full"
-          />
-          <p className="leading-none">{topComment.comment}</p>
+          <img src={userAvatarUrl} alt="" className="w-[35px] rounded-full" />
+          <p className="leading-none">{firstCommentText}</p>
         </div>
       </div>
 
@@ -84,7 +67,6 @@ const Comment = () => {
         className={`${
           showComment ? "block" : "hidden"
         } my-4 h-[100vh] overflow-y-auto rounded-2xl  shadow-[-3px_-5px_5px_0px_#000000BF]`}
-        onScroll={handleCommentScroll}
       >
         {/* Comment header */}
         <div className="sticky top-0 z-10 flex justify-between border-b-2 bg-white px-4 py-5">
@@ -115,89 +97,79 @@ const Comment = () => {
           />
         </div>
 
-        <InfiniteScroll
-          dataLength={comments.length}
-          next={fetchMoreData}
-          hasMore={!!fetchedComment?.nextPageToken}
-          loader={<h4>Loading...</h4>}
-        >
-          {/* Display comments */}
-          {comments?.map((currComment, index) => {
-            // Checks for necessary data; skips this iteration if absent.
-            if (
-              !currComment ||
-              !currComment.snippet ||
-              !currComment.snippet.topLevelComment ||
-              !currComment.snippet.topLevelComment.snippet
-            )
-              return null;
+        {/* Display comments */}
+        {comments?.items?.map((currComment, index) => {
+          // Checks for necessary data; skips this iteration if absent.
+          if (
+            !currComment ||
+            !currComment.snippet ||
+            !currComment.snippet.topLevelComment ||
+            !currComment.snippet.topLevelComment.snippet
+          )
+            return null;
 
-            // Destructures currComment's nested data.
-            const {
-              snippet: {
-                topLevelComment: {
-                  snippet: {
-                    textOriginal,
-                    authorDisplayName,
-                    authorProfileImageUrl: avatar,
-                    likeCount,
-                    publishedAt,
-                    authorChannelId: { value: channelId },
-                  },
+          // Destructures currComment's nested data.
+          const {
+            snippet: {
+              topLevelComment: {
+                snippet: {
+                  textOriginal,
+                  authorDisplayName,
+                  authorProfileImageUrl: avatar,
+                  likeCount,
+                  publishedAt,
+                  authorChannelId: { value: channelId },
                 },
-                totalReplyCount,
               },
-            } = currComment;
+              totalReplyCount,
+            },
+          } = currComment;
 
-            // Formats like count, total reply count, and calculates time ago
-            const formattedLikeCount = likeCount && formatCount(likeCount);
-            const formattedTotalReplyCount =
-              totalReplyCount && formatCount(totalReplyCount);
-            const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "N/A";
+          // Formats like count, total reply count, and calculates time ago
+          const formattedLikeCount = likeCount && formatCount(likeCount);
+          const formattedTotalReplyCount =
+            totalReplyCount && formatCount(totalReplyCount);
+          const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "N/A";
 
-            // Returns JSX for each comment
-            return (
-              <div
-                className="mx-2 my-6 flex gap-3"
-                key={`${currComment.id}/${index}`}
-              >
-                <NavLink
-                  to={`/channel/${channelId}`}
-                  className="h-fit w-[45px]"
-                >
-                  <img src={avatar} alt="" className="w-full rounded-full" />
-                </NavLink>
+          // Returns JSX for each comment
+          return (
+            <div
+              className="mx-2 my-6 flex gap-3"
+              key={`${currComment.id}/${index}`}
+            >
+              <NavLink to={`/channel/${channelId}`} className="h-fit w-[45px]">
+                <img src={avatar} alt="" className="w-full rounded-full" />
+              </NavLink>
 
-                <div className="w-5/6">
-                  <div className="mr-2 flex justify-between">
-                    <p>{authorDisplayName}</p>
-                    <p>{timeAgo}</p>
-                  </div>
-                  <p>{textOriginal}</p>
+              <div className="w-5/6">
+                <div className="mr-2 flex justify-between">
+                  <p>{authorDisplayName}</p>
+                  <p>{timeAgo}</p>
+                </div>
+                <p>{textOriginal}</p>
 
-                  <div className="flex justify-between">
-                    <p className="flex items-center">
-                      <AiOutlineLike className="mr-1" /> {formattedLikeCount}
-                      <AiOutlineDislike className="mx-3" />
-                      <MdInsertComment className="mr-1" />
-                      {formattedTotalReplyCount}
-                    </p>
-                    <p>
-                      <CiMenuKebab className="mr-2" />
-                    </p>
-                  </div>
-                  <p
-                    className={`my-2 text-center font-medium ${
-                      formattedTotalReplyCount ? "block" : "hidden"
-                    }`}
-                  >
-                    Show more replies
+                <div className="flex justify-between">
+                  <p className="flex items-center">
+                    <AiOutlineLike className="mr-1" /> {formattedLikeCount}
+                    <AiOutlineDislike className="mx-3" />
+                    <MdInsertComment className="mr-1" />
+                    {formattedTotalReplyCount}
+                  </p>
+                  <p>
+                    <CiMenuKebab className="mr-2" />
                   </p>
                 </div>
+                <p
+                  className={`my-2 text-center font-medium ${
+                    formattedTotalReplyCount ? "block" : "hidden"
+                  }`}
+                >
+                  Show more replies
+                </p>
               </div>
-            );
-          })}
-        </InfiniteScroll>
+            </div>
+          );
+        })}
       </div>
     </>
   );

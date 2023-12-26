@@ -1,23 +1,9 @@
-// import { configureStore } from "@reduxjs/toolkit";
-// import videoReducer from "./features/VideoSlice";
-// import channelStatisticsReducer from "./features/ChannelStatisticsSlice";
-// import ChannelPlaylistSlice from './features/ChannelPlaylistSlice';
-
-// const store = configureStore({
-//   reducer: {
-//     video: videoReducer,
-//     channelStatistics: channelStatisticsReducer,
-//     channelPlaylists : ChannelPlaylistSlice
-//     []
-//   },
-// });
-
-// export default store;
-
 import { configureStore } from "@reduxjs/toolkit";
-import  {youtubeService}  from "../api/youtubeService"
+import { youtubeService } from "../api/youtubeService";
+import infoReducer from "./features/infoSlice";
 const store = configureStore({
   reducer: {
+    info: infoReducer,
     [youtubeService.reducerPath]: youtubeService.reducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -25,7 +11,3 @@ const store = configureStore({
 });
 
 export default store;
-
-
-
-

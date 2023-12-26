@@ -7,11 +7,9 @@ import { formatDuration } from "../../helpers/formatDuration";
 import Channel from "./Channel";
 import Video from "./Video";
 import PlayList from "./PlayList";
+import { useChannelsQuery, useVideosQuery } from "../../api/youtubeService";
 
 const Search = ({ video }) => {
-  const { fetchData: fetchVideoStats, data: videoStats } = useApi();
-  const { fetchData: fetchChannelStats, data: channelStats } = useApi();
-
   // todo : try using a dummy cannel cover if not avaible using nullish operator
   // Destructure video data
   const thumbnail = video?.snippet?.thumbnails?.medium?.url || "";
@@ -25,17 +23,10 @@ const Search = ({ video }) => {
   const isChannel = video?.id?.channelId || "";
   const isPlayList = video?.id?.playlistId || "";
 
-  // API call to get videoStats like : duration, viewCount, likeCount
-  useEffect(() => {
-    if (isVideo) {
-      const url = "videos";
-      const params = {
-        part: "statistics,contentDetails",
-        id: isVideo,
-      };
-      fetchVideoStats(url, params);
-    }
-  }, [isVideo]);
+  const { data: videoStats } = useVideosQuery({
+    part: "statistics,contentDetails",
+    id: isVideo,
+  });
 
   // Destructure videoStats
   const rawDuration = videoStats?.items?.[0]?.contentDetails?.duration || "";
@@ -48,17 +39,10 @@ const Search = ({ video }) => {
 
   // -------------------------Video stats Ends here-------------------------
 
-  // API call to get channelStats : customUrl, description, avatar, subsCount
-  useEffect(() => {
-    if (channelId) {
-      const url = "channels";
-      const params = {
-        part: "snippet,statistics",
-        id: channelId,
-      };
-      fetchChannelStats(url, params);
-    }
-  }, [channelId]);
+  const { data: channelStats } = useChannelsQuery({
+    part: "snippet,statistics",
+    id: channelId,
+  });
 
   // Destructure channelStats
   const customUrl = channelStats?.items?.[0]?.snippet?.customUrl || "";

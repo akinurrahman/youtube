@@ -9,45 +9,29 @@ import { CiSaveDown1 } from "react-icons/ci";
 
 import { NavLink, useParams } from "react-router-dom";
 import Comment from "../Comment";
-import useApi from "../../hooks/useApi";
 import { formatCount } from "../../helpers/formatCount";
 import { useDispatch } from "react-redux";
-import { setVideoDetails } from "../../redux/features/VideoSlice";
+import {  useChannelsQuery, useVideosQuery } from "../../api/youtubeService";
+import { setTitle } from "../../redux/features/infoSlice";
 
 const FirstColumn = () => {
   const { videoID } = useParams();
   const dispatch = useDispatch();
 
-  // API call to get videoInfo like - title, likeCount, channelName, channelId
-  const { data: videoInfo, fetchData: fetchVideoInfo } = useApi();
-  useEffect(() => {
-    if (videoID) {
-      const url = "videos";
-      const params = {
-        part: "snippet,contentDetails,statistics",
-        id: videoID,
-      };
-      fetchVideoInfo(url, params);
-    }
-  }, [videoID]);
+  const { data: videoInfo } = useVideosQuery({
+    part: "snippet,contentDetails,statistics",
+    id: videoID,
+  });
   const title = videoInfo?.items?.[0]?.snippet?.title || "N/A";
   const rawLikeCount = videoInfo?.items?.[0]?.statistics?.likeCount || "N/A";
   const likeCount = rawLikeCount ? formatCount(rawLikeCount) : "N/A";
   const channelName = videoInfo?.items?.[0]?.snippet?.channelTitle || "N/A";
   const channelId = videoInfo?.items?.[0]?.snippet?.channelId || "";
 
-  // API call to get channelInfo like - subsCount, avatar
-  const { data: channelInfo, fetchData: fetchChannelInfo } = useApi();
-  useEffect(() => {
-    if (videoID && channelId) {
-      const url = "channels";
-      const params = {
-        part: "snippet,statistics",
-        id: channelId,
-      };
-      fetchChannelInfo(url, params);
-    }
-  }, [videoID, channelId]);
+  const { data: channelInfo } = useChannelsQuery({
+    part: "snippet,statistics",
+    id: channelId,
+  });
   const avatar =
     channelInfo?.items?.[0]?.snippet?.thumbnails?.default?.url || null;
   const rawSubs = channelInfo?.items?.[0]?.statistics?.subscriberCount || null;
@@ -56,7 +40,7 @@ const FirstColumn = () => {
   // Dispatching title for recommened videos
   useEffect(() => {
     if (videoInfo) {
-      dispatch(setVideoDetails({ title }));
+      dispatch(setTitle(title));
     }
   }, [videoInfo]);
 

@@ -2,13 +2,12 @@ import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { calculateTimeAgo } from "../helpers/calculateTimeAgo";
 import { formatCount } from "../helpers/formatCount";
-import useApi from "../hooks/useApi";
 
 // Lazy load image and blur effect
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { formatDuration } from "../helpers/formatDuration";
-import { useChannelInfoQuery } from "../api/youtubeService";
+import { useChannelsQuery } from "../api/youtubeService";
 
 const ThumbnailCard = ({ video }) => {
   const thumbnail = video?.snippet?.thumbnails?.medium?.url || "";
@@ -30,7 +29,7 @@ const ThumbnailCard = ({ video }) => {
     data: channelData,
     error,
     isLoading,
-  } = useChannelInfoQuery({
+  } = useChannelsQuery({
     part: "snippet",
     id: channelId,
   });

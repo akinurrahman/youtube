@@ -4,7 +4,7 @@ import { formatCount } from "../../helpers/formatCount";
 import { NavLink } from "react-router-dom";
 
 import { formatDuration } from "../../helpers/formatDuration";
-import useApi from "../../hooks/useApi";
+import { useVideosQuery } from "../../api/youtubeService";
 
 const RecommenedVideoCard = ({ video }) => {
   // Destructuring video data
@@ -16,18 +16,10 @@ const RecommenedVideoCard = ({ video }) => {
 
   const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "N/A";
 
-  const { fetchData: fetchVideoInfo, data: videoInfo } = useApi();
-  // API call to get videoInfo like - duration, view count
-  useEffect(() => {
-    if (videoID) {
-      const url = "videos";
-      const params = {
-        part: "statistics,contentDetails",
-        id: videoID,
-      };
-      fetchVideoInfo(url, params);
-    }
-  }, [videoID]);
+  const { data: videoInfo } = useVideosQuery({
+    part: "statistics,contentDetails",
+    id: videoID,
+  });
 
   const rawDuration = videoInfo?.items?.[0]?.contentDetails?.duration || "N/A";
   const rawView = videoInfo?.items?.[0]?.statistics?.viewCount || "N/A";

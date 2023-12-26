@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { RiMenuUnfoldFill } from "react-icons/ri";
-import useApi from "../../hooks/useApi";
+import { usePlaylistsQuery } from "../../api/youtubeService";
 
 const PlayList = ({
   isPlayList,
@@ -11,18 +11,10 @@ const PlayList = ({
   title,
   channelName,
 }) => {
-  const { fetchData: fetchPlayListStats, data: playlistStats } = useApi();
-
-  useEffect(() => {
-    if (isPlayList) {
-      const url = "playlists";
-      const params = {
-        part: "snippet,contentDetails",
-        id: isPlayList,
-      };
-      fetchPlayListStats(url, params);
-    }
-  }, [isPlayList]);
+  const { data: playlistStats } = usePlaylistsQuery({
+    part: "snippet,contentDetails",
+    id: isPlayList,
+  });
 
   const playlistCount =
     playlistStats?.items?.[0]?.contentDetails?.itemCount || "N/A";
