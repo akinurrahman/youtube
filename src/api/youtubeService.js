@@ -13,7 +13,21 @@ export const youtubeService = createApi({
         params: { part, chart, maxResults, regionCode, key: API_KEY },
       }),
     }),
+    channelInfo: builder.query({
+      query: ({ part, id }) => ({
+        url: "/channels",
+        params: { part, id, key: API_KEY },
+      }),
+    }),
+
+    search: builder.query({
+      query: ({ part, maxResults, q, type, videoDuration }) => ({
+        url: "/search",
+        params: { part, maxResults, q, type, videoDuration, key: API_KEY },
+      }),
+    }),
   }),
 });
 
-export const { useHomeVideosQuery } = youtubeService;
+export const { useHomeVideosQuery, useChannelInfoQuery, useSearchQuery } =
+  youtubeService;

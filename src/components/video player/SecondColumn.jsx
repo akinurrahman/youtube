@@ -27,6 +27,7 @@ const SecondColumn = () => {
     };
     fetchData(url, params);
   };
+  
 
   useEffect(() => {
     if (!loading && videos) {

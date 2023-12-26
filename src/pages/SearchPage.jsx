@@ -1,67 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useSearchQuery } from "../api/youtubeService";
 import Search from "../components/search/Search";
 import { useParams } from "react-router-dom";
-import useApi from "../hooks/useApi";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 const SearchPage = () => {
   const { query } = useParams();
-  const { data: videos, fetchData, loading, error } = useApi();
-  const [pageToken, setPageToken] = useState(null);
-  const [allVideos, setAllVideos] = useState([]);
+  const {
+    data: searchResults,
+    isLoading,
+    error,
+  } = useSearchQuery({
+    part: "snippet",
+    maxResults: 20,
+    q: query,
+  });
 
-  useEffect(() => {
-    setAllVideos([]);
-    setPageToken(null);
-    fetchDataFromApi();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query]);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  const fetchDataFromApi = () => {
-    const url = "search";
-    const params = {
-      part: "snippet",
-      maxResults: 10,
-      q: query,
-      pageToken: pageToken,
-    };
-    fetchData(url, params);
-  };
-
-  useEffect(() => {
-    if (!loading && videos) {
-      // Check for duplicate video IDs before adding them
-      const uniqueVideos = videos.items.filter((video) => {
-        return !allVideos.some(
-          (existingVideo) => existingVideo.id === video.id,
-        );
-      });
-
-      setAllVideos((prevVideos) => [...prevVideos, ...uniqueVideos]);
-      setPageToken(videos.nextPageToken);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, videos]);
-
-  const loadMore = () => {
-    if (!loading && pageToken) {
-      fetchDataFromApi();
-    }
-  };
-
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
   return (
-    <div className="mt-2">
-      <InfiniteScroll
-        dataLength={allVideos.length}
-        next={loadMore}
-        hasMore={!!pageToken}
-        loader={<p>Loading more...</p>}
-        endMessage={<p>No more videos</p>}
-      >
-        {allVideos.map((video, index) => (
-          <Search video={video} key={index} />
-        ))}
-      </InfiniteScroll>
+    <div>
+      {searchResults?.items?.map((video, index) => (
+        <Search video={video} key={index} />
+      ))}
     </div>
   );
 };

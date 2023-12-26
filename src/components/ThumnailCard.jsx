@@ -8,10 +8,9 @@ import useApi from "../hooks/useApi";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { formatDuration } from "../helpers/formatDuration";
+import { useChannelInfoQuery } from "../api/youtubeService";
 
 const ThumbnailCard = ({ video }) => {
-  
-  
   const thumbnail = video?.snippet?.thumbnails?.medium?.url || "";
   const channelName = video?.snippet?.channelTitle || "N/A";
   const title = video?.snippet?.title || "N/A";
@@ -26,21 +25,26 @@ const ThumbnailCard = ({ video }) => {
   const viewCount = rawViewCount ? formatCount(rawViewCount) : null;
   const duration = rawDuration ? formatDuration(rawDuration) : "";
 
-  // API call to get channel avatar
-  const { fetchData: fetchChannelData, data: channelData } = useApi();
 
-  useEffect(() => {
-    if (channelId) {
-      const url = "channels";
-      const params = {
-        part: "snippet",
-        id: channelId,
-      };
-      fetchChannelData(url, params);
-    }
-  }, [channelId]);
+  const {
+    data: channelData,
+    error,
+    isLoading,
+  } = useChannelInfoQuery({
+    part: "snippet",
+    id: channelId,
+  });
+  
   const avatar =
     channelData?.items?.[0]?.snippet?.thumbnails?.default?.url || null;
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     // NavLink to video details page

@@ -10,7 +10,7 @@ const VideoPlayer = () => {
         <FirstColumn />
       </div>
       <div className="column-2 h-screen lg:w-[30%] ">
-        <SecondColumn />
+        {/* <SecondColumn /> */}
       
       </div>
     </div>
