@@ -1,15 +1,17 @@
-import React, { useEffect } from "react";
-import { NavLink } from "react-router-dom";
-import { calculateTimeAgo } from "../helpers/calculateTimeAgo";
-import { formatCount } from "../helpers/formatCount";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
+import { formatCount } from "../../helpers/formatCount";
 
 // Lazy load image and blur effect
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-import { formatDuration } from "../helpers/formatDuration";
-import { useChannelsQuery } from "../api/youtubeService";
+import { formatDuration } from "../../helpers/formatDuration";
+import { useChannelsQuery } from "../../api/youtubeService";
 
-const ThumbnailCard = ({ video }) => {
+const HomeThumnailCard = ({ video }) => {
+  const navigate = useNavigate();
+  // Destructuing video info
   const thumbnail = video?.snippet?.thumbnails?.medium?.url || "";
   const channelName = video?.snippet?.channelTitle || "N/A";
   const title = video?.snippet?.title || "N/A";
@@ -24,7 +26,7 @@ const ThumbnailCard = ({ video }) => {
   const viewCount = rawViewCount ? formatCount(rawViewCount) : null;
   const duration = rawDuration ? formatDuration(rawDuration) : "";
 
-
+  // API call to get Channel info -  Avatar
   const {
     data: channelData,
     error,
@@ -33,7 +35,7 @@ const ThumbnailCard = ({ video }) => {
     part: "snippet",
     id: channelId,
   });
-  
+
   const avatar =
     channelData?.items?.[0]?.snippet?.thumbnails?.default?.url || null;
 
@@ -45,9 +47,12 @@ const ThumbnailCard = ({ video }) => {
     return <div>Error: {error.message}</div>;
   }
 
+  const handleNavigate = (destination, e) => {
+    e.stopPropagation();
+    navigate(destination);
+  };
   return (
-    // NavLink to video details page
-    <NavLink to={`/watch/${videoID}`}>
+    <div onClick={() => navigate(`/watch/${videoID}`)}>
       {/* Thumbnail container */}
       <div className="thumbnail-container relative text-white">
         <LazyLoadImage
@@ -64,27 +69,28 @@ const ThumbnailCard = ({ video }) => {
 
       {/* Video statistics */}
       <div className="info my-2 flex space-x-4 px-1">
-        {/* NavLink to channel */}
-        <NavLink to={`/channel/${channelId}`} className="logo-container">
+        <div
+          className="logo-container"
+          onClick={(e) => handleNavigate(`/channel/${channelId}`, e)}
+        >
           <LazyLoadImage src={avatar} className="max-w-[40px] rounded-full" />
-        </NavLink>
+        </div>
         <div>
           <h2 className="line-clamp-2 font-bold text-gray-900">{title}</h2>
-          {/* NavLink to channel */}
-          <NavLink
-            to={`/channel/${channelId}`}
+          <p
             className="line-clamp-1 text-gray-700"
+            onClick={(e) => handleNavigate(`/channel/${channelId}`, e)}
           >
             {channelName}
-          </NavLink>
+          </p>
           {/* Displaying view count and time ago */}
           <p className="text-gray-700">
             {viewCount} • {timeAgo}
           </p>
         </div>
       </div>
-    </NavLink>
+    </div>
   );
 };
 
-export default ThumbnailCard;
+export default HomeThumnailCard;

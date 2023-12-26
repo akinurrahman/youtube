@@ -1,11 +1,10 @@
 import ChannelSidebar from "./ChannelSidebar";
-import ChannelTopSection from "./ChannelTopSection";
-
+import ChannelTop from "./ChannelTop";
 
 const ChannelLayout = ({ children }) => {
   return (
     <div>
-      <ChannelTopSection />
+      <ChannelTop />
       <ChannelSidebar />
       <div>{children}</div>
     </div>

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useCommentThreadsQuery } from "../api/youtubeService";
+import { useCommentThreadsQuery } from "../../api/youtubeService";
 import { NavLink, useParams } from "react-router-dom";
 import { RxCross2 } from "react-icons/rx";
 import { AiOutlineLike, AiOutlineDislike } from "react-icons/ai";
 import { MdInsertComment } from "react-icons/md";
 import { CiMenuKebab } from "react-icons/ci";
 
-import { formatCount } from "../helpers/formatCount";
-import { calculateTimeAgo } from "../helpers/calculateTimeAgo";
+import { formatCount } from "../../helpers/formatCount";
+import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
 
 const Comment = () => {
   const { videoID } = useParams();

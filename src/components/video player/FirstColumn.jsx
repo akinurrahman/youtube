@@ -8,10 +8,10 @@ import { HiOutlineScissors } from "react-icons/hi2";
 import { CiSaveDown1 } from "react-icons/ci";
 
 import { NavLink, useParams } from "react-router-dom";
-import Comment from "../Comment";
+import Comment from "./Comment";
 import { formatCount } from "../../helpers/formatCount";
 import { useDispatch } from "react-redux";
-import {  useChannelsQuery, useVideosQuery } from "../../api/youtubeService";
+import { useChannelsQuery, useVideosQuery } from "../../api/youtubeService";
 import { setTitle } from "../../redux/features/infoSlice";
 
 const FirstColumn = () => {

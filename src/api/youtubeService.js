@@ -21,9 +21,17 @@ export const youtubeService = createApi({
     }),
 
     search: builder.query({
-      query: ({ part, maxResults, q, type, videoDuration }) => ({
+      query: ({ part, maxResults, q, type, videoDuration, channelId }) => ({
         url: "/search",
-        params: { part, maxResults, q, type, videoDuration, key: API_KEY },
+        params: {
+          part,
+          maxResults,
+          q,
+          type,
+          videoDuration,
+          channelId,
+          key: API_KEY,
+        },
       }),
     }),
     commentThreads: builder.query({

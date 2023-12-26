@@ -1,9 +1,18 @@
 import React from "react";
 import { formatCount } from "../../helpers/formatCount";
-import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { useChannelsQuery } from "../../api/youtubeService";
 
-const ChannelTopSection = () => {
-  // const { statistics } = useSelector((state) => state.channelStatistics);
+const ChannelTop = () => {
+  const { channelId } = useParams();
+
+  // Fetch channel statistics using RTK Query
+  const { data: statistics } = useChannelsQuery({
+    part: "snippet,statistics,brandingSettings",
+    id: channelId,
+  });
+
+  // Extract necessary information from the fetched data
   const avatar =
     statistics?.items?.[0]?.snippet?.thumbnails?.default?.url || "N/A";
   const channelName = statistics?.items?.[0]?.snippet?.title || "N/A";
@@ -20,6 +29,7 @@ const ChannelTopSection = () => {
 
   return (
     <div className="space-y-3">
+      {/* Display Channel Cover */}
       <div>
         <img
           src={coverImg}
@@ -28,8 +38,10 @@ const ChannelTopSection = () => {
         />
       </div>
 
-      <div className=" flex items-center">
+      {/* Channel Information */}
+      <div className="flex items-center">
         <div>
+          {/* Display Channel Avatar */}
           <img
             src={avatar}
             alt=""
@@ -37,24 +49,29 @@ const ChannelTopSection = () => {
           />
         </div>
         <div className="">
+          {/* Display Channel Name, Subscribers, Custom URL, and Video Count */}
           <h2 className="text-[24px] font-bold">{channelName}</h2>
           <p className="text-xs text-gray-700 sm:text-sm">{`${customUrl} • ${subsCount} Subscribers • ${videoCount} Videos`}</p>
-          <div className="  mr-[16.5rem] hidden items-center sm:flex">
+          {/* Display Channel Description */}
+          <div className="mr-[16.5rem] hidden items-center sm:flex">
             <p className="mt-2 line-clamp-2 text-sm text-gray-700">
               {description}
             </p>
           </div>
-          <button className="mt-3  hidden w-[33%] rounded-3xl bg-black py-2 text-white sm:block">
+          {/* Subscribe Button (Visible on larger screens) */}
+          <button className="mt-3 hidden w-[33%] rounded-3xl bg-black py-2 text-white sm:block">
             Subscribe
           </button>
         </div>
       </div>
 
-      <div className=" flex items-center sm:hidden">
+      {/* Channel Description (Visible on smaller screens) */}
+      <div className="flex items-center sm:hidden">
         <p className="line-clamp-2 text-sm text-gray-700">{description}</p>
       </div>
 
-      <div className=" sm:hidden">
+      {/* Subscribe Button (Visible on smaller screens) */}
+      <div className="sm:hidden">
         <button className="w-full rounded-3xl bg-black py-2 text-white">
           Subscribe
         </button>
@@ -63,4 +80,4 @@ const ChannelTopSection = () => {
   );
 };
 
-export default ChannelTopSection;
+export default ChannelTop;
