@@ -119,11 +119,25 @@ const Videos = () => {
     });
   };
 
+
+  const noLiveAvailable = () => {
+    return (
+      <div className=" relative flex w-screen flex-col items-center justify-center">
+        <img src="/assets/video not found.webp" alt="" className="w-[20rem] " />
+        <h2 className="absolute bottom-9 font-semibold sm:text-lg lg:text-2xl">
+          This channel has no videos
+        </h2>
+      </div>
+    );
+  };
+
   // Render videos in a grid layout within ChannelLayout
   return (
     <ChannelLayout>
       <div className="m-4 grid gap-4 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        {renderChannelVideos()}
+      {channelVideos?.items?.length > 0
+          ? renderChannelVideos()
+          : noLiveAvailable()}
       </div>
     </ChannelLayout>
   );
