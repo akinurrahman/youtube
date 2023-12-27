@@ -8,7 +8,7 @@ import { formatDuration } from "../../helpers/formatDuration";
 
 const HomeThumnailCard = ({ video, channel }) => {
   const navigate = useNavigate();
-
+// console.log(channel)
   const thumbnail = video?.snippet?.thumbnails?.medium?.url ?? "";
   const channelName = video?.snippet?.channelTitle || "N/A";
   const title = video?.snippet?.title || "N/A";

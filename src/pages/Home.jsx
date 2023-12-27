@@ -26,10 +26,9 @@ const Home = () => {
     isLoading: channelsLoading,
     error: channelsError,
   } = useChannelsQuery({
-    part: "snippet",
+    part: "snippet", 
     id: channelIds.join(","), // Pass comma-separated channel IDs
   });
-
   // Show loading state while fetching data
   if (videosLoading || channelsLoading) {
     return <div>Loading...</div>;

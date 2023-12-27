@@ -8,13 +8,12 @@ import { calculateTimeAgo } from "../../../helpers/calculateTimeAgo";
 
 const Videos = () => {
   const { channelId } = useParams();
-
-  // Accessing current location to determine video duration type
   const location = useLocation();
   const path = location.pathname;
 
   let videoDuration;
 
+  // Determine video duration based on URL path
   if (path === `/channel/${channelId}/shorts`) {
     videoDuration = "short";
   } else if (path === `/channel/${channelId}/videos`) {
@@ -41,30 +40,26 @@ const Videos = () => {
     error: isErrorVideoInfo,
   } = useVideosQuery({
     part: "statistics,contentDetails",
-    // Concatenate video IDs to fetch details for multiple videos
     id: channelVideos?.items?.map((video) => video.id.videoId).join(",") || "",
   });
 
-  // Display a loading message while data is being fetched
+  // Loading state while fetching data
   if (isLoadingVideos || isLoadingVideoInfo) {
     return <div>Loading...</div>;
   }
 
-  // Error handling: Check for errors in video information or videos
+  // Error handling for video information or videos
   if (isErrorVideoInfo || isErrorVideos) {
-    // Retrieve and set the error status
     const status =
       (isErrorVideos && isErrorVideos.status) ||
       (isErrorVideoInfo && isErrorVideoInfo.status) ||
       "Unknown";
 
-    // Retrieve and set the error message
     const message =
       (isErrorVideos && isErrorVideos?.data?.error?.message) ||
       (isErrorVideoInfo && isErrorVideoInfo?.data?.error?.message) ||
       "Unknown error occurred";
 
-    // Render the error status and message
     return (
       <div>
         <p>Error: {status}</p>
@@ -75,21 +70,22 @@ const Videos = () => {
 
   // Function to render individual channel videos
   const renderChannelVideos = () => {
-    if (!channelVideos || !videoInfo) {
-      return null;
-    }
-
     return channelVideos?.items?.map((video, index) => {
+      // Find additional video information
+      const additionVideoInfo = videoInfo?.items?.find(
+        (elem) => elem.id === video.id.videoId,
+      );
+
+      // Extract necessary video details
       const thumbnail = video?.snippet?.thumbnails?.medium?.url || "";
       const publishedAt = video?.snippet?.publishedAt || "";
       const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "";
       const title = video?.snippet?.title || "";
       const videoID = video?.id?.videoId || "";
 
-      // Retrieve duration and view count for each video
-      const rawDuration =
-        videoInfo?.items?.[index]?.contentDetails?.duration || "";
-      const rawView = videoInfo?.items?.[index]?.statistics?.viewCount || "";
+      // Extract duration and view count for each video
+      const rawDuration = additionVideoInfo?.contentDetails?.duration || "";
+      const rawView = additionVideoInfo?.statistics?.viewCount || "";
       const duration = rawDuration ? formatDuration(rawDuration) : "";
       const viewCount = rawView ? formatCount(rawView) : "";
 
@@ -99,6 +95,7 @@ const Videos = () => {
           className="flex sm:flex-col"
           key={index + videoID}
         >
+          {/* Display video thumbnail, duration, title, views, and time */}
           <div className="relative text-white">
             <img
               src={thumbnail}
@@ -122,6 +119,7 @@ const Videos = () => {
     });
   };
 
+  // Render videos in a grid layout within ChannelLayout
   return (
     <ChannelLayout>
       <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
