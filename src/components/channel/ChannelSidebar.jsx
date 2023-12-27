@@ -5,11 +5,6 @@ const ChannelSidebar = () => {
   const { channelId } = useParams();
   const location = useLocation();
 
-  // Helper function to determine if a NavLink should be active
-  const isActive = (path) => {
-    return location.pathname === `/channel/${channelId}${path}`;
-  };
-
   // Data for NavLinks: label and path
   const navLinks = [
     { label: "Home", path: "" },
@@ -21,6 +16,11 @@ const ChannelSidebar = () => {
     { label: "Community", path: "/community" },
   ];
 
+  // Helper function to determine if a NavLink should be active
+  const isActive = (path) => {
+    return location.pathname === `/channel/${channelId}${path}`;
+  };
+
   // Apply active style conditionally
   const getNavLinkStyle = (path) => {
     return isActive(path)
@@ -28,8 +28,20 @@ const ChannelSidebar = () => {
       : {};
   };
 
+  const scrollbarStyles = {
+    /* For WebKit browsers like Chrome and Safari */
+    WebkitScrollbar: {
+      width: "0",
+    },
+    /* For Firefox */
+    scrollbarWidth: "none",
+  };
+
   return (
-    <ul className="mx-2 flex justify-between space-x-7 overflow-x-auto sm:w-4/5 md:w-3/5 lg:w-1/2 xl:w-2/5">
+    <ul
+      className=" mx-5 my-3  flex justify-between space-x-7 overflow-x-auto sm:w-4/5 md:w-3/5 lg:w-1/2 xl:w-2/5"
+      style={scrollbarStyles}
+    >
       {navLinks.map((link, index) => (
         <li key={index}>
           <NavLink
