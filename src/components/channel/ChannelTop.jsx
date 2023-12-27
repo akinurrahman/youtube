@@ -28,7 +28,7 @@ const ChannelTop = () => {
   const videoCount = rawVideoCount && formatCount(rawVideoCount);
 
   return (
-    <div className="space-y-3 mx-5">
+    <div className="space-y-3 mx-5 my-3">
       {/* Display Channel Cover */}
       <div>
         <img

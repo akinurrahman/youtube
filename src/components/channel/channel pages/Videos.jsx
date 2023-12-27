@@ -30,7 +30,7 @@ const Videos = () => {
     type: "video",
     videoDuration,
     channelId,
-    maxResults: 5,
+    maxResults: 30,
   });
 
   // Fetch detailed video information for each video
@@ -122,7 +122,7 @@ const Videos = () => {
   // Render videos in a grid layout within ChannelLayout
   return (
     <ChannelLayout>
-      <div className=" grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-5">
+      <div className="m-4 grid gap-4 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {renderChannelVideos()}
       </div>
     </ChannelLayout>

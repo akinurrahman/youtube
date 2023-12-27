@@ -41,9 +41,9 @@ export const youtubeService = createApi({
       }),
     }),
     playlists: builder.query({
-      query: ({ part, id }) => ({
+      query: ({ part, id, maxResults, channelId }) => ({
         url: "/playlists",
-        params: { part, id, key: API_KEY },
+        params: { part, id, maxResults, channelId, key: API_KEY },
       }),
     }),
 
