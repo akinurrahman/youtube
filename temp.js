@@ -36,15 +36,11 @@ const Suggestions = () => {
     dispatch(setSearchQuery(""));
   };
 
-  const closeSuggestions = () => {
-    dispatch(setSearchQuery("")); 
-  };
-
   return (
-    <section onClick={() => closeSuggestions()}>
+    <section >
       {/* search suggestions */}
       {searchQuery && (
-        <div className="fixed  top-0 z-50 flex h-fit w-screen  justify-center ">
+        <div className="fixed left-0 top-0 z-50 flex h-fit w-screen  justify-center ">
           <div className="mt-[50px] w-full space-y-3 bg-white p-6 shadow-lg  sm:w-[70%] sm:rounded-2xl md:mt-[60px] md:w-[60%] lg:w-[50%] xl:w-[40%]">
             {suggestions?.items?.map((suggestion, index) => {
               return (
