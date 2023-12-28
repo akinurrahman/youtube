@@ -4,7 +4,7 @@ import { RiMenuUnfoldFill } from "react-icons/ri";
 import { usePlaylistsQuery } from "../../../api/youtubeService";
 import { NavLink, useParams } from "react-router-dom";
 
-const PlayLists = () => {
+const ChannelPlayLists = () => {
   const { channelId } = useParams();
 
   const { data: playLists } = usePlaylistsQuery({
@@ -82,4 +82,4 @@ const PlayLists = () => {
   );
 };
 
-export default PlayLists;
+export default ChannelPlayLists;

@@ -6,7 +6,7 @@ import { formatDuration } from "../../../helpers/formatDuration";
 import { formatCount } from "../../../helpers/formatCount";
 import { calculateTimeAgo } from "../../../helpers/calculateTimeAgo";
 
-const Videos = () => {
+const ChannelVideos = () => {
   const { channelId } = useParams();
   const location = useLocation();
   const path = location.pathname;
@@ -143,4 +143,4 @@ const Videos = () => {
   );
 };
 
-export default Videos;
+export default ChannelVideos;

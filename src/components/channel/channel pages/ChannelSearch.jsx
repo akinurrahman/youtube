@@ -1,7 +1,7 @@
 import React from 'react'
 import ChannelLayout from '../ChannelLayout'
 
-const Search = () => {
+const ChannelSearch = () => {
   return (
     <ChannelLayout>
       thsi is search
@@ -9,4 +9,4 @@ const Search = () => {
   )
 }
 
-export default Search
+export default ChannelSearch

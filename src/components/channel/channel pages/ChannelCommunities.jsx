@@ -2,8 +2,8 @@ import React from "react";
 
 import ChannelLayout from "../ChannelLayout";
 
-const Community = () => {
+const ChannelCommunities = () => {
   return <ChannelLayout>community</ChannelLayout>;
 };
 
-export default Community;
+export default ChannelCommunities;

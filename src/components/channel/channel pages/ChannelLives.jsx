@@ -6,7 +6,7 @@ import { calculateTimeAgo } from "../../../helpers/calculateTimeAgo";
 import { formatDuration } from "../../../helpers/formatDuration";
 import { formatCount } from "../../../helpers/formatCount";
 
-const Live = () => {
+const ChannelLives = () => {
   const { channelId } = useParams();
   const { data: channelLives } = useSearchQuery({
     part: "snippet",
@@ -88,4 +88,4 @@ const Live = () => {
   );
 };
 
-export default Live;
+export default ChannelLives;

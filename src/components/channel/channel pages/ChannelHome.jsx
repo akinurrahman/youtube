@@ -47,7 +47,7 @@ const ChannelHome = () => {
       return (
         <NavLink
           to={`/playlist/${playlistId}`}
-          className="flex sm:flex-col"
+          className="flex flex-col"
           key={playlistId + index}
         >
           <div className="relative">

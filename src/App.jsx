@@ -5,11 +5,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import VideoPlayer from "./pages/VideoPlayer";
 import SearchPage from "./pages/SearchPage";
 // import PlayListTop from "./components/channel/PlayListTop";
-import Videos from "./components/channel/channel pages/Videos";
-import Live from "./components/channel/channel pages/Live";
-import PlayLists from "./components/channel/channel pages/PlayLists";
-import Search from "./components/channel/channel pages/Search";
-import Community from "./components/channel/channel pages/Community";
+import ChannelVideos from "./components/channel/channel pages/ChannelVideos";
+import ChannelLives from "./components/channel/channel pages/ChannelLives";
+import ChannelPlayLists from "./components/channel/channel pages/ChannelPlayLists";
+import ChannelSearch from "./components/channel/channel pages/ChannelSearch";
+import ChannelCommunities from "./components/channel/channel pages/ChannelCommunities";
 import ChannelHome from "./components/channel/channel pages/ChannelHome";
 const App = () => {
   return (
@@ -19,13 +19,13 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/watch/:videoID" element={<VideoPlayer />} />
         <Route path="/search/:query" element={<SearchPage />} />
-        <Route path="/channel/:channelId" element={<ChannelHome/>} />
-         <Route path="/channel/:channelId/videos" element={<Videos/>} />
-        <Route path="/channel/:channelId/shorts" element={<Videos />} />
-        <Route path="/channel/:channelId/live" element={<Live/>} />
-        <Route path="/channel/:channelId/playlist" element={<PlayLists/>} />
-        <Route path="/channel/:channelId/search" element={<Search/>} />
-        <Route path="/channel/:channelId/community" element={<Community/>} />
+        <Route path="/channel/:channelId" element={<ChannelHome />} />
+        <Route path="/channel/:channelId/videos" element={<ChannelVideos />} />
+        <Route path="/channel/:channelId/shorts" element={<ChannelVideos />} />
+        <Route path="/channel/:channelId/live" element={<ChannelLives />} />
+        <Route path="/channel/:channelId/playlist" element={<ChannelPlayLists />} />
+        <Route path="/channel/:channelId/search" element={<ChannelSearch />} />
+        <Route path="/channel/:channelId/community" element={<ChannelCommunities />} />
         {/* <Route path="/playlist/:playListId" element={<PlayListTop />} /> */}
       </Routes>
     </Router>
