@@ -6,37 +6,53 @@ import { BsMicFill } from "react-icons/bs";
 import { RxHamburgerMenu } from "react-icons/rx";
 import Hamburger from "./Hamburger";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setSearchQuery } from "../../redux/features/infoSlice";
+import Suggestions from "../search/Suggestions";
 
 const Header = () => {
   const [menu, setMenu] = useState(false);
-  const [query, setQuery] = useState("");
+  const dispatch = useDispatch();
+  const { searchQuery } = useSelector((state) => state.info);
   const [mobileSearch, setMobileSearch] = useState(false);
   const navigate = useNavigate();
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      if (query !== "") navigate(`/search/${query}`);
+      if (searchQuery !== "") {
+        navigate(`/search/${searchQuery}`);
+        dispatch(setSearchQuery(""));
+      }
     }
   };
+  console.log(searchQuery);
+
+  const handleNevigate = () => {
+    if (searchQuery !== "") {
+      navigate(`/search/${searchQuery}`);
+      dispatch(setSearchQuery(""));
+    }
+  };
+
   return (
     <div>
-      <div className=" mx-4 mt-3 flex items-center justify-between">
+      <div className="fixed left-0 top-0 z-30 flex w-full items-center justify-between bg-white  px-4 py-3 ">
         {/* Column 1 */}
         <div className={` flex  space-x-9 ${menu && " space-x-9 "} `}>
           {menu ? (
             <FaRegWindowClose
               size={28}
               onClick={() => setMenu((prev) => !prev)}
-              className=" z-20 cursor-pointer"
+              className=" z-50 cursor-pointer"
             />
           ) : (
             <RxHamburgerMenu
               size={26}
               onClick={() => setMenu((prev) => !prev)}
-              className=" z-20 cursor-pointer"
+              className=" z-50 cursor-pointer"
             />
           )}
-          <NavLink to="/" className=" z-20 w-24">
+          <NavLink to="/" className=" z-50 w-24">
             <img src="/assets/logo.svg" alt="logo" />
           </NavLink>
         </div>
@@ -48,16 +64,16 @@ const Header = () => {
               type="text"
               placeholder="Search"
               className="mr-px flex h-full  w-full  rounded-l-3xl    px-4 "
-              onChange={(e) => setQuery(e.target.value)}
-              value={query}
+              onChange={(e) => dispatch(setSearchQuery(e.target.value))}
+              value={searchQuery}
               onKeyDown={handleKeyDown}
             />
-            <NavLink
-              to={`/search/${query}`}
+            <div
+              onClick={handleNevigate}
               className=" flex h-full  items-center justify-center  rounded-r-3xl  border-gray-300 bg-gray-300 px-4"
             >
               <IoIosSearch size={26} className="cursor-pointer" />
-            </NavLink>
+            </div>
           </div>
           <div className="flex cursor-pointer items-center justify-center rounded-full bg-gray-300 p-3 text-sm">
             <BsMicFill size={20} />
@@ -97,16 +113,18 @@ const Header = () => {
         {menu && <Hamburger />}
       </div>
       {/* this part is for mobile device only */}
-      <div className={`mx-4 mt-2   ${!mobileSearch && "hidden"}`}>
+      <div className={`z-50 mx-4 mt-2  ${!mobileSearch && "hidden"}`}>
         <input
           type="text"
           className="w-full rounded-md border border-gray-400 px-2  py-[2px] outline-none focus:border-gray-600 "
           placeholder="Search"
-          onChange={(e) => setQuery(e.target.value)}
-          value={query}
+          onChange={(e) => dispatch(setSearchQuery(e.target.value))}
+          value={searchQuery}
           onKeyDown={handleKeyDown}
         />
       </div>
+      <div className="h-14"></div>
+      <Suggestions />
     </div>
   );
 };

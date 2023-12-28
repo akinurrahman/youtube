@@ -12,9 +12,9 @@ const Hamburger = () => {
     <div>
         
         {/* overlay */}
-      <div className="fixed left-0 top-0 z-10 h-screen w-full bg-black/80"></div>
+      <div className="fixed left-0 top-0 z-40 h-screen w-full bg-black/80"></div>
       {/* side drawer menu */}
-      <div className='fixed top-0 left-0 w-[300px] h-screen bg-white z-10 duration-300'>
+      <div className='fixed top-0 left-0 w-[300px] h-screen bg-white z-40 duration-300'>
         <nav>
             <ul className='flex flex-col   mt-12   text-gray-800 '>
                 

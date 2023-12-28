@@ -21,28 +21,27 @@ export const youtubeService = createApi({
     }),
 
     search: builder.query({
-      query: ({
-        part,
-        maxResults,
-        q,
-        type,
-        eventType,
-        videoDuration,
-        channelId,
-      }) => ({
-        url: "/search",
-        params: {
-          part,
-          maxResults,
-          q,
-          type,
-          eventType,
-          videoDuration,
-          channelId,
-          key: API_KEY,
-        },
-      }),
+      query: ({ part, maxResults, q, type, eventType, videoDuration, channelId }) => {
+        if (!q) {
+          return { data: undefined }; // Return predefined data when 'q' is falsy
+        }
+    
+        return {
+          url: "/search",
+          params: {
+            part,
+            maxResults,
+            q,
+            type,
+            eventType,
+            videoDuration,
+            channelId,
+            key: API_KEY,
+          },
+        };
+      },
     }),
+    
     commentThreads: builder.query({
       query: ({ part, videoId, maxResults }) => ({
         url: "/commentThreads",

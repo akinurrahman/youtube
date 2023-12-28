@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
 import { formatCount } from "../../helpers/formatCount";
@@ -8,18 +8,17 @@ import { formatDuration } from "../../helpers/formatDuration";
 
 const HomeThumnailCard = ({ video, channel }) => {
   const navigate = useNavigate();
-// console.log(channel)
+
   const thumbnail = video?.snippet?.thumbnails?.medium?.url ?? "";
   const channelName = video?.snippet?.channelTitle || "N/A";
   const title = video?.snippet?.title || "N/A";
   const publishedAt = video?.snippet?.publishedAt || "N/A";
   const channelId = video?.snippet?.channelId || "";
   const videoID = video?.id || "";
-  
+
   // Nested destructuring for statistics and contentDetails with defaults
   const { viewCount: rawViewCount = "N/A" } = video?.statistics ?? {};
   const { duration: rawDuration = "N/A" } = video?.contentDetails ?? {};
-  
 
   // Formatting video details
   const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "";
