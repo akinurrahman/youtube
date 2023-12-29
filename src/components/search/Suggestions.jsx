@@ -22,19 +22,13 @@ const Suggestions = () => {
       clearTimeout(debounceTimer);
     };
   }, [searchQuery]);
-
-  // Conditionally use the useSearchQuery hook based on debouncedQuery
-  const searchQueryResult = debouncedQuery
-    ? useSearchQuery({
-        part: "snippet",
-        maxResults: 10,
-        type: "suggest",
-        q: debouncedQuery,
-      })
-    : { data: null };
-
-  // Extract the suggestions from the searchQueryResult
-  const suggestions = searchQueryResult.data;
+  console.log('Value of debouncedQuery:', debouncedQuery);
+  const { data: suggestions } = useSearchQuery({
+    part: "snippet",
+    maxResults: 10,
+    type: "suggest",
+    q: debouncedQuery,
+  });
 
   const handleNavigate = (destination, e) => {
     e.stopPropagation();
@@ -49,16 +43,16 @@ const Suggestions = () => {
   return (
     <section onClick={() => closeSuggestions()}>
       {/* search suggestions */}
-      {searchQuery && (
-        <div className="fixed  top-0 z-50 flex h-fit w-screen  justify-center ">
-          <div className="mt-[50px] w-full space-y-3 bg-white p-6 shadow-lg  sm:w-[70%] sm:rounded-2xl md:mt-[60px] md:w-[60%] lg:w-[50%] xl:w-[40%]">
+      {searchQuery && suggestions && (
+        <div className="fixed top-0 z-50 flex h-fit w-screen justify-center">
+          <div className="mt-[50px] w-full space-y-3 bg-white p-6 shadow-lg sm:w-[70%] sm:rounded-2xl md:mt-[60px] md:w-[60%] lg:w-[50%] xl:w-[40%]">
             {suggestions?.items?.map((suggestion, index) => {
               return (
                 <div
                   onClick={(e) =>
                     handleNavigate(`/search/${suggestion.snippet.title}`, e)
                   }
-                  className="  flex cursor-pointer items-center gap-3  font-semibold"
+                  className="flex cursor-pointer items-center gap-3 font-semibold"
                   key={index}
                 >
                   <p>
