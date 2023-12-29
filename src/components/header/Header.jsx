@@ -136,8 +136,16 @@ const Header = () => {
             value={searchQuery}
             onKeyDown={handleKeyDown}
           />
-          <IoMdClose size={22} onClick={() => dispatch(setSearchQuery(""))} className="bg-red-300 cursor-pointer" />
-          <IoIosSearch size={22} onClick={() => handleNevigate()} className="bg-blue-400 cursor-pointer"/>
+          <IoMdClose
+            size={22}
+            onClick={() => dispatch(setSearchQuery(""))}
+            className=" cursor-pointer"
+          />
+          <IoIosSearch
+            size={22}
+            onClick={() => handleNevigate()}
+            className=" cursor-pointer"
+          />
         </div>
       </div>
       <Suggestions />
