@@ -1,34 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { useSearchQuery } from "../../api/youtubeService";
-import { useDispatch, useSelector } from "react-redux";
-import { setSearchQuery } from "../../redux/features/infoSlice";
 import { IoIosSearch } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { setSearchQuery } from "../../redux/features/infoSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Suggestions = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { searchQuery } = useSelector((state) => state.info);
-
-  // search suggestions
   const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [avoidAPICall, SetAvoidAPICall] = useState(true);
 
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
       setDebouncedQuery(searchQuery);
-    }, 400);
+    }, 600);
 
     return () => {
       clearTimeout(debounceTimer);
     };
   }, [searchQuery]);
-  console.log('Value of debouncedQuery:', debouncedQuery);
-  const { data: suggestions } = useSearchQuery({
-    part: "snippet",
-    maxResults: 10,
-    type: "suggest",
-    q: debouncedQuery,
-  });
+
+  useEffect(() => {
+    if (debouncedQuery) {
+      SetAvoidAPICall(false);
+    } else {
+      SetAvoidAPICall(true);
+    }
+  }, [debouncedQuery]);
+
+  const { data: suggestions } = useSearchQuery(
+    {
+      part: "snippet",
+      maxResults: 10,
+      type: "suggest",
+      q: debouncedQuery,
+    },
+    { skip: avoidAPICall },
+  );
 
   const handleNavigate = (destination, e) => {
     e.stopPropagation();

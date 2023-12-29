@@ -25,7 +25,6 @@ const Header = () => {
       }
     }
   };
-  console.log(searchQuery);
 
   const handleNevigate = () => {
     if (searchQuery !== "") {
