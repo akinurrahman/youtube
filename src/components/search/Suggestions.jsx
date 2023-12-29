@@ -23,12 +23,18 @@ const Suggestions = () => {
     };
   }, [searchQuery]);
 
-  const { data: suggestions } = useSearchQuery({
-    part: "snippet",
-    maxResults: 10,
-    type: "suggest",
-    q: debouncedQuery,
-  });
+  // Conditionally use the useSearchQuery hook based on debouncedQuery
+  const searchQueryResult = debouncedQuery
+    ? useSearchQuery({
+        part: "snippet",
+        maxResults: 10,
+        type: "suggest",
+        q: debouncedQuery,
+      })
+    : { data: null };
+
+  // Extract the suggestions from the searchQueryResult
+  const suggestions = searchQueryResult.data;
 
   const handleNavigate = (destination, e) => {
     e.stopPropagation();
@@ -37,7 +43,7 @@ const Suggestions = () => {
   };
 
   const closeSuggestions = () => {
-    dispatch(setSearchQuery("")); 
+    dispatch(setSearchQuery(""));
   };
 
   return (
