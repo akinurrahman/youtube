@@ -8,7 +8,7 @@ const PlayListVideos = ({ video, videoInfo }) => {
   const thumbnail = video?.snippet?.thumbnails?.medium?.url || "";
   const title = video?.snippet?.title || "";
   const publishAt = video?.snippet?.publishAt || "";
-  const timeAgo = publishAt ? calculateTimeAgo(publishAt) : "3 days ago";
+  const timeAgo = publishAt ? calculateTimeAgo(publishAt) : "";
   const videoID = video?.snippet?.resourceId?.videoId || "";
   const rawDuration = videoInfo?.contentDetails?.duration || "";
   const duration = rawDuration ? formatDuration(rawDuration) : "";
