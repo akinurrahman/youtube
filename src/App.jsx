@@ -4,13 +4,13 @@ import Home from "./pages/Home";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import VideoPlayer from "./pages/VideoPlayer";
 import SearchPage from "./pages/SearchPage";
-// import PlayListTop from "./components/channel/PlayListTop";
 import ChannelVideos from "./components/channel/channel pages/ChannelVideos";
 import ChannelLives from "./components/channel/channel pages/ChannelLives";
 import ChannelPlayLists from "./components/channel/channel pages/ChannelPlayLists";
 import ChannelSearch from "./components/channel/channel pages/ChannelSearch";
 import ChannelCommunities from "./components/channel/channel pages/ChannelCommunities";
 import ChannelHome from "./components/channel/channel pages/ChannelHome";
+import Playlist from "./components/playlist/Playlist";
 const App = () => {
   return (
     <Router>
@@ -26,7 +26,7 @@ const App = () => {
         <Route path="/channel/:channelId/playlist" element={<ChannelPlayLists />} />
         <Route path="/channel/:channelId/search" element={<ChannelSearch />} />
         <Route path="/channel/:channelId/community" element={<ChannelCommunities />} />
-        {/* <Route path="/playlist/:playListId" element={<PlayListTop />} /> */}
+        <Route path="/playlist/:playListId" element={<Playlist/>} />
       </Routes>
     </Router>
   );

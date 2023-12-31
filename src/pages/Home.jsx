@@ -27,7 +27,7 @@ const Home = () => {
     error: channelsError,
   } = useChannelsQuery({
     part: "snippet",
-    id: channelIds.join(","), // Pass comma-separated channel IDs
+    id: channelIds.join(","), 
   });
   // Show loading state while fetching data
   if (videosLoading || channelsLoading) {
