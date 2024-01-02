@@ -6,7 +6,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { formatDuration } from "../../helpers/formatDuration";
 
-const HomeThumnailCard = ({ video, channel }) => {
+const HomeThumnailCard = ({ video, extraInfo }) => {
   const navigate = useNavigate();
 
   const thumbnail = video?.snippet?.thumbnails?.medium?.url ?? "";
@@ -25,7 +25,7 @@ const HomeThumnailCard = ({ video, channel }) => {
   const viewCount = rawViewCount ? formatCount(rawViewCount) : null;
   const duration = rawDuration ? formatDuration(rawDuration) : "";
 
-  const avatar = channel?.snippet?.thumbnails?.default?.url || null;
+  const avatar = extraInfo?.snippet?.thumbnails?.default?.url || null;
 
   const handleNavigate = (destination, e) => {
     e.stopPropagation();

@@ -8,9 +8,17 @@ export const youtubeService = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   endpoints: (builder) => ({
     videos: builder.query({
-      query: ({ part, chart, maxResults, regionCode, id, pageToken }) => ({
+      query: ({ part, chart, maxResults = 20, regionCode, id, pageToken }) => ({
         url: "/videos",
-        params: { part, id, chart, maxResults, regionCode, pageToken, key: API_KEY },
+        params: {
+          part,
+          id,
+          chart,
+          maxResults,
+          regionCode,
+          pageToken,
+          key: API_KEY,
+        },
       }),
     }),
     channels: builder.query({
@@ -19,8 +27,6 @@ export const youtubeService = createApi({
         params: { part, id, key: API_KEY },
       }),
     }),
-
-
 
     search: builder.query({
       query: ({
@@ -75,5 +81,4 @@ export const {
   useCommentThreadsQuery,
   usePlaylistsQuery,
   usePlaylistItemsQuery,
-  
 } = youtubeService;
