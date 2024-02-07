@@ -11,12 +11,14 @@ import ChannelSearch from "./components/channel/channel pages/ChannelSearch";
 import ChannelCommunities from "./components/channel/channel pages/ChannelCommunities";
 import ChannelHome from "./components/channel/channel pages/ChannelHome";
 import Playlist from "./components/playlist/Playlist";
+import Testing from "../Testing";
 const App = () => {
   return (
     <Router>
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/testing" element={<Testing />} />
         <Route path="/watch/:videoID" element={<VideoPlayer />} />
         <Route path="/search/:query" element={<SearchPage />} />
         <Route path="/channel/:channelId" element={<ChannelHome />} />
