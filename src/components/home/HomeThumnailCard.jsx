@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 const HomeThumnailCard = ({ video }) => {
   const navigate = useNavigate();
 
+  // Extracting video details
   const thumbnail = video?.snippet.thumbnails.medium.url ?? "";
   const channelName = video?.snippet.channelTitle || "N/A";
   const title = video?.snippet?.title || "N/A";
@@ -18,7 +19,7 @@ const HomeThumnailCard = ({ video }) => {
   const channelId = video?.snippet.channelId || "";
   const videoID = video?.id || "";
 
-  // Nested destructuring for statistics and contentDetails with defaults
+  // Extracting statistics and contentDetails with defaults
   const { viewCount: rawViewCount = "N/A" } = video?.statistics ?? {};
   const { duration: rawDuration = "N/A" } = video?.contentDetails ?? {};
 
@@ -27,8 +28,9 @@ const HomeThumnailCard = ({ video }) => {
   const viewCount = rawViewCount ? formatCount(rawViewCount) : null;
   const duration = rawDuration ? formatDuration(rawDuration) : "";
 
+  // Fetching channel data
   const { data } = useQuery({
-    queryKey: ["trending", channelId],
+    queryKey: [videoID, channelId],
     queryFn: () =>
       getYouTubeData({
         endpoint: "channels",
@@ -39,9 +41,11 @@ const HomeThumnailCard = ({ video }) => {
       }),
     staleTime: 1000 * 60 * 5,
   });
-  const avatar = data?.items[0]?.snippet.thumbnails.default.url || null;
-  console.log("channel data is", data?.items[0]);
 
+  // Extracting channel avatar
+  const avatar = data?.items[0]?.snippet.thumbnails.default.url || null;
+
+  // Navigation handler
   const handleNavigate = (destination, e) => {
     e.stopPropagation();
     navigate(destination);

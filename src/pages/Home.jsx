@@ -17,7 +17,7 @@ const Home = () => {
           queryParams: {
             part: "snippet,statistics,contentDetails",
             chart: "mostPopular",
-            maxResults: 10,
+            maxResults: 12,
             pageToken: pageParam,
             regionCode: "IN",
           },
