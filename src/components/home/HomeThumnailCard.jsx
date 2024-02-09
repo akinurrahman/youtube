@@ -50,7 +50,7 @@ const HomeThumnailCard = ({ video }) => {
   return (
     <div onClick={() => navigate(`/watch/${videoID}`)}>
       {/* Thumbnail container */}
-      <div className="thumbnail-container relative text-white">
+      <div className="thumbnail-container relative h-[184px] rounded-lg bg-gray-300 text-white sm:h-[166px] md:h-[132px] xl:h-[168px] 2xl:h-[206px]">
         <LazyLoadImage
           src={thumbnail}
           width={"100%"}
