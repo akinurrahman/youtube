@@ -1,19 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
 import { formatCount } from "../../helpers/formatCount";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { formatDuration } from "../../helpers/formatDuration";
+import { getYouTubeData } from "../../api/queries";
+import { useQuery } from "@tanstack/react-query";
 
-const HomeThumnailCard = ({ video, extraInfo }) => {
+const HomeThumnailCard = ({ video }) => {
   const navigate = useNavigate();
 
-  const thumbnail = video?.snippet?.thumbnails?.medium?.url ?? "";
-  const channelName = video?.snippet?.channelTitle || "N/A";
+  const thumbnail = video?.snippet.thumbnails.medium.url ?? "";
+  const channelName = video?.snippet.channelTitle || "N/A";
   const title = video?.snippet?.title || "N/A";
-  const publishedAt = video?.snippet?.publishedAt || "N/A";
-  const channelId = video?.snippet?.channelId || "";
+  const publishedAt = video?.snippet.publishedAt || "N/A";
+  const channelId = video?.snippet.channelId || "";
   const videoID = video?.id || "";
 
   // Nested destructuring for statistics and contentDetails with defaults
@@ -25,7 +27,20 @@ const HomeThumnailCard = ({ video, extraInfo }) => {
   const viewCount = rawViewCount ? formatCount(rawViewCount) : null;
   const duration = rawDuration ? formatDuration(rawDuration) : "";
 
-  const avatar = extraInfo?.snippet?.thumbnails?.default?.url || null;
+  const { data } = useQuery({
+    queryKey: ["trending", channelId],
+    queryFn: () =>
+      getYouTubeData({
+        endpoint: "channels",
+        queryParams: {
+          part: "snippet",
+          id: channelId,
+        },
+      }),
+    staleTime: 1000 * 60 * 5,
+  });
+  const avatar = data?.items[0]?.snippet.thumbnails.default.url || null;
+  console.log("channel data is", data?.items[0]);
 
   const handleNavigate = (destination, e) => {
     e.stopPropagation();
