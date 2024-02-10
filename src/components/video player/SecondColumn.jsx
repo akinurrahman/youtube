@@ -19,7 +19,7 @@ const SecondColumn = () => {
           endpoint: "search",
           queryParams: {
             part: "snippet",
-            maxResults: 1,
+            maxResults: 10,
             q: title,
             type: "video",
             videoDuration: "medium",
