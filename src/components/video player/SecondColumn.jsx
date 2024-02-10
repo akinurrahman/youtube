@@ -1,47 +1,64 @@
-// import React from "react";
-// import { useSelector } from "react-redux";
-// import { useSearchQuery } from "../../api/youtubeService";
-// import RecommenedVideoCard from "./RecommenedVideoCard";
-
-// const SecondColumn = () => {
-//   const title = useSelector((state) => state.info.title);
-//   const {
-//     data: recommendedVideos,
-//     isLoading,
-//     error,
-//   } = useSearchQuery({
-//     part: "snippet",
-//     maxResults: 8,
-//     q: title,
-//     type: "video",
-//     videoDuration: "medium",
-//   });
-
-//   if (isLoading) {
-//     return <div>Loading...</div>;
-//   }
-
-//   if (error) {
-//     return <div>Error: {error.message}</div>;
-//   }
-//   return (
-//     <div>
-//       {recommendedVideos?.items?.map((video, index) => (
-//         <RecommenedVideoCard video={video} key={index} />
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default SecondColumn;
-import React from 'react'
+import React from "react";
+import { useSelector } from "react-redux";
+import RecommenedVideoCard from "./RecommenedVideoCard";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { getYouTubeData } from "../../api/queries";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { recommendedSkeleton } from "../skeletons/RecommendredSkeleton";
 
 const SecondColumn = () => {
+  // Select the title from Redux state
+  const title = useSelector((state) => state.info.title);
+
+  // Fetch data using Infinite Query
+  const { data, isLoading, error, fetchNextPage, hasNextPage } =
+    useInfiniteQuery({
+      queryKey: ["recommended", title],
+      queryFn: ({ pageParam }) =>
+        getYouTubeData({
+          endpoint: "search",
+          queryParams: {
+            part: "snippet",
+            maxResults: 1,
+            q: title,
+            type: "video",
+            videoDuration: "medium",
+            pageToken: pageParam,
+          },
+        }),
+      getNextPageParam: (lastPage) => lastPage.nextPageToken,
+      enabled: !!title,
+    });
+
+  // Flatten the data and extract recommended videos
+  const recommendedVideos = data?.pages.flatMap((page) => page.items) || [];
+
   return (
     <div>
-      
-    </div>
-  )
-}
+      {/* Infinite scroll component */}
+      <InfiniteScroll
+        dataLength={recommendedVideos?.length}
+        next={fetchNextPage}
+        hasMore={hasNextPage}
+      >
+        {/* Render recommended videos */}
+        {data &&
+          !error &&
+          recommendedVideos.map((video) => (
+            <RecommenedVideoCard video={video} key={video.id.videoId} />
+          ))}
 
-export default SecondColumn
+        {/* Render error message if error occurs */}
+        {error && (
+          <div className="ml-5 mt-6 text-red-500">Error: {error.message}</div>
+        )}
+
+        {/* Render loading skeletons while data is loading */}
+        {isLoading &&
+          Array.from({ length: 20 }).forEach(() => recommendedSkeleton())}
+      </InfiniteScroll>
+    </div>
+  );
+};
+
+export default SecondColumn;

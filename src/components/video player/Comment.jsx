@@ -113,10 +113,7 @@ const Comment = () => {
     );
   };
 
-  // Loading state
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  
 
   // Error state
   if (error) {
