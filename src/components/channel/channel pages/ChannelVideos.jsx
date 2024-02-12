@@ -128,22 +128,21 @@ const ChannelVideos = () => {
           "video not found.jpg",
         )}
 
-      {/* Infinite scroll container */}
-      <InfiniteScroll
-        dataLength={channelVideos?.length}
-        next={fetchNextPage}
-        hasMore={hasNextPage}
-        loader={<Spinner />}
-      >
-        {/* Conditionally render videos or videoNotAvailable */}
-        {channelVideos.length > 0 && !isErrorVideos && (
+      {/* Render videos if available */}
+      {channelVideos.length > 0 && !isErrorVideos && (
+        <InfiniteScroll
+          dataLength={channelVideos?.length}
+          next={fetchNextPage}
+          hasMore={hasNextPage}
+          loader={<Spinner />}
+        >
           <div className="m-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {channelVideos.map((video, index) => (
               <RenderVideo key={video.id.videoId + index} video={video} />
             ))}
           </div>
-        )}
-      </InfiniteScroll>
+        </InfiniteScroll>
+      )}
     </ChannelLayout>
   );
 };
