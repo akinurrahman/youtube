@@ -4,7 +4,7 @@ import ChannelTop from "./ChannelTop";
 const ChannelLayout = ({ children }) => {
   return (
     <div>
-      {/* <ChannelTop /> */}
+      <ChannelTop />
       <ChannelSidebar />
       <div>{children}</div>
     </div>

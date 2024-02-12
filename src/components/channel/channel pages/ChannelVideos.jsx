@@ -9,6 +9,7 @@ import { getYouTubeData } from "../../../api/queries";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ChannelVideoSkeleton from "../../skeletons/ChannelVideoSkeleton";
 import Spinner from "../../skeletons/Spinner";
+import displayNotAvailable from "../../../../utilities/displayNotAvailable";
 
 const ChannelVideos = () => {
   // Get channelId and path from the URL
@@ -110,6 +111,23 @@ const ChannelVideos = () => {
 
   return (
     <ChannelLayout>
+      {/* Show skeletons while loading */}
+      <div className="m-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        {isLoading &&
+          Array.from({ length: 15 }).map((_, index) => (
+            <ChannelVideoSkeleton key={index} />
+          ))}
+      </div>
+
+      {/* Display message if no videos are available */}
+      {channelVideos.length < 1 &&
+        displayNotAvailable(
+          `This channel does not have ${
+            videoDuration === "short" ? "any short videos" : "videos"
+          }`,
+          "video not found.jpg",
+        )}
+
       {/* Infinite scroll container */}
       <InfiniteScroll
         dataLength={channelVideos?.length}
@@ -117,21 +135,14 @@ const ChannelVideos = () => {
         hasMore={hasNextPage}
         loader={<Spinner />}
       >
-        {/* Video grid */}
-        <div className="m-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {/* Show skeletons while loading */}
-          {isLoading &&
-            Array.from({ length: 15 }).map((_, index) => (
-              <ChannelVideoSkeleton key={index} />
-            ))}
-
-          {/* Render videos */}
-          {channelVideos &&
-            !isErrorVideos &&
-            channelVideos?.map((video, index) => (
+        {/* Conditionally render videos or videoNotAvailable */}
+        {channelVideos.length > 0 && !isErrorVideos && (
+          <div className="m-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {channelVideos.map((video, index) => (
               <RenderVideo key={video.id.videoId + index} video={video} />
             ))}
-        </div>
+          </div>
+        )}
       </InfiniteScroll>
     </ChannelLayout>
   );
