@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ChannelLayout from "../ChannelLayout";
-import { NavLink, useLocation, useParams } from "react-router-dom";
-import { useSearchQuery, useVideosQuery } from "../../../api/youtubeService";
+import { useLocation, useParams } from "react-router-dom";
 import { formatDuration } from "../../../helpers/formatDuration";
 import { formatCount } from "../../../helpers/formatCount";
 import { calculateTimeAgo } from "../../../helpers/calculateTimeAgo";
@@ -12,19 +11,20 @@ import ChannelVideoSkeleton from "../../skeletons/ChannelVideoSkeleton";
 import Spinner from "../../skeletons/Spinner";
 
 const ChannelVideos = () => {
+  // Get channelId and path from the URL
   const { channelId } = useParams();
   const location = useLocation();
   const path = location.pathname;
 
+  // Determine video duration based on the path
   let videoDuration;
-
-  // Determine video duration based on URL path
   if (path === `/channel/${channelId}/shorts`) {
     videoDuration = "short";
   } else if (path === `/channel/${channelId}/videos`) {
     videoDuration = "medium";
   }
 
+  // Fetch videos using infinite query
   const {
     data: videos,
     hasNextPage,
@@ -50,8 +50,10 @@ const ChannelVideos = () => {
     staleTime: 1000 * 60 * 5,
   });
 
+  // Extract video items from the data
   const channelVideos = videos?.pages.flatMap((page) => page.items) || [];
 
+  // Render individual video
   const RenderVideo = ({ video }) => {
     const videoId = video.id.videoId || "";
     const { data: videoInfo } = useQuery({
@@ -79,9 +81,10 @@ const ChannelVideos = () => {
     const title = video?.snippet.title || "";
     const publishedAt = video?.snippet.publishedAt || "";
     const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "";
+
+    // Render video details
     return (
-      <div className="flex sm:flex-col ">
-        {/* Display video thumbnail, duration, title, views, and time */}
+      <div className="flex sm:flex-col">
         <div className="relative text-white">
           <img
             src={thumbnail}
@@ -107,26 +110,27 @@ const ChannelVideos = () => {
 
   return (
     <ChannelLayout>
+      {/* Infinite scroll container */}
       <InfiniteScroll
         dataLength={channelVideos?.length}
         next={fetchNextPage}
         hasMore={hasNextPage}
-        loader={
-          <div className="flex h-20 items-center justify-center">
-            <Spinner />
-          </div>
-        }
+        loader={<Spinner />}
       >
-        <div className="m-4 grid gap-4 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        {/* Video grid */}
+        <div className="m-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {/* Show skeletons while loading */}
           {isLoading &&
             Array.from({ length: 15 }).map((_, index) => (
               <ChannelVideoSkeleton key={index} />
             ))}
+
+          {/* Render videos */}
           {channelVideos &&
             !isErrorVideos &&
-            channelVideos?.map((video, index) => {
-              return <RenderVideo video={video} key={video.id.videoId + index} />;
-            })}
+            channelVideos?.map((video, index) => (
+              <RenderVideo key={video.id.videoId + index} video={video} />
+            ))}
         </div>
       </InfiniteScroll>
     </ChannelLayout>
