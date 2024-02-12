@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ChannelLayout from "../ChannelLayout";
 import { NavLink, useLocation, useParams } from "react-router-dom";
 import { useSearchQuery, useVideosQuery } from "../../../api/youtubeService";
 import { formatDuration } from "../../../helpers/formatDuration";
 import { formatCount } from "../../../helpers/formatCount";
 import { calculateTimeAgo } from "../../../helpers/calculateTimeAgo";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { getYouTubeData } from "../../../api/queries";
+import InfiniteScroll from "react-infinite-scroll-component";
+import ChannelVideoSkeleton from "../../skeletons/ChannelVideoSkeleton";
+import Spinner from "../../skeletons/Spinner";
 
 const ChannelVideos = () => {
   const { channelId } = useParams();
@@ -20,125 +25,110 @@ const ChannelVideos = () => {
     videoDuration = "medium";
   }
 
-  // Fetch videos based on channel ID and video duration
   const {
-    data: channelVideos,
-    isLoading: isLoadingVideos,
-    error: isErrorVideos,
-  } = useSearchQuery({
-    part: "snippet",
-    type: "video",
-    videoDuration,
-    channelId,
-    maxResults: 30,
+    data: videos,
+    hasNextPage,
+    fetchNextPage,
+    isError: isErrorVideos,
+    isLoading,
+  } = useInfiniteQuery({
+    queryKey: ["channel videos", channelId],
+    queryFn: ({ pageParam }) =>
+      getYouTubeData({
+        endpoint: "search",
+        queryParams: {
+          part: "snippet",
+          type: "video",
+          videoDuration,
+          channelId,
+          maxResults: 15,
+          pageToken: pageParam,
+        },
+      }),
+    enabled: !!channelId,
+    getNextPageParam: (lastPage) => lastPage.nextPageToken,
+    staleTime: 1000 * 60 * 5,
   });
 
-  // Fetch detailed video information for each video
-  const {
-    data: videoInfo,
-    isLoading: isLoadingVideoInfo,
-    error: isErrorVideoInfo,
-  } = useVideosQuery({
-    part: "statistics,contentDetails",
-    id: channelVideos?.items?.map((video) => video.id.videoId).join(",") || "",
-  });
+  const channelVideos = videos?.pages.flatMap((page) => page.items) || [];
 
-  // Loading state while fetching data
-  if (isLoadingVideos || isLoadingVideoInfo) {
-    return <div>Loading...</div>;
-  }
+  const RenderVideo = ({ video }) => {
+    const videoId = video.id.videoId || "";
+    const { data: videoInfo } = useQuery({
+      queryKey: ["videoInfo", videoId],
+      queryFn: () =>
+        getYouTubeData({
+          endpoint: "videos",
+          queryParams: {
+            part: "statistics,contentDetails",
+            id: videoId,
+          },
+        }),
 
-  // Error handling for video information or videos
-  if (isErrorVideoInfo || isErrorVideos) {
-    const status =
-      (isErrorVideos && isErrorVideos.status) ||
-      (isErrorVideoInfo && isErrorVideoInfo.status) ||
-      "Unknown";
-
-    const message =
-      (isErrorVideos && isErrorVideos?.data?.error?.message) ||
-      (isErrorVideoInfo && isErrorVideoInfo?.data?.error?.message) ||
-      "Unknown error occurred";
-
-    return (
-      <div>
-        <p>Error: {status}</p>
-        <p>{message}</p>
-      </div>
-    );
-  }
-
-  // Function to render individual channel videos
-  const renderChannelVideos = () => {
-    return channelVideos?.items?.map((video, index) => {
-      // Find additional video information
-      const additionVideoInfo = videoInfo?.items?.find(
-        (elem) => elem.id === video.id.videoId,
-      );
-
-      // Extract necessary video details
-      const thumbnail = video?.snippet?.thumbnails?.medium?.url || "";
-      const publishedAt = video?.snippet?.publishedAt || "";
-      const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "";
-      const title = video?.snippet?.title || "";
-      const videoID = video?.id?.videoId || "";
-
-      // Extract duration and view count for each video
-      const rawDuration = additionVideoInfo?.contentDetails?.duration || "";
-      const rawView = additionVideoInfo?.statistics?.viewCount || "";
-      const duration = rawDuration ? formatDuration(rawDuration) : "";
-      const viewCount = rawView ? formatCount(rawView) : "";
-
-      return (
-        <NavLink
-          to={`/watch/${videoID}`}
-          className="flex sm:flex-col "
-          key={index + videoID}
-        >
-          {/* Display video thumbnail, duration, title, views, and time */}
-          <div className="relative text-white">
-            <img
-              src={thumbnail}
-              alt=""
-              className="mr-2 max-w-[155px] rounded-lg sm:w-full sm:max-w-full"
-            />
-            <p className="absolute bottom-2 right-3 z-10 rounded-md bg-black bg-opacity-70 px-2">
-              {duration}
-            </p>
-          </div>
-          <div>
-            <h2 className="line-clamp-3 font-semibold leading-tight sm:mt-1 sm:line-clamp-2">
-              {title}
-            </h2>
-            <p className="line-clamp-1 text-sm font-extralight">
-              {viewCount} views • {timeAgo}
-            </p>
-          </div>
-        </NavLink>
-      );
+      enabled: !!videoId,
+      staleTime: 1000 * 60 * 5,
     });
-  };
+    const { statistics, contentDetails } = videoInfo?.items[0] || {};
 
-
-  const noLiveAvailable = () => {
+    // Extract necessary video details
+    const thumbnail = video?.snippet.thumbnails.medium.url || "";
+    const rawDuration = contentDetails?.duration || "";
+    const rawView = statistics?.viewCount || "";
+    const duration = rawDuration ? formatDuration(rawDuration) : "";
+    const viewCount = rawView ? formatCount(rawView) : "";
+    const title = video?.snippet.title || "";
+    const publishedAt = video?.snippet.publishedAt || "";
+    const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "";
     return (
-      <div className=" relative flex w-screen flex-col items-center justify-center">
-        <img src="/assets/video not found.webp" alt="" className="w-[20rem] " />
-        <h2 className="absolute bottom-9 font-semibold sm:text-lg lg:text-2xl">
-          This channel has no videos
-        </h2>
+      <div className="flex sm:flex-col ">
+        {/* Display video thumbnail, duration, title, views, and time */}
+        <div className="relative text-white">
+          <img
+            src={thumbnail}
+            alt=""
+            className="mr-2 max-w-[155px] rounded-lg sm:w-full sm:max-w-full"
+          />
+          <p className="absolute bottom-2 right-3 z-10 rounded-md bg-black bg-opacity-70 px-2">
+            {duration}
+          </p>
+        </div>
+
+        <div>
+          <h2 className="line-clamp-3 font-semibold leading-tight sm:mt-1 sm:line-clamp-2">
+            {title}
+          </h2>
+          <p className="line-clamp-1 text-sm font-extralight">
+            {viewCount} views • {timeAgo}
+          </p>
+        </div>
       </div>
     );
   };
 
-  // Render videos in a grid layout within ChannelLayout
   return (
     <ChannelLayout>
-      <div className="m-4 grid gap-4 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-      {channelVideos?.items?.length > 0
-          ? renderChannelVideos()
-          : noLiveAvailable()}
-      </div>
+      <InfiniteScroll
+        dataLength={channelVideos?.length}
+        next={fetchNextPage}
+        hasMore={hasNextPage}
+        loader={
+          <div className="flex h-20 items-center justify-center">
+            <Spinner />
+          </div>
+        }
+      >
+        <div className="m-4 grid gap-4 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {isLoading &&
+            Array.from({ length: 15 }).map((_, index) => (
+              <ChannelVideoSkeleton key={index} />
+            ))}
+          {channelVideos &&
+            !isErrorVideos &&
+            channelVideos?.map((video, index) => {
+              return <RenderVideo video={video} key={video.id.videoId + index} />;
+            })}
+        </div>
+      </InfiniteScroll>
     </ChannelLayout>
   );
 };
