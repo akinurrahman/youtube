@@ -24,6 +24,7 @@ const ChannelLives = () => {
             eventType: "completed",
             type: "video",
             pageToken: pageParam,
+            maxResults: 30,
           },
         }),
       enabled: !!channelId,

@@ -40,7 +40,7 @@ const ChannelVideos = () => {
           type: "video",
           videoDuration,
           channelId,
-          maxResults: 15,
+          maxResults: 30,
           pageToken: pageParam,
         },
       }),
