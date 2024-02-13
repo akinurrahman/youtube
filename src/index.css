@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Hide the scrollbar but keep the functionality */
+body {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+/* For Webkit browsers like Chrome and Safari */
+body::-webkit-scrollbar {
+  width: 12px; /* Adjust as needed */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}

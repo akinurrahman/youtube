@@ -24,14 +24,13 @@ const ChannelTop = () => {
 
   // Destructure fetched data
   const { snippet, statistics, brandingSettings } = data?.items[0] || {};
-
   // Extract necessary information from the fetched data
   const avatar = snippet?.thumbnails.default.url || "N/A";
   const channelName = snippet?.title || "N/A";
   const rawSubs = statistics?.subscriberCount || "N/A";
   const subsCount = rawSubs && formatCount(rawSubs);
   const coverImg =
-    brandingSettings?.image.bannerExternalUrl || "/assets/COVER NOT FOUND.png";
+    brandingSettings?.image?.bannerExternalUrl || "/assets/COVER NOT FOUND.png";
   const customUrl = snippet?.customUrl || "N/A";
   const description = snippet?.localized.description || "N/A";
   const rawVideoCount = statistics?.videoCount || "N/A";
