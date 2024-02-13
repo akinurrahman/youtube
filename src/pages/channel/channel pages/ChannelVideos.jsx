@@ -4,10 +4,10 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getYouTubeData } from "../../../api/queries";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ChannelLayout from "../../../components/channel/ChannelLayout";
-import DisplayNotAvailable from "../../../../utilities/DisplayNotAvailable";
 import ChannelVideoSkeleton from "../../../components/skeletons/ChannelVideoSkeleton";
 import Spinner from "../../../components/skeletons/Spinner";
 import ChannelContentCard from "../../../components/channel/ChannelContentCard";
+import DisplayNoContent from "../../../../utilities/DisplayNoContent";
 
 const ChannelVideos = () => {
   // Get channelId and path from the URL
@@ -64,7 +64,7 @@ const ChannelVideos = () => {
 
       {/* Display message if no videos are available */}
       {channelVideos.length < 1 && (
-        <DisplayNotAvailable
+        <DisplayNoContent
           message={`This channel does not have ${
             videoDuration === "short" ? "any short videos" : "videos"
           }`}

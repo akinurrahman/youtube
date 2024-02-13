@@ -5,9 +5,9 @@ import { getYouTubeData } from "../../../api/queries";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ChannelLayout from "../../../components/channel/ChannelLayout";
 import ChannelVideoSkeleton from "../../../components/skeletons/ChannelVideoSkeleton";
-import DisplayNotAvailable from "../../../../utilities/DisplayNotAvailable";
 import Spinner from "../../../components/skeletons/Spinner";
 import ChannelContentCard from "../../../components/channel/ChannelContentCard";
+import DisplayNoContent from "../../../../utilities/DisplayNoContent";
 
 const ChannelLives = () => {
   const { channelId } = useParams();
@@ -47,7 +47,7 @@ const ChannelLives = () => {
 
       {/* Display message if no videos are available */}
       {channelLives.length < 1 && (
-        <DisplayNotAvailable
+        <DisplayNoContent
           message={`This channel does not have Lives`}
           img={"video not found.jpg"}
         />

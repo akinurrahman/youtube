@@ -1,40 +1,50 @@
 import React from "react";
 import { formatCount } from "../../helpers/formatCount";
 import { useParams } from "react-router-dom";
-import { useChannelsQuery } from "../../api/youtubeService";
+import { useQuery } from "@tanstack/react-query";
+import { getYouTubeData } from "../../api/queries";
 
 const ChannelTop = () => {
+  // Get channelId from the URL
   const { channelId } = useParams();
 
-  // Fetch channel statistics using RTK Query
-  const { data: statistics } = useChannelsQuery({
-    part: "snippet,statistics,brandingSettings",
-    id: channelId,
+  // Fetch channel data using query
+  const { data } = useQuery({
+    queryKey: ["channel top", channelId],
+    queryFn: () =>
+      getYouTubeData({
+        endpoint: "channels",
+        queryParams: {
+          part: "snippet,statistics,brandingSettings",
+          id: channelId,
+        },
+      }),
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
+  // Destructure fetched data
+  const { snippet, statistics, brandingSettings } = data?.items[0] || {};
+
   // Extract necessary information from the fetched data
-  const avatar =
-    statistics?.items?.[0]?.snippet?.thumbnails?.default?.url || "N/A";
-  const channelName = statistics?.items?.[0]?.snippet?.title || "N/A";
-  const rawSubs = statistics?.items?.[0]?.statistics?.subscriberCount || "N/A";
+  const avatar = snippet?.thumbnails.default.url || "N/A";
+  const channelName = snippet?.title || "N/A";
+  const rawSubs = statistics?.subscriberCount || "N/A";
   const subsCount = rawSubs && formatCount(rawSubs);
   const coverImg =
-    statistics?.items?.[0]?.brandingSettings?.image?.bannerExternalUrl ||
-    "/assets/COVER NOT FOUND.png";
-  const customUrl = statistics?.items?.[0]?.snippet?.customUrl || "N/A";
-  const description =
-    statistics?.items?.[0]?.snippet?.localized?.description || "N/A";
-  const rawVideoCount = statistics?.items?.[0]?.statistics?.videoCount || "N/A";
+    brandingSettings?.image.bannerExternalUrl || "/assets/COVER NOT FOUND.png";
+  const customUrl = snippet?.customUrl || "N/A";
+  const description = snippet?.localized.description || "N/A";
+  const rawVideoCount = statistics?.videoCount || "N/A";
   const videoCount = rawVideoCount && formatCount(rawVideoCount);
 
   return (
-    <div className="space-y-3 mx-5 my-3">
+    <div className="mx-5 my-3 space-y-3">
       {/* Display Channel Cover */}
       <div>
         <img
           src={coverImg}
           alt="Channel Cover"
-          className="h-[60px] w-full rounded-lg object-cover sm:h-[115px] md:h-[128px] lg:h-[176px] xl:h-[213px] "
+          className="h-[60px] w-full rounded-lg object-cover sm:h-[115px] md:h-[128px] lg:h-[176px] xl:h-[213px]"
         />
       </div>
 

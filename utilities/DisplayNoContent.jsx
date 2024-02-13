@@ -1,6 +1,6 @@
 import React from "react";
 
-const DisplayNotAvailable = ({
+const DisplayNoContent = ({
   message = "not found",
   img = "video not found.jpg",
 }) => {
@@ -18,4 +18,4 @@ const DisplayNotAvailable = ({
   );
 };
 
-export default DisplayNotAvailable;
+export default DisplayNoContent;
