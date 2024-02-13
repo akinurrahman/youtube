@@ -1,58 +1,41 @@
 import React from "react";
-import ChannelLayout from "../ChannelLayout";
-import { useLocation, useParams } from "react-router-dom";
+import { useSearchQuery, useVideosQuery } from "../../../api/youtubeService";
+import { NavLink, useParams } from "react-router-dom";
+import { calculateTimeAgo } from "../../../helpers/calculateTimeAgo";
 import { formatDuration } from "../../../helpers/formatDuration";
 import { formatCount } from "../../../helpers/formatCount";
-import { calculateTimeAgo } from "../../../helpers/calculateTimeAgo";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { getYouTubeData } from "../../../api/queries";
 import InfiniteScroll from "react-infinite-scroll-component";
-import ChannelVideoSkeleton from "../../skeletons/ChannelVideoSkeleton";
-import Spinner from "../../skeletons/Spinner";
-import displayNotAvailable from "../../../../utilities/displayNotAvailable";
+import ChannelLayout from "../../../components/channel/ChannelLayout";
+import ChannelVideoSkeleton from "../../../components/skeletons/ChannelVideoSkeleton";
+import DisplayNotAvailable from "../../../../utilities/DisplayNotAvailable";
+import Spinner from "../../../components/skeletons/Spinner";
 
-const ChannelVideos = () => {
-  // Get channelId and path from the URL
+const ChannelLives = () => {
   const { channelId } = useParams();
-  const location = useLocation();
-  const path = location.pathname;
 
-  // Determine video duration based on the path
-  let videoDuration;
-  if (path === `/channel/${channelId}/shorts`) {
-    videoDuration = "short";
-  } else if (path === `/channel/${channelId}/videos`) {
-    videoDuration = "medium";
-  }
-
-  // Fetch videos using infinite query
-  const {
-    data: videos,
-    hasNextPage,
-    fetchNextPage,
-    isError: isErrorVideos,
-    isLoading,
-  } = useInfiniteQuery({
-    queryKey: ["channel videos", channelId],
-    queryFn: ({ pageParam }) =>
-      getYouTubeData({
-        endpoint: "search",
-        queryParams: {
-          part: "snippet",
-          type: "video",
-          videoDuration,
-          channelId,
-          maxResults: 15,
-          pageToken: pageParam,
-        },
-      }),
-    enabled: !!channelId,
-    getNextPageParam: (lastPage) => lastPage.nextPageToken,
-    staleTime: 1000 * 60 * 5,
-  });
+  const { data, hasNextPage, fetchNextPage, isLoading, isError } =
+    useInfiniteQuery({
+      queryKey: ["Channel lives", channelId],
+      queryFn: ({ pageParam }) =>
+        getYouTubeData({
+          endpoint: "search",
+          queryParams: {
+            part: "snippet",
+            channelId: channelId,
+            eventType: "completed",
+            type: "video",
+            pageToken: pageParam,
+          },
+        }),
+      enabled: !!channelId,
+      staleTime: 1000 * 60 * 5,
+      getNextPageParam: (lastPage) => lastPage.nextPageToken,
+    });
 
   // Extract video items from the data
-  const channelVideos = videos?.pages.flatMap((page) => page.items) || [];
+  const channelLives = data?.pages.flatMap((page) => page.items) || [];
 
   // Render individual video
   const RenderVideo = ({ video }) => {
@@ -109,6 +92,7 @@ const ChannelVideos = () => {
     );
   };
 
+  // Render videos in a grid layout within ChannelLayout
   return (
     <ChannelLayout>
       {/* Show skeletons while loading */}
@@ -120,24 +104,23 @@ const ChannelVideos = () => {
       </div>
 
       {/* Display message if no videos are available */}
-      {channelVideos.length < 1 &&
-        displayNotAvailable(
-          `This channel does not have ${
-            videoDuration === "short" ? "any short videos" : "videos"
-          }`,
-          "video not found.jpg",
-        )}
+      {channelLives.length < 1 && (
+        <DisplayNotAvailable
+          message={`This channel does not have Lives`}
+          img={"video not found.jpg"}
+        />
+      )}
 
       {/* Render videos if available */}
-      {channelVideos.length > 0 && !isErrorVideos && (
+      {channelLives.length > 0 && !isError && (
         <InfiniteScroll
-          dataLength={channelVideos?.length}
+          dataLength={channelLives?.length}
           next={fetchNextPage}
           hasMore={hasNextPage}
           loader={<Spinner />}
         >
           <div className="m-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            {channelVideos.map((video, index) => (
+            {channelLives.map((video, index) => (
               <RenderVideo key={video.id.videoId + index} video={video} />
             ))}
           </div>
@@ -147,4 +130,4 @@ const ChannelVideos = () => {
   );
 };
 
-export default ChannelVideos;
+export default ChannelLives;

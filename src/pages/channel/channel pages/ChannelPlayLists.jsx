@@ -1,8 +1,8 @@
 import React from "react";
-import ChannelLayout from "../ChannelLayout";
 import { RiMenuUnfoldFill } from "react-icons/ri";
 import { usePlaylistsQuery } from "../../../api/youtubeService";
 import { NavLink, useParams } from "react-router-dom";
+import ChannelLayout from "../../../components/channel/ChannelLayout";
 
 const ChannelPlayLists = () => {
   const { channelId } = useParams();

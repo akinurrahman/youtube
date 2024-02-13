@@ -1,11 +1,11 @@
 import React from "react";
 
-const displayNotAvailable = (
+const DisplayNotAvailable = ({
   message = "not found",
   img = "video not found.jpg",
-) => {
+}) => {
   return (
-    <div className=" w-full  p-4">
+    <div className=" mx-auto w-[90%]   px-4">
       <img
         src={`/assets/${img}`}
         alt=""
@@ -18,4 +18,4 @@ const displayNotAvailable = (
   );
 };
 
-export default displayNotAvailable;
+export default DisplayNotAvailable;

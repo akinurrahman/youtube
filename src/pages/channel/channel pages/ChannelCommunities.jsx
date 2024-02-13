@@ -1,6 +1,6 @@
 import React from "react";
+import ChannelLayout from "../../../components/channel/ChannelLayout";
 
-import ChannelLayout from "../ChannelLayout";
 
 const ChannelCommunities = () => {
   return <ChannelLayout>community</ChannelLayout>;

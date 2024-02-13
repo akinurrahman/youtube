@@ -1,5 +1,5 @@
 import React from 'react'
-import ChannelLayout from '../ChannelLayout'
+import ChannelLayout from '../../../components/channel/ChannelLayout'
 
 const ChannelSearch = () => {
   return (

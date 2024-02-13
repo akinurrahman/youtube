@@ -1,5 +1,5 @@
-import ChannelSidebar from "./ChannelSidebar";
-import ChannelTop from "./ChannelTop";
+import ChannelSidebar from "../../pages/channel/ChannelSidebar";
+import ChannelTop from "../../pages/channel/ChannelTop";
 
 const ChannelLayout = ({ children }) => {
   return (

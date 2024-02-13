@@ -1,5 +1,4 @@
 import React from "react";
-import ChannelLayout from "../ChannelLayout";
 import { NavLink, useParams } from "react-router-dom";
 import { usePlaylistsQuery, useSearchQuery, useVideosQuery } from "../../../api/youtubeService";
 import { calculateTimeAgo } from "../../../helpers/calculateTimeAgo";
@@ -7,6 +6,7 @@ import { formatDuration } from "../../../helpers/formatDuration";
 import { formatCount } from "../../../helpers/formatCount";
 import { FaPlay } from "react-icons/fa";
 import { RiMenuUnfoldFill } from "react-icons/ri";
+import ChannelLayout from "../../../components/channel/ChannelLayout";
 
 
 const ChannelHome = () => {
