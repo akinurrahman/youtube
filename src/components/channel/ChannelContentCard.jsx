@@ -6,7 +6,8 @@ import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
 import { formatCount } from "../../helpers/formatCount";
 // Render individual video
 const ChannelContentCard = ({ video }) => {
-  const videoId = video.id.videoId || "";
+  const videoId = video.id.videoId || video.snippet.resourceId.videoId || "";
+
   const { data: videoInfo } = useQuery({
     queryKey: ["videoInfo", videoId],
     queryFn: () =>
@@ -24,7 +25,7 @@ const ChannelContentCard = ({ video }) => {
   const { statistics, contentDetails } = videoInfo?.items[0] || {};
 
   // Extract necessary video details
-  const thumbnail = video?.snippet.thumbnails.medium.url || "";
+  const thumbnail = video?.snippet?.thumbnails?.medium?.url || "";
   const rawDuration = contentDetails?.duration || "";
   const rawView = statistics?.viewCount || "";
   const duration = rawDuration ? formatDuration(rawDuration) : "";
