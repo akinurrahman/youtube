@@ -6,7 +6,6 @@ import { getYouTubeData } from "../../api/queries";
 import { useParams } from "react-router-dom";
 import PlaylistTop from "./PlaylistTop";
 import InfiniteScroll from "react-infinite-scroll-component";
-import PlayListVideos from "./PlayListVideos";
 import Spinner from "../skeletons/Spinner";
 import ChannelContentCard from "../channel/ChannelContentCard";
 

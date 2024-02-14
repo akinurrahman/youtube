@@ -4,8 +4,10 @@ import { formatDuration } from "../../helpers/formatDuration";
 import { getYouTubeData } from "../../api/queries";
 import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
 import { formatCount } from "../../helpers/formatCount";
+import { useNavigate } from "react-router-dom";
 // Render individual video
 const ChannelContentCard = ({ video }) => {
+  const navigate = useNavigate();
   const videoId = video.id.videoId || video.snippet.resourceId.videoId || "";
 
   const { data: videoInfo } = useQuery({
@@ -34,9 +36,13 @@ const ChannelContentCard = ({ video }) => {
   const publishedAt = video?.snippet.publishedAt || "";
   const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "";
 
+  const handleNavigate = () => {
+    navigate(`/watch/${videoId}`);
+  };
+
   // Render video details
   return (
-    <div className="flex sm:flex-col">
+    <div className="flex sm:flex-col" onClick={handleNavigate}>
       <div className="relative text-white">
         <img
           src={thumbnail}
