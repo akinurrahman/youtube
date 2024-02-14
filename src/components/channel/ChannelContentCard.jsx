@@ -16,7 +16,7 @@ const ChannelContentCard = ({ video }) => {
       getYouTubeData({
         endpoint: "videos",
         queryParams: {
-          part: "statistics,contentDetails",
+          part: "snippet,contentDetails,statistics",
           id: videoId,
         },
       }),

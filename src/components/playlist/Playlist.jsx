@@ -92,7 +92,7 @@ const Playlist = () => {
           loader={<Spinner />}
         >
           <section className="mx-1 mt-3 grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:my-4 lg:grid-cols-2 xl:grid-cols-3">
-            {playlistVideos?.map((video, index) => (
+            {playlistVideos?.map((video) => (
               <ChannelContentCard key={video.id} video={video} />
             ))}
           </section>

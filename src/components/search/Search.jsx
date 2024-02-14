@@ -9,19 +9,19 @@ import Video from "./Video";
 import PlayList from "./PlayList";
 import { useChannelsQuery, useVideosQuery } from "../../api/youtubeService";
 
-const Search = ({ video }) => {
+const Search = ({ item }) => {
   // todo : try using a dummy cannel cover if not avaible using nullish operator
   // Destructure video data
-  const thumbnail = video?.snippet?.thumbnails?.medium?.url || "";
-  const channelName = video?.snippet?.channelTitle || "";
-  const title = video?.snippet?.title || "";
-  const channelId = video?.snippet?.channelId || "";
-  const publishedAt = video?.snippet?.publishedAt || "";
+  const thumbnail = item?.snippet?.thumbnails?.medium?.url || "";
+  const channelName = item?.snippet?.channelTitle || "";
+  const title = item?.snippet?.title || "";
+  const channelId = item?.snippet?.channelId || "";
+  const publishedAt = item?.snippet?.publishedAt || "";
   const timeAgo = publishedAt && calculateTimeAgo(publishedAt);
-  // we will get either videoID or channelID or PlayListID from video.id
-  const isVideo = video?.id?.videoId || "";
-  const isChannel = video?.id?.channelId || "";
-  const isPlayList = video?.id?.playlistId || "";
+  // we will get either itemID or channelID or PlayListID from video.id
+  const isVideo = item?.id?.videoId || "";
+  const isChannel = item?.id?.channelId || "";
+  const isPlayList = item?.id?.playlistId || "";
 
   const { data: videoStats } = useVideosQuery({
     part: "statistics,contentDetails",
