@@ -1,83 +1,69 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
 import React from "react";
-import { RiMenuUnfoldFill } from "react-icons/ri";
-import { usePlaylistsQuery } from "../../../api/youtubeService";
-import { NavLink, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { getYouTubeData } from "../../../api/queries";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Spinner from "../../../components/skeletons/Spinner";
 import ChannelLayout from "../../../components/channel/ChannelLayout";
+import ChannelPlaylistsCard from "../../../components/channel/ChannelPlaylistsCard";
+import PlaylistsSkeleton from "../../../components/skeletons/PlaylistsSkeleton";
+import DisplayNoContent from "../../../../utilities/DisplayNoContent";
 
 const ChannelPlayLists = () => {
   const { channelId } = useParams();
 
-  const { data: playLists } = usePlaylistsQuery({
-    part: "snippet,contentDetails",
-    channelId: channelId,
-    maxResults: 30,
-  });
-
-  const renderPlaylists = () => {
-    return playLists?.items?.map((playlist, index) => {
-      // Extract playlist details
-      const snippet = playlist?.snippet;
-      const title = snippet?.title || "N/A";
-      const thumbnail = snippet?.thumbnails?.medium?.url || "N/A";
-      const channelName = snippet?.channelTitle || "N/A";
-      const playlistId = playlist?.id;
-      const itemCount = playlist?.contentDetails?.itemCount || 0;
-
-      return (
-        <NavLink
-          to={`/playlist/${playlistId}`}
-          className="flex sm:flex-col"
-          key={playlistId + index}
-        >
-          <div className="relative">
-            <img
-              src={thumbnail}
-              alt="thumbnail"
-              className="mr-2 max-w-[155px] rounded-lg sm:w-full sm:max-w-full"
-            />
-            {/* Display item count if it's greater than 0 */}
-            {itemCount > 0 && (
-              <div className="absolute bottom-2 right-3 z-10 flex items-center gap-[6px] rounded-sm bg-black bg-opacity-70 px-2 text-white">
-                <RiMenuUnfoldFill />
-                <span className="pb-[2px]">{itemCount}</span>
-              </div>
-            )}
-          </div>
-          {/* Playlist details */}
-          <div>
-            <h2 className="line-clamp-2 font-semibold leading-tight sm:mt-1">
-              {title}
-            </h2>
-            <p className="line-clamp-1 text-sm font-light sm:hidden">
-              {channelName} • Playlist
-            </p>
-            <p className="line-clamp-1 hidden text-sm font-light sm:block">
-              View full Playlist
-            </p>
-          </div>
-        </NavLink>
-      );
+  const { data, isLoading, fetchNextPage, hasNextPage, error } =
+    useInfiniteQuery({
+      queryKey: ["channel playlists", channelId],
+      queryFn: ({ pageParam }) =>
+        getYouTubeData({
+          endpoint: "playlists",
+          queryParams: {
+            part: "snippet,contentDetails",
+            channelId: channelId,
+            maxResults: 30,
+            pageToken: pageParam,
+            maxResults: 30,
+          },
+        }),
+      enabled: !!channelId,
+      getNextPageParam: (lastPage) => lastPage.nextPageToken,
+      staleTime: 1000 * 60 * 5,
     });
-  };
-
-  const noPlaylistsAvailable = () => {
-    return (
-      <div className=" relative flex w-screen flex-col items-center justify-center">
-        <img src="/assets/video not found.webp" alt="" className="w-[20rem] " />
-        <h2 className="absolute bottom-9 font-semibold sm:text-lg lg:text-2xl">
-          This channel has no Playlists
-        </h2>
-      </div>
-    );
-  };
+  const playlists = data?.pages.flatMap((page) => page.items) || [];
 
   return (
     <ChannelLayout>
-      <div className="m-4 grid gap-4 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        {playLists?.items?.length > 0
-          ? renderPlaylists()
-          : noPlaylistsAvailable()}
-      </div>
+      {isLoading && (
+        <div className="mx-4 grid gap-4 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {Array.from({ length: 5 }).map(() => (
+            <PlaylistsSkeleton />
+          ))}
+        </div>
+      )}
+      {playlists.length > 0 && !error && (
+        <InfiniteScroll
+          dataLength={playlists?.length}
+          next={fetchNextPage}
+          hasMore={hasNextPage}
+          loader={<Spinner />}
+        >
+          <div className="mx-4 grid gap-4 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {playlists.map((playlist, index) => (
+              <ChannelPlaylistsCard
+                key={playlist.id + index}
+                playlist={playlist}
+              />
+            ))}
+          </div>
+        </InfiniteScroll>
+      )}
+      {playlists.length < 1 && !error && (
+        <DisplayNoContent
+          message={`This channel does not have any playlists`}
+          img={"playlist not found.jpg"}
+        />
+      )}
     </ChannelLayout>
   );
 };
