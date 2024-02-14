@@ -39,16 +39,19 @@ const Carousel = ({ data, title }) => {
 
       {/* Carousel title */}
       <h2 className="px-4 py-2 text-xl">{title}</h2>
-      
+
       {/* Carousel content */}
       <div
         className="carouselItems flex w-full gap-3 overflow-auto px-4 py-2"
         ref={carouselContainer}
       >
         {/* Render each video content */}
-        {data?.map((video, index) => (
-          <RenderHomeContent video={video} key={index + video.id.videoId} />
-        ))}
+        {data?.map((item) => {
+          const videoId = item.id.videoId || item.id || "";
+          return (
+            <RenderHomeContent item={item} key={videoId} isPlaylist={title} />
+          );
+        })}
       </div>
     </section>
   );

@@ -4,16 +4,18 @@ import { getYouTubeData } from "../../api/queries";
 import { formatDuration } from "../../helpers/formatDuration";
 import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
 import { formatCount } from "../../helpers/formatCount";
+import { useNavigate } from "react-router-dom";
 
-const RenderHomeContent = ({ video }) => {
-  const videoId = video.id.videoId || "";
+const RenderHomeContent = ({ item, isPlaylist }) => {
+  const navigate = useNavigate();
+  const videoId = item.id.videoId || "";
   const { data: videoInfo } = useQuery({
     queryKey: ["videoInfo", videoId],
     queryFn: () =>
       getYouTubeData({
         endpoint: "videos",
         queryParams: {
-          part: "statistics,contentDetails",
+          part: "snippet,contentDetails,statistics",
           id: videoId,
         },
       }),
@@ -24,16 +26,25 @@ const RenderHomeContent = ({ video }) => {
   const { statistics, contentDetails } = videoInfo?.items[0] || {};
 
   // Extract necessary video details
-  const thumbnail = video?.snippet.thumbnails.medium.url || "";
+  const thumbnail = item?.snippet.thumbnails.medium.url || "";
   const rawDuration = contentDetails?.duration || "";
   const rawView = statistics?.viewCount || "";
   const duration = rawDuration ? formatDuration(rawDuration) : "";
   const viewCount = rawView ? formatCount(rawView) : "";
-  const title = video?.snippet.title || "";
-  const publishedAt = video?.snippet.publishedAt || "";
+  const title = item?.snippet.title || "";
+  const publishedAt = item?.snippet.publishedAt || "";
   const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "";
+
+  const handleNavigate = () => {
+    if (isPlaylist === "Playlists") {
+      navigate(`/playlist/${item.id}`);
+    } else {
+      navigate(`/watch/${videoId}`);
+    }
+  };
+
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col " onClick={handleNavigate}>
       <div className=" relative h-[95px] w-[150px]   text-white sm:h-[117px] sm:w-[194px]">
         <img
           src={thumbnail}
@@ -47,14 +58,18 @@ const RenderHomeContent = ({ video }) => {
 
       <div className="w-[150px] sm:w-[194px]">
         <h2 className="line-clamp-2  leading-none ">{title}</h2>
-        <p className="line-clamp-1 text-sm font-extralight">
-          {viewCount} views • {timeAgo}
-        </p>
+        {isPlaylist === "Playlists" ? (
+          <p className="line-clamp-1 text-sm font-extralight">
+            Watch full Playlist • {timeAgo}
+          </p>
+        ) : (
+          <p className="line-clamp-1 text-sm font-extralight">
+            {viewCount} views • {timeAgo}
+          </p>
+        )}
       </div>
     </div>
   );
 };
 
 export default RenderHomeContent;
-
-

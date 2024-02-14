@@ -1,7 +1,5 @@
-
-
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import React from "react";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { getYouTubeData } from "../../api/queries";
 import { useParams } from "react-router-dom";
 import PlaylistTop from "./PlaylistTop";
@@ -11,7 +9,8 @@ import ChannelContentCard from "../channel/ChannelContentCard";
 
 const Playlist = () => {
   const { playListId } = useParams();
-  //   API Call to get playlist info
+
+  // API Call to get playlist info
   const { data: playListInfo, error: playlistError } = useQuery({
     queryKey: ["playlist info", playListId],
     queryFn: () =>
@@ -25,6 +24,8 @@ const Playlist = () => {
     enabled: !!playListId,
     staleTime: 1000 * 60 * 5, // 5 min
   });
+
+  // Extracting necessary playlist info
   const { snippet, contentDetails } = playListInfo?.items[0] || {};
   const playListTitle = snippet?.title || "";
   const videoCount = contentDetails?.itemCount || 0;
@@ -35,11 +36,11 @@ const Playlist = () => {
     day: "numeric",
   });
 
-  //   API Call to get playlist videos
+  // API Call to get playlist videos
   const {
     data: playListData,
     error: videosError,
-    isLoading,
+    isLoading: loadingVideos,
     hasNextPage,
     fetchNextPage,
   } = useInfiniteQuery({
@@ -58,10 +59,11 @@ const Playlist = () => {
     staleTime: 1000 * 60 * 5,
     getNextPageParam: (lastPage) => lastPage.nextPageToken,
   });
-  // Extracting live videos from fetched channel live videos data
-  const playlistVideos =
-    playListData?.pages.flatMap((page) => page.items) || [];
 
+  // Extracting playlist videos
+  const playlistVideos = playListData?.pages.flatMap((page) => page.items) || [];
+
+  // Extracting additional data for rendering
   const cover = snippet?.thumbnails?.medium?.url || "";
   const channelName = snippet?.channelTitle || "";
   const data = {
@@ -71,13 +73,17 @@ const Playlist = () => {
     videoCount,
     timeAgo,
   };
+
   return (
-    <div className="mx-auto mt-4   px-3 lg:flex lg:gap-3 xl:mx-6">
+    <div className="mx-auto mt-4 px-3 lg:flex lg:gap-3 xl:mx-6">
+      {/* Render playlist top section if data is available */}
       {playListInfo && !playlistError && (
-        <section className="flex flex-col rounded-lg bg-gray-700 p-4 text-white sm:flex-row sm:gap-3 lg:my-4  lg:w-[80%] lg:flex-col lg:rounded-xl xl:max-w-[30%]">
+        <section className="flex flex-col rounded-lg bg-gray-700 p-4 text-white sm:flex-row sm:gap-3 lg:my-4 lg:w-[80%] lg:flex-col lg:rounded-xl xl:max-w-[30%]">
           <PlaylistTop data={data} />
         </section>
       )}
+
+      {/* Render playlist videos if data is available and no error occurred */}
       {playlistVideos?.length > 0 && !videosError && (
         <InfiniteScroll
           dataLength={playlistVideos?.length}
@@ -85,7 +91,7 @@ const Playlist = () => {
           next={fetchNextPage}
           loader={<Spinner />}
         >
-          <section className="mx-1  mt-3 grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:my-4  lg:grid-cols-2 xl:grid-cols-3">
+          <section className="mx-1 mt-3 grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:my-4 lg:grid-cols-2 xl:grid-cols-3">
             {playlistVideos?.map((video, index) => (
               <ChannelContentCard key={video.id} video={video} />
             ))}

@@ -7,7 +7,7 @@ import ChannelLayout from "../../../components/channel/ChannelLayout";
 import ChannelVideoSkeleton from "../../../components/skeletons/ChannelVideoSkeleton";
 import Spinner from "../../../components/skeletons/Spinner";
 import ChannelContentCard from "../../../components/channel/ChannelContentCard";
-import DisplayNoContent from "../../../../utilities/DisplayNoContent";
+import DisplayNoContent from "../../../components/utilities/DisplayNoContent";
 
 const ChannelVideos = () => {
   // Get channelId and path from the URL

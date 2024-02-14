@@ -9,7 +9,7 @@ import Spinner from "../../../components/skeletons/Spinner";
 import ChannelLayout from "../../../components/channel/ChannelLayout";
 import ChannelPlaylistsCard from "../../../components/channel/ChannelPlaylistsCard";
 import PlaylistsSkeleton from "../../../components/skeletons/PlaylistsSkeleton";
-import DisplayNoContent from "../../../../utilities/DisplayNoContent";
+import DisplayNoContent from "../../../components/utilities/DisplayNoContent";
 
 const ChannelPlayLists = () => {
   const { channelId } = useParams();
