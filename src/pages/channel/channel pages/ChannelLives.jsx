@@ -48,10 +48,7 @@ const ChannelLives = () => {
 
       {/* Display message if no videos are available */}
       {channelLives.length < 1 && (
-        <DisplayNoContent
-          message={`This channel does not have Lives`}
-          img={"video not found.jpg"}
-        />
+        <DisplayNoContent message={`This channel does not have Lives`} />
       )}
 
       {/* Render videos if available */}

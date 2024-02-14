@@ -4,14 +4,21 @@ import { useNavigate } from "react-router-dom";
 
 const ChannelPlaylistsCard = ({ playlist }) => {
   const navigate = useNavigate();
-  const snippet = playlist?.snippet || {};
+
+  // Destructure necessary data from the playlist object
+  const { snippet, id, contentDetails } = playlist || {};
   const title = snippet?.title || "N/A";
-  const thumbnail = snippet?.thumbnails.medium.url || "";
-  const channelName = snippet?.channelTitle || "N/A";
-  const playlistId = playlist?.id;
-  const itemCount = playlist?.contentDetails?.itemCount || 0;
+  const thumbnail = snippet?.thumbnails?.medium?.url || "";
+  const channelTitle = snippet?.channelTitle || "N/A";
+  const itemCount = contentDetails?.itemCount || 0;
+
+  // Navigate to the playlist page when clicked
+  const handleNavigation = () => {
+    navigate(`/playlist/${id}`);
+  };
+
   return (
-    <div onClick={() => navigate(`/playlist/${playlistId}`)}>
+    <div onClick={handleNavigation}>
       <div className="img--area relative bg-gray-300">
         <img src={thumbnail} className="relative h-[185px] w-full rounded-lg" />
         <div className="absolute bottom-2 right-3 z-10 flex items-center gap-[6px] rounded-sm bg-black bg-opacity-70 px-2 text-white">
@@ -25,7 +32,7 @@ const ChannelPlaylistsCard = ({ playlist }) => {
           {title}
         </h2>
         <p className="line-clamp-1 text-sm font-light sm:hidden">
-          {channelName} • Playlist
+          {channelTitle} • Playlist
         </p>
         <p className="line-clamp-1 hidden text-sm font-light sm:block">
           View full Playlist

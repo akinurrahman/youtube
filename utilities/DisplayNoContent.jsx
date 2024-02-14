@@ -2,7 +2,7 @@ import React from "react";
 
 const DisplayNoContent = ({
   message = "not found",
-  img = "video not found.jpg",
+  img = "not found.jpg",
 }) => {
   return (
     <div className=" mx-auto w-[90%]   px-4">

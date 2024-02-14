@@ -64,6 +64,32 @@ const ChannelHome = () => {
   // Extracting live videos from fetched channel live videos data
   const lives = channelLives?.pages.flatMap((page) => page.items) || [];
 
+  // Fetch playlists data using react-query
+  const {
+    data: channelPlaylists,
+    isLoading: isPlaylistsLoading,
+    error: isPlaylistsError,
+  } = useInfiniteQuery({
+    queryKey: ["channel playlists", channelId],
+    queryFn: ({ pageParam }) =>
+      getYouTubeData({
+        endpoint: "playlists",
+        queryParams: {
+          part: "snippet,contentDetails",
+          channelId: channelId,
+          maxResults: 30,
+          pageToken: pageParam,
+          maxResults: 30,
+        },
+      }),
+    enabled: !!channelId,
+    getNextPageParam: (lastPage) => lastPage.nextPageToken,
+    staleTime: 1000 * 60 * 5, // 5 min
+  });
+
+  // Extract playlists from fetched data
+  const playlists = channelPlaylists?.pages.flatMap((page) => page.items) || [];
+
   return (
     <ChannelLayout>
       {/* Skeleton loading for videos */}
@@ -82,14 +108,27 @@ const ChannelHome = () => {
           ))}
       </div>
 
+      {/* Skeleton loading for playlists */}
+      <div className="flex w-full gap-3 overflow-auto ">
+        {isPlaylistsLoading &&
+          Array.from({ length: 15 }).map((_, index) => (
+            <ChannelHomeContentSkeleton key={index} />
+          ))}
+      </div>
+
       {/* Rendering carousel for videos if available */}
       {videos?.length > 0 && !isVideoError && (
         <Crousel data={videos} title={"Videos"} />
       )}
-      
+
       {/* Rendering carousel for live videos if available */}
       {lives?.length > 0 && !isLiveError && (
         <Crousel data={lives} title={"Lives"} />
+      )}
+
+      {/* Rendering carousel for playlists if available */}
+      {playlists?.length > 0 && !isPlaylistsError && (
+        <Crousel data={playlists} title={"Playlists"} />
       )}
     </ChannelLayout>
   );
