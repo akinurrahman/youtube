@@ -1,51 +1,58 @@
 import React, { useEffect, useState } from "react";
-import { useSearchQuery } from "../../api/youtubeService";
-import { IoIosSearch } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-import { setSearchQuery } from "../../redux/features/infoSlice";
+import { IoIosSearch } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { getYouTubeData } from "../../api/queries";
+import { setSearchQuery } from "../../redux/features/infoSlice";
 
 const Suggestions = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { searchQuery } = useSelector((state) => state.info);
-  const [debouncedQuery, setDebouncedQuery] = useState("");
-  const [avoidAPICall, SetAvoidAPICall] = useState(true);
 
+  // State for debounced search query
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+
+  // Effect for debouncing search query
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
       setDebouncedQuery(searchQuery);
     }, 600);
 
+    // Cleanup function to clear timeout on unmount or query change
     return () => {
       clearTimeout(debounceTimer);
     };
   }, [searchQuery]);
 
-  useEffect(() => {
-    if (debouncedQuery) {
-      SetAvoidAPICall(false);
-    } else {
-      SetAvoidAPICall(true);
-    }
-  }, [debouncedQuery]);
+  // Hook for navigation
+  const navigate = useNavigate();
 
-  const { data: suggestions } = useSearchQuery(
-    {
-      part: "snippet",
-      maxResults: 10,
-      type: "suggest",
-      q: debouncedQuery,
-    },
-    { skip: avoidAPICall },
-  );
+  // Query to fetch search suggestions from YouTube API
+  const { data: suggestions } = useQuery({
+    queryKey: ["search", debouncedQuery],
+    queryFn: () =>
+      getYouTubeData({
+        endpoint: "search",
+        queryParams: {
+          part: "snippet",
+          maxResults: 10,
+          type: "suggest",
+          q: debouncedQuery,
+        },
+      }),
+    staleTime: 1000 * 60 * 5,
+    enabled: !!debouncedQuery,
+  });
 
+  // Function to handle navigation to search results page
   const handleNavigate = (destination, e) => {
-    e.stopPropagation();
-    navigate(destination);
-    dispatch(setSearchQuery(""));
+    e.stopPropagation(); // Prevent event propagation
+    navigate(destination); // Navigate to search results page
+    dispatch(setSearchQuery("")); // Clear search query in Redux store
   };
 
+  // Render search suggestions
   return (
     <>
       {searchQuery && suggestions && (
