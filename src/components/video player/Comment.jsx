@@ -9,7 +9,6 @@ import { CiMenuKebab } from "react-icons/ci";
 import { formatCount } from "../../helpers/formatCount";
 import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
 import { getYouTubeData } from "../../api/queries";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 const Comment = () => {
   // Extracting videoID from URL params
@@ -27,7 +26,7 @@ const Comment = () => {
           queryParams: {
             part: "snippet",
             videoId: videoID,
-            maxResults: 5,
+            maxResults: 20,
             pageToken: pageParam,
           },
         }),
@@ -65,31 +64,29 @@ const Comment = () => {
         totalReplyCount,
       },
     } = comment;
-  
+
     // Formats like count, total reply count, and calculates time ago
     const formattedLikeCount = likeCount && formatCount(likeCount);
-    const formattedTotalReplyCount = totalReplyCount && formatCount(totalReplyCount);
+    const formattedTotalReplyCount =
+      totalReplyCount && formatCount(totalReplyCount);
     const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "N/A";
-  
+
     return (
-      <section
-        className="mx-2 my-6 flex gap-3"
-        key={`${comment.id}/${index}`}
-      >
+      <section className="mx-2 my-6 flex gap-3" key={`${comment.id}/${index}`}>
         <div
           onClick={() => handleNavigate(`/channel/${channelId}`)}
           className="h-fit w-[45px]"
         >
           <img src={avatar} alt="" className="w-full rounded-full" />
         </div>
-  
+
         <div className="w-5/6">
           <div className="mr-2 flex justify-between">
             <p>{authorDisplayName}</p>
             <p>{timeAgo}</p>
           </div>
           <p>{textOriginal}</p>
-  
+
           <div className="flex justify-between">
             <p className="flex items-center">
               <AiOutlineLike className="mr-1" /> {formattedLikeCount}
@@ -113,8 +110,6 @@ const Comment = () => {
     );
   };
 
-  
-
   // Error state
   if (error) {
     console.log(error.message);
@@ -130,7 +125,7 @@ const Comment = () => {
         } `}
         onClick={() => setShowComment((prev) => !prev)}
       >
-        <p className="font-medium">Comments {comments.length}</p>
+        <p className="font-medium">Comments </p>
         <div className="mt-2 flex items-center gap-5">
           <img src={userAvatarUrl} alt="" className="w-[35px] rounded-full" />
           <p className="leading-none">{firstCommentText}</p>
@@ -141,14 +136,11 @@ const Comment = () => {
       <div
         className={`${
           showComment ? "block" : "hidden"
-        } my-4 h-[100vh] overflow-y-auto rounded-2xl  shadow-[-3px_-5px_5px_0px_#000000BF]`}
+        } my-5 h-[100vh] overflow-y-auto rounded-2xl   shadow-[-3px_-5px_5px_0px_#000000BF]`}
       >
         {/* Comment header */}
         <div className="sticky top-0 z-10 flex justify-between border-b-2 bg-white px-4 py-5">
-          <p className="text-xl font-semibold">
-            Comments{" "}
-            <sup className="font-normal text-gray-800">{comments.length}</sup>
-          </p>
+          <p className="text-xl font-semibold">Comments</p>
           <p>
             <RxCross2
               size={25}
@@ -174,15 +166,20 @@ const Comment = () => {
         </div>
 
         {/* Render comments */}
-        <InfiniteScroll
-          dataLength={comments?.length}
-          next={fetchNextPage}
-          hasMore={hasNextPage}
-        >
-          {comments &&
-            !error &&
-            comments?.map((comment, index) => renderComment(comment, index))}
-        </InfiniteScroll>
+
+        {comments &&
+          !error &&
+          comments?.map((comment, index) => renderComment(comment, index))}
+        {hasNextPage && (
+          <div className="w-full   text-center font-bold text-white">
+            <button
+              onClick={fetchNextPage}
+              className="rounded-lg bg-gray-500 px-4 py-2 hover:bg-gray-400"
+            >
+              Fetch More Comments
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

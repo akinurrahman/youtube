@@ -1,60 +1,80 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
 import { formatCount } from "../../helpers/formatCount";
-import useApi from "../../hooks/useApi";
-
 import { formatDuration } from "../../helpers/formatDuration";
 import Channel from "./Channel";
 import Video from "./Video";
 import PlayList from "./PlayList";
-import { useChannelsQuery, useVideosQuery } from "../../api/youtubeService";
+import { useQuery } from "@tanstack/react-query";
+import { getYouTubeData } from "../../api/queries";
 
 const Search = ({ item }) => {
-  // todo : try using a dummy cannel cover if not avaible using nullish operator
-  // Destructure video data
-  const thumbnail = item?.snippet?.thumbnails?.medium?.url || "";
-  const channelName = item?.snippet?.channelTitle || "";
-  const title = item?.snippet?.title || "";
-  const channelId = item?.snippet?.channelId || "";
-  const publishedAt = item?.snippet?.publishedAt || "";
-  const timeAgo = publishedAt && calculateTimeAgo(publishedAt);
-  // we will get either itemID or channelID or PlayListID from video.id
-  const isVideo = item?.id?.videoId || "";
-  const isChannel = item?.id?.channelId || "";
-  const isPlayList = item?.id?.playlistId || "";
+  const { id, snippet } = item || {};
 
-  const { data: videoStats } = useVideosQuery({
-    part: "statistics,contentDetails",
-    id: isVideo,
+  // Extract necessary data from snippet object
+  const thumbnail = snippet?.thumbnails?.medium?.url || "";
+  const channelName = snippet?.channelTitle || "";
+  const title = snippet?.title || "";
+  const channelId = snippet?.channelId || "";
+  const publishedAt = snippet?.publishedAt || "";
+  const timeAgo = publishedAt && calculateTimeAgo(publishedAt);
+
+  // Determine if the item is a video, channel, or playlist
+  const isVideo = id?.videoId || "";
+  const isChannel = id?.channelId || "";
+  const isPlayList = id?.playlistId || "";
+
+  // Fetch video statistics if it's a video
+  const { data: videoStats } = useQuery({
+    queryKey: ["video", isVideo],
+    queryFn: () =>
+      getYouTubeData({
+        endpoint: "videos",
+        queryParams: {
+          part: "statistics,contentDetails",
+          id: isVideo,
+        },
+      }),
+    enabled: !!isVideo,
+    staleTime: 1000 * 60 * 5,
   });
 
-  // Destructure videoStats
-  const rawDuration = videoStats?.items?.[0]?.contentDetails?.duration || "";
-  const rawViewCount = videoStats?.items?.[0]?.statistics?.viewCount || "";
+  // Extract relevant information from videoStats
+  const { statistics: videoStatsStatistics, contentDetails } =
+    videoStats?.items?.[0] || {};
+  const rawDuration = contentDetails?.duration || "";
+  const rawViewCount = videoStatsStatistics?.viewCount || "";
 
-  // Formatting values
+  // Format duration and view count
   const duration =
     rawDuration === "P0D" ? "Live" : rawDuration && formatDuration(rawDuration);
   const viewCount = rawViewCount && formatCount(rawViewCount);
 
-  // -------------------------Video stats Ends here-------------------------
-
-  const { data: channelStats } = useChannelsQuery({
-    part: "snippet,statistics",
-    id: channelId,
+  // Fetch channel statistics if it's a channel
+  const { data: channelStats } = useQuery({
+    queryKey: ["video", channelId],
+    queryFn: () =>
+      getYouTubeData({
+        endpoint: "channels",
+        queryParams: {
+          part: "snippet,statistics",
+          id: channelId,
+        },
+      }),
+    enabled: !!channelId,
+    staleTime: 1000 * 60 * 5,
   });
 
-  // Destructure channelStats
-  const customUrl = channelStats?.items?.[0]?.snippet?.customUrl || "";
-  const description =
-    channelStats?.items?.[0]?.snippet?.localized?.description || "";
-  const avatar =
-    channelStats?.items?.[0]?.snippet?.thumbnails?.default?.url || "";
-  const subscriberCount =
-    channelStats?.items?.[0]?.statistics?.subscriberCount || "";
+  // Extract relevant information from channelStats
+  const { snippet: channelStatsSnippet, statistics } =
+    channelStats?.items?.[0] || {};
+  const customUrl = channelStatsSnippet?.customUrl || "";
+  const description = channelStatsSnippet?.localized?.description || "";
+  const avatar = channelStatsSnippet?.thumbnails?.default?.url || "";
+  const subscriberCount = statistics?.subscriberCount || "";
   const subsCount = subscriberCount ? formatCount(subscriberCount) : "";
-  // ---------------------------Channel Stats Ends Here-------------------------------------
 
+  // Combine all relevant information into 'info' object
   const info = {
     channelId,
     thumbnail,
@@ -70,14 +90,16 @@ const Search = ({ item }) => {
     channelName,
     isPlayList,
   };
+
+  // Render corresponding component based on the type of item
   return (
     <div>
       {isChannel ? (
-        <Channel {...info} />
+        <Channel info={info} />
       ) : isPlayList ? (
-        <PlayList {...info} />
+        <PlayList  info={info} />
       ) : (
-        <Video {...info} />
+        <Video info={info} />
       )}
     </div>
   );

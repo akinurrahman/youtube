@@ -1,72 +1,83 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const Video = ({
-  isVideo,
-  thumbnail,
-  duration,
-  channelId,
-  avatar,
-  viewCount,
-  timeAgo,
-  title,
-  description,
-  channelName,
-}) => {
+const Video = ({ info }) => {
+  const navigate = useNavigate();
+
+  // Handler for navigating to the video page
+  const handleVideoNavigation = () => {
+    navigate(`/watch/${info.isVideo}`);
+  };
+
+  // Handler for navigating to the channel page
+  const handleChannelNavigation = (event) => {
+    event.stopPropagation();
+    navigate(`/channel/${info.channelId}`);
+  };
+
   return (
-    <NavLink to={`/watch/${isVideo}`}>
-      <div className="mt-4 gap-4 sm:flex md:mx-5 lg:mx-[187px]">
-        {/* col - 1  */}
-        <div className=" img-container relative text-white">
+    <div
+      className="mt-4 gap-4 sm:flex md:mx-5 lg:mx-[187px]"
+      onClick={handleVideoNavigation}
+    >
+      {/* Column 1: Thumbnail and duration */}
+      <div className="img-container relative text-white">
+        <img
+          src={info.thumbnail}
+          alt=""
+          className="w-full sm:min-w-[320px] sm:rounded-xl"
+        />
+        {/* Duration overlay */}
+        <p className="absolute bottom-2 right-3 z-10 rounded-md bg-black bg-opacity-70 px-2">
+          {info.duration}
+        </p>
+      </div>
+      {/* Column 2: Video details */}
+      <div className="mx-2 mt-2 flex items-center sm:hidden">
+        {/* Channel avatar */}
+        <div onClick={handleChannelNavigation}>
           <img
-            src={thumbnail}
+            src={info.avatar}
             alt=""
-            className=" w-full sm:min-w-[320px] sm:rounded-xl "
+            className="mr-3 max-w-[40px] rounded-full"
           />
-          <p className="absolute bottom-2  right-3 z-10 rounded-md bg-black bg-opacity-70 px-2">
-            {duration}
-          </p>
         </div>
-        {/* col-2 */}
-        <div className="mx-2 mt-2 flex items-center sm:hidden">
-          <NavLink to={`/channel/${channelId}`}>
-            <img
-              src={avatar}
-              alt=""
-              className="mr-3 max-w-[40px] rounded-full "
-            />
-          </NavLink>
-          <div>
-            <div className="line-clamp-2 font-semibold leading-none">
-              {title}
-            </div>
-            <p className="line-clamp-1 text-gray-700">
-              <NavLink to={`/channel/${channelId}`}>{channelName}</NavLink> •{" "}
-              {viewCount} • {timeAgo}
-            </p>
+        {/* Title, channel name, view count, and time ago */}
+        <div>
+          <div className="line-clamp-2 font-semibold leading-none">
+            {info.title}
+          </div>
+          <div className="line-clamp-1 text-gray-700">
+            {/* Clickable channel name */}
+            <div onClick={handleChannelNavigation}>{info.channelName}</div> •
+            {info.viewCount} • {info.timeAgo}
           </div>
         </div>
-        {/* show this for column 2 when size is small */}
-        <div className="mt-1 hidden flex-col sm:flex ">
-          <h2 className="mb-1 line-clamp-2 font-semibold ">{title}</h2>
-          <p className="mb-2 line-clamp-1 text-gray-700">
-            {viewCount} • {timeAgo}
-          </p>
-          <NavLink
-            to={`/channel/${channelId}`}
-            className="mb-2 line-clamp-1  flex items-center text-gray-700"
-          >
-            <img
-              src={avatar}
-              alt=""
-              className="mr-3 max-w-[25px] rounded-full "
-            />
-            <span>{channelName}</span>
-          </NavLink>
-          <p className="line-clamp-2 text-gray-600 ">{description}</p>
-        </div>
       </div>
-    </NavLink>
+      {/* Show this for column 2 when size is small */}
+      <div className="mt-1 hidden flex-col sm:flex">
+        {/* Title */}
+        <h2 className="mb-1 line-clamp-2 font-semibold">{info.title}</h2>
+        {/* View count and time ago */}
+        <p className="mb-2 line-clamp-1 text-gray-700">
+          {info.viewCount} • {info.timeAgo}
+        </p>
+        {/* Channel avatar and name */}
+        <div
+          onClick={handleChannelNavigation}
+          className="mb-2 line-clamp-1 flex items-center text-gray-700"
+        >
+          <img
+            src={info.avatar}
+            alt=""
+            className="mr-3 max-w-[25px] rounded-full"
+          />
+          <span>{info.channelName}</span>
+        </div>
+        {/* Description */}
+        <p className="line-clamp-2 text-gray-600">{info.description}</p>
+      </div>
+    </div>
   );
 };
 
