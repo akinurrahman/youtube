@@ -30,11 +30,12 @@ const Home = () => {
   const videos = data?.pages.flatMap((page) => page.items) || [];
 
   return (
-    <section>
+    <section className="my-6">
       {/* Displaying error message if there's an error */}
       {error && (
         <div className="ml-5 mt-6 text-red-500">Error: {error.message}</div>
       )}
+
       {/* Infinite scrolling component */}
       <InfiniteScroll
         dataLength={videos.length}

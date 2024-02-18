@@ -2,26 +2,29 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
 import { formatCount } from "../../helpers/formatCount";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { formatDuration } from "../../helpers/formatDuration";
 import { getYouTubeData } from "../../api/queries";
 import { useQuery } from "@tanstack/react-query";
+import Img from "../lazy load/Img";
 
 const HomeThumnailCard = ({ video }) => {
   const navigate = useNavigate();
 
+  const { snippet, statistics, contentDetails } = video || {};
+
   // Extracting video details
-  const thumbnail = video?.snippet.thumbnails.medium.url ?? "";
-  const channelName = video?.snippet.channelTitle || "N/A";
-  const title = video?.snippet?.title || "N/A";
-  const publishedAt = video?.snippet.publishedAt || "N/A";
-  const channelId = video?.snippet.channelId || "";
+  const thumbnail = snippet.thumbnails.high.url ?? "";
+  const placeholderImg = snippet.thumbnails.default.url ?? "";
+  const channelName = snippet.channelTitle || "N/A";
+  const title = snippet?.title || "N/A";
+  const publishedAt = snippet.publishedAt || "N/A";
+  const channelId = snippet.channelId || "";
   const videoID = video?.id || "";
 
   // Extracting statistics and contentDetails with defaults
-  const { viewCount: rawViewCount = "N/A" } = video?.statistics ?? {};
-  const { duration: rawDuration = "N/A" } = video?.contentDetails ?? {};
+  const { viewCount: rawViewCount = "N/A" } = statistics ?? {};
+  const { duration: rawDuration = "N/A" } = contentDetails ?? {};
 
   // Formatting video details
   const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "";
@@ -54,15 +57,14 @@ const HomeThumnailCard = ({ video }) => {
   return (
     <div onClick={() => navigate(`/watch/${videoID}`)}>
       {/* Thumbnail container */}
-      <div className="thumbnail-container relative h-[184px] rounded-lg bg-gray-300 text-white sm:h-[166px] md:h-[132px] xl:h-[168px] 2xl:h-[206px]">
-        <LazyLoadImage
+      <div className="image-container ">
+        <Img
           src={thumbnail}
-          width={"100%"}
-          effect="blur"
+          placeholderSrc={placeholderImg}
           className="rounded-lg"
         />
         {/* Displaying video duration */}
-        <p className="absolute bottom-2 right-3 z-10 rounded-md bg-black bg-opacity-70 px-2">
+        <p className="absolute bottom-2 right-3 z-10 rounded-md bg-black bg-opacity-70 px-2 text-white">
           {duration}
         </p>
       </div>
@@ -73,7 +75,7 @@ const HomeThumnailCard = ({ video }) => {
           className="logo-container"
           onClick={(e) => handleNavigate(`/channel/${channelId}`, e)}
         >
-          <LazyLoadImage src={avatar} className="max-w-[40px] rounded-full" />
+          <Img src={avatar} className="max-w-[40px] rounded-full" />
         </div>
         <div>
           <h2 className="line-clamp-2 font-bold text-gray-900">{title}</h2>

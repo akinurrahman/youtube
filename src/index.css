@@ -16,3 +16,25 @@ body::-webkit-scrollbar {
 body::-webkit-scrollbar-thumb {
   background-color: transparent;
 }
+
+/* --------------------------- Image ---------------------------*/
+.image-container {
+  position: relative;
+  width: 100%;
+  padding-top: calc(9 / 16 * 100%); /* 16:9 aspect ratio */
+}
+
+.image-container .lazy-load-image-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.image-container .lazy-load-image-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
