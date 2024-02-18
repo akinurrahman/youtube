@@ -3,7 +3,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getYouTubeData } from "../api/queries";
 import InfiniteScroll from "react-infinite-scroll-component";
 import HomeSkeleton from "../components/skeletons/HomeSkeleton";
-import HomeThumnailCard from "../components/home/HomeThumnailCard";
+import HomeCard from "../components/display-cards/HomeCard";
 
 const Home = () => {
   // Using useInfiniteQuery to fetch data in an infinite-scrolling manner
@@ -51,7 +51,7 @@ const Home = () => {
           {/* Mapping through videos and rendering thumbnail cards */}
           {videos &&
             videos.map((video, index) => (
-              <HomeThumnailCard key={video.id + index} video={video} />
+              <HomeCard key={video.id + index} video={video} />
             ))}
           {/* Rendering skeleton components while loading */}
           {isLoading &&

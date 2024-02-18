@@ -1,11 +1,11 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import RecommenedVideoCard from "./RecommenedVideoCard";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getYouTubeData } from "../../api/queries";
-import { recommendedSkeleton } from "../skeletons/RecommendredSkeleton";
+import RecommendCard from "../display-cards/RecommendCard";
+import VideoSkeleton from "../skeletons/VideoSkeleton";
 
-const SecondColumn = () => {
+const Recommended = () => {
   // Select the title from Redux state
   const title = useSelector((state) => state.info.title);
 
@@ -34,21 +34,28 @@ const SecondColumn = () => {
 
   return (
     <div>
+      {/* Render loading skeletons while data is loading */}
+      {isLoading && (
+        <div className="my-2 grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <VideoSkeleton key={index} />
+          ))}
+        </div>
+      )}
       {/* Render recommended videos */}
-      {data &&
-        !error &&
-        recommendedVideos.map((video) => (
-          <RecommenedVideoCard video={video} key={video.id.videoId} />
-        ))}
+      {data && !error && (
+        <div className="my-2 grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1">
+          {recommendedVideos.map((video) => (
+            <RecommendCard video={video} key={video.id.videoId} />
+          ))}
+        </div>
+      )}
 
       {/* Render error message if error occurs */}
       {error && (
         <div className="ml-5 mt-6 text-red-500">Error: {error.message}</div>
       )}
 
-      {/* Render loading skeletons while data is loading */}
-      {isLoading &&
-        Array.from({ length: 20 }).forEach(() => recommendedSkeleton())}
       {hasNextPage && (
         <div className="w-full   text-center font-bold text-white">
           <button
@@ -63,4 +70,4 @@ const SecondColumn = () => {
   );
 };
 
-export default SecondColumn;
+export default Recommended;

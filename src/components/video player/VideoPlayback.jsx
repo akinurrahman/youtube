@@ -12,7 +12,7 @@ import { setTitle } from "../../redux/features/infoSlice";
 import { useQuery } from "@tanstack/react-query";
 import { getYouTubeData } from "../../api/queries";
 
-const FirstColumn = () => {
+const VideoPlayback = () => {
   // Hooks
   const navigate = useNavigate();
   const { videoID } = useParams();
@@ -77,14 +77,14 @@ const FirstColumn = () => {
     <div>
       {/* Video player */}
       <iframe
-        className="md:[440px] h-[260px] w-full rounded-[31px] p-4 outline-none sm:h-[375px] lg:h-[397px]  xl:h-[500px] 2xl:h-[600px] "
+        className="mt-3 aspect-video w-full rounded-[27px] p-4"
         src={`https://www.youtube.com/embed/${videoID}?autoplay=1`}
         title="YouTube video player"
         allowFullScreen
       ></iframe>
 
       {/* Video title */}
-      <h2 className="line-clamp-2 px-4 font-bold text-gray-900 ">{title}</h2>
+      <h2 className="line-clamp-2  px-4 font-bold text-gray-900 ">{title}</h2>
 
       {/* Channel info */}
       <div className="flex flex-col md:mr-2 md:flex md:flex-row md:justify-between">
@@ -159,4 +159,4 @@ const FirstColumn = () => {
   );
 };
 
-export default FirstColumn;
+export default VideoPlayback;

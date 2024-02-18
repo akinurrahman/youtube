@@ -8,7 +8,7 @@ import { getYouTubeData } from "../../api/queries";
 import { useQuery } from "@tanstack/react-query";
 import Img from "../lazy load/Img";
 
-const HomeThumnailCard = ({ video }) => {
+const HomeCard = ({ video }) => {
   const navigate = useNavigate();
 
   const { snippet, statistics, contentDetails } = video || {};
@@ -95,4 +95,4 @@ const HomeThumnailCard = ({ video }) => {
   );
 };
 
-export default HomeThumnailCard;
+export default HomeCard;

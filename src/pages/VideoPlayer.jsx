@@ -1,15 +1,15 @@
 import React from "react";
-import FirstColumn from "../components/video player/FirstColumn";
-import SecondColumn from "../components/video player/SecondColumn";
+import VideoPlayback from "../components/video player/VideoPlayback";
+import Recommended from "../components/video player/Recommended";
 
 const VideoPlayer = () => {
   return (
     <div className="lg:flex ">
-      <div className="column-1  lg:w-[70%]  ">
-        <FirstColumn />
+      <div className="column-1  lg:w-[75%]  ">
+        <VideoPlayback />
       </div>
-      <div className="column-2 h-screen  lg:w-[30%] ">
-        <SecondColumn />
+      <div className="column-2 m-3 mt-4 h-screen lg:w-[25%] ">
+        <Recommended />
       </div>
     </div>
   );
