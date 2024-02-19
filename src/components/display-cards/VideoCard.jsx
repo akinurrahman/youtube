@@ -28,8 +28,7 @@ const VideoCard = ({ video }) => {
   const { statistics, contentDetails } = videoInfo?.items[0] || {};
 
   // Extract necessary video details
-  const thumbnail = video?.snippet.thumbnails.high.url ?? "";
-  const placeholderImg = video?.snippet.thumbnails.default.url ?? "";
+  const thumbnail = video?.snippet?.thumbnails?.medium?.url || "";
   const rawDuration = contentDetails?.duration || "";
   const rawView = statistics?.viewCount || "";
   const duration = rawDuration ? formatDuration(rawDuration) : "";
@@ -46,12 +45,7 @@ const VideoCard = ({ video }) => {
   return (
     <div onClick={handleNavigate}>
       <div className="image-container text-white">
-        <Img
-          src={thumbnail}
-          alt=""
-          placeholderSrc={placeholderImg}
-          className="rounded-lg"
-        />
+        <Img src={thumbnail} alt="" className="rounded-lg" />
         <p className="absolute bottom-2 right-3 z-10 rounded-md bg-black bg-opacity-70 px-2">
           {duration}
         </p>
