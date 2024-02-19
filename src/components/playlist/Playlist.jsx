@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import PlaylistTop from "./PlaylistTop";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Spinner from "../skeletons/Spinner";
-import ChannelContentCard from "../channel/ChannelContentCard";
+import VideoCard from "../display-cards/VideoCard";
 
 const Playlist = () => {
   const { playListId } = useParams();
@@ -61,7 +61,8 @@ const Playlist = () => {
   });
 
   // Extracting playlist videos
-  const playlistVideos = playListData?.pages.flatMap((page) => page.items) || [];
+  const playlistVideos =
+    playListData?.pages.flatMap((page) => page.items) || [];
 
   // Extracting additional data for rendering
   const cover = snippet?.thumbnails?.medium?.url || "";
@@ -93,7 +94,7 @@ const Playlist = () => {
         >
           <section className="mx-1 mt-3 grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:my-4 lg:grid-cols-2 xl:grid-cols-3">
             {playlistVideos?.map((video) => (
-              <ChannelContentCard key={video.id} video={video} />
+              <VideoCard key={video.id} video={video} />
             ))}
           </section>
         </InfiniteScroll>

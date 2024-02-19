@@ -4,10 +4,10 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getYouTubeData } from "../../../api/queries";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ChannelLayout from "../../../components/channel/ChannelLayout";
-import ChannelVideoSkeleton from "../../../components/skeletons/ChannelVideoSkeleton";
 import Spinner from "../../../components/skeletons/Spinner";
-import ChannelContentCard from "../../../components/channel/ChannelContentCard";
 import DisplayNoContent from "../../../components/utilities/DisplayNoContent";
+import VideoCard from "../../../components/display-cards/VideoCard";
+import VideoSkeleton from "../../../components/skeletons/VideoSkeleton";
 
 const ChannelLives = () => {
   const { channelId } = useParams();
@@ -42,7 +42,7 @@ const ChannelLives = () => {
       <div className="m-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {isLoading &&
           Array.from({ length: 15 }).map((_, index) => (
-            <ChannelVideoSkeleton key={index} />
+            <VideoSkeleton key={index} />
           ))}
       </div>
 
@@ -61,10 +61,7 @@ const ChannelLives = () => {
         >
           <div className="m-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {channelLives.map((video, index) => (
-              <ChannelContentCard
-                key={video.id.videoId + index}
-                video={video}
-              />
+              <VideoCard key={video.id.videoId + index} video={video} />
             ))}
           </div>
         </InfiniteScroll>

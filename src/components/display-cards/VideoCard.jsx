@@ -1,12 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { formatDuration } from "../../helpers/formatDuration";
 import { getYouTubeData } from "../../api/queries";
-import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
 import { formatCount } from "../../helpers/formatCount";
-import { useNavigate } from "react-router-dom";
+import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
+import Img from "../lazy load/Img";
 // Render individual video
-const ChannelContentCard = ({ video }) => {
+const VideoCard = ({ video }) => {
   const navigate = useNavigate();
   const videoId = video.id.videoId || video.snippet.resourceId.videoId || "";
 
@@ -27,7 +28,8 @@ const ChannelContentCard = ({ video }) => {
   const { statistics, contentDetails } = videoInfo?.items[0] || {};
 
   // Extract necessary video details
-  const thumbnail = video?.snippet?.thumbnails?.medium?.url || "";
+  const thumbnail = video?.snippet.thumbnails.high.url ?? "";
+  const placeholderImg = video?.snippet.thumbnails.default.url ?? "";
   const rawDuration = contentDetails?.duration || "";
   const rawView = statistics?.viewCount || "";
   const duration = rawDuration ? formatDuration(rawDuration) : "";
@@ -42,12 +44,13 @@ const ChannelContentCard = ({ video }) => {
 
   // Render video details
   return (
-    <div className="flex sm:flex-col" onClick={handleNavigate}>
-      <div className="relative text-white">
-        <img
+    <div onClick={handleNavigate}>
+      <div className="image-container text-white">
+        <Img
           src={thumbnail}
           alt=""
-          className="mr-2 max-w-[155px] rounded-lg sm:w-full sm:max-w-full"
+          placeholderSrc={placeholderImg}
+          className="rounded-lg"
         />
         <p className="absolute bottom-2 right-3 z-10 rounded-md bg-black bg-opacity-70 px-2">
           {duration}
@@ -66,4 +69,4 @@ const ChannelContentCard = ({ video }) => {
   );
 };
 
-export default ChannelContentCard;
+export default VideoCard;

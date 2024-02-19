@@ -4,10 +4,10 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getYouTubeData } from "../../../api/queries";
 import InfiniteScroll from "react-infinite-scroll-component";
 import ChannelLayout from "../../../components/channel/ChannelLayout";
-import ChannelVideoSkeleton from "../../../components/skeletons/ChannelVideoSkeleton";
 import Spinner from "../../../components/skeletons/Spinner";
-import ChannelContentCard from "../../../components/channel/ChannelContentCard";
 import DisplayNoContent from "../../../components/utilities/DisplayNoContent";
+import VideoSkeleton from "../../../components/skeletons/VideoSkeleton";
+import VideoCard from "../../../components/display-cards/VideoCard";
 
 const ChannelVideos = () => {
   // Get channelId and path from the URL
@@ -58,7 +58,7 @@ const ChannelVideos = () => {
       <div className="m-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {isLoading &&
           Array.from({ length: 15 }).map((_, index) => (
-            <ChannelVideoSkeleton key={index} />
+            <VideoSkeleton key={index} />
           ))}
       </div>
 
@@ -80,12 +80,9 @@ const ChannelVideos = () => {
           hasMore={hasNextPage}
           loader={<Spinner />}
         >
-          <div className="m-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="mx-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {channelVideos.map((video, index) => (
-              <ChannelContentCard
-                key={video.id.videoId + index}
-                video={video}
-              />
+              <VideoCard key={video.id.videoId + index} video={video} />
             ))}
           </div>
         </InfiniteScroll>

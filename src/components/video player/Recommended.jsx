@@ -2,8 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getYouTubeData } from "../../api/queries";
-import RecommendCard from "../display-cards/RecommendCard";
 import VideoSkeleton from "../skeletons/VideoSkeleton";
+import VideoCard from "../display-cards/VideoCard";
 
 const Recommended = () => {
   // Select the title from Redux state
@@ -37,8 +37,8 @@ const Recommended = () => {
       {/* Render loading skeletons while data is loading */}
       {isLoading && (
         <div className="my-2 grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <VideoSkeleton key={index} />
+          {Array.from({ length: 12 }).map((_, index) => (
+            <VideoSkeleton key={index}  />
           ))}
         </div>
       )}
@@ -46,7 +46,7 @@ const Recommended = () => {
       {data && !error && (
         <div className="my-2 grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1">
           {recommendedVideos.map((video) => (
-            <RecommendCard video={video} key={video.id.videoId} />
+            <VideoCard video={video} key={video.id.videoId}  />
           ))}
         </div>
       )}
