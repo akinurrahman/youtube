@@ -5,8 +5,10 @@ import { formatDuration } from "../../helpers/formatDuration";
 import { calculateTimeAgo } from "../../helpers/calculateTimeAgo";
 import { formatCount } from "../../helpers/formatCount";
 import { useNavigate } from "react-router-dom";
+import Img from "../lazy load/Img";
+import { RiMenuUnfoldFill } from "react-icons/ri";
 
-const RenderHomeContent = ({ item, isPlaylist }) => {
+const CarouselCard = ({ item, isPlaylist }) => {
   const navigate = useNavigate();
   const videoId = item.id.videoId || "";
 
@@ -37,6 +39,7 @@ const RenderHomeContent = ({ item, isPlaylist }) => {
   const title = item?.snippet.title || "";
   const publishedAt = item?.snippet.publishedAt || "";
   const timeAgo = publishedAt ? calculateTimeAgo(publishedAt) : "";
+  const itemCount = item?.contentDetails?.itemCount || 0;
 
   // Function to handle navigation based on playlist or single video
   const handleNavigate = () => {
@@ -48,19 +51,20 @@ const RenderHomeContent = ({ item, isPlaylist }) => {
   };
 
   return (
-    <div className="flex flex-col" onClick={handleNavigate}>
-      <div className="relative h-[95px] w-[150px] text-white sm:h-[117px] sm:w-[194px]">
-        <img
-          src={thumbnail}
-          alt=""
-          className="mr-2 w-full rounded-lg sm:w-full sm:max-w-full"
-        />
-        <p className="absolute bottom-[17px] right-[6px] z-10 rounded-md bg-black bg-opacity-70 px-2">
-          {duration}
-        </p>
+    <div onClick={handleNavigate}>
+      <div className="image__container--crousel  rounded-md bg-gray-300">
+        <Img src={thumbnail} alt="" className="rounded-md" />
+        {duration ? (
+          <p className="absolute bottom-[8px] right-[6px] z-10 rounded-md bg-black bg-opacity-70 px-2 text-white">
+            {duration}
+          </p>
+        ) : (
+          <p className="absolute bottom-[8px] right-[6px] z-10 flex items-center gap-1 rounded-md bg-black bg-opacity-70 px-2 text-white">
+            <RiMenuUnfoldFill /> {itemCount}
+          </p>
+        )}
       </div>
-
-      <div className="w-[150px] sm:w-[194px]">
+      <div className="my-1">
         <h2 className="line-clamp-2 leading-none">{title}</h2>
         {isPlaylist === "Playlists" ? (
           <p className="line-clamp-1 text-sm font-extralight">
@@ -76,4 +80,4 @@ const RenderHomeContent = ({ item, isPlaylist }) => {
   );
 };
 
-export default RenderHomeContent;
+export default CarouselCard;

@@ -38,3 +38,11 @@ body::-webkit-scrollbar-thumb {
   object-fit: cover;
   object-position: center;
 }
+
+
+.image__container--crousel {
+  position: relative;
+  width: 250px; /* Adjust the width as needed */
+  height: 140px; /* Adjust the height as needed */
+  display: inline-block;
+}

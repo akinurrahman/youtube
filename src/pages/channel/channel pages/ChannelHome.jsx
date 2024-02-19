@@ -4,8 +4,8 @@ import ChannelLayout from "../../../components/channel/ChannelLayout";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getYouTubeData } from "../../../api/queries";
 import { useParams } from "react-router-dom";
-import ChannelHomeContentSkeleton from "../../../components/skeletons/ChannelHomeContentSkeleton";
-import Crousel from "../../../components/channel/Crousel";
+import Carousel from "../../../components/channel/Carousel";
+import CarouselSkeleton from "../../../components/skeletons/CarouselSkeleton";
 
 const ChannelHome = () => {
   const { channelId } = useParams();
@@ -93,42 +93,54 @@ const ChannelHome = () => {
   return (
     <ChannelLayout>
       {/* Skeleton loading for videos */}
-      <div className="flex w-full gap-3 overflow-auto ">
-        {isVideoLoading &&
-          Array.from({ length: 15 }).map((_, index) => (
-            <ChannelHomeContentSkeleton key={index} />
-          ))}
-      </div>
+      {isVideoLoading && (
+        <div className="mt-[20px]">
+          <p className="mx-4  h-5 w-[150px] bg-gray-300"></p>
+          <div className="mx-4 my-2 flex w-full gap-3 overflow-auto">
+            {Array.from({ length: 15 }).map((_, index) => (
+              <CarouselSkeleton key={index} />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Skeleton loading for live videos */}
-      <div className="flex w-full gap-3 overflow-auto ">
-        {isLiveLoading &&
-          Array.from({ length: 15 }).map((_, index) => (
-            <ChannelHomeContentSkeleton key={index} />
-          ))}
-      </div>
+      {isLiveLoading && (
+        <div className="mt-[20px]">
+          <p className="mx-4  h-5 w-[150px] bg-gray-300"></p>
+          <div className="mx-4 my-2 flex w-full gap-3 overflow-auto">
+            {Array.from({ length: 15 }).map((_, index) => (
+              <CarouselSkeleton key={index} />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Skeleton loading for playlists */}
-      <div className="flex w-full gap-3 overflow-auto ">
-        {isPlaylistsLoading &&
-          Array.from({ length: 15 }).map((_, index) => (
-            <ChannelHomeContentSkeleton key={index} />
-          ))}
-      </div>
+      {isPlaylistsLoading && (
+        <div className="mt-[20px]">
+          <p className="mx-4  h-5 w-[150px] bg-gray-300"></p>
+          <div className="mx-4 my-2 flex w-full gap-3 overflow-auto">
+            {Array.from({ length: 15 }).map((_, index) => (
+              <CarouselSkeleton key={index} />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Rendering carousel for videos if available */}
       {videos?.length > 0 && !isVideoError && (
-        <Crousel data={videos} title={"Videos"} />
+        <Carousel data={videos} title={"Videos"} />
       )}
 
       {/* Rendering carousel for live videos if available */}
       {lives?.length > 0 && !isLiveError && (
-        <Crousel data={lives} title={"Lives"} />
+        <Carousel data={lives} title={"Lives"} />
       )}
 
       {/* Rendering carousel for playlists if available */}
       {playlists?.length > 0 && !isPlaylistsError && (
-        <Crousel data={playlists} title={"Playlists"} />
+        <Carousel data={playlists} title={"Playlists"} />
       )}
     </ChannelLayout>
   );

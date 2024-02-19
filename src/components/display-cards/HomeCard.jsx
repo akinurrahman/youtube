@@ -57,11 +57,11 @@ const HomeCard = ({ video }) => {
   return (
     <div onClick={() => navigate(`/watch/${videoID}`)}>
       {/* Thumbnail container */}
-      <div className="image-container ">
+      <div className="image-container rounded-lg bg-gray-300">
         <Img
           src={thumbnail}
           placeholderSrc={placeholderImg}
-          className="rounded-lg"
+          className="rounded-lg "
         />
         {/* Displaying video duration */}
         <p className="absolute bottom-2 right-3 z-10 rounded-md bg-black bg-opacity-70 px-2 text-white">

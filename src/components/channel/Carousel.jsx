@@ -3,22 +3,21 @@ import {
   BsFillArrowLeftCircleFill,
   BsFillArrowRightCircleFill,
 } from "react-icons/bs";
-import RenderHomeContent from "./RenderHomeContent";
+import CarouselCard from "../display-cards/CarouselCard";
 
-const ChannelHomeCrousel = ({ data }) => {
-  // Ref for accessing the carousel container
-  const crouselContainer = useRef();
+const Carousel = ({ data, title }) => {
+  // Ref to access the carousel container
+  const carouselContainer = useRef();
 
   // Function to handle carousel scrolling
   const carouselScrollHandler = (direction) => {
-    const container = crouselContainer.current;
-    // Calculate the amount to scroll based on the specified direction
+    const container = carouselContainer.current;
     const scrollAmount =
       direction === "left"
         ? container.scrollLeft - container.offsetWidth
         : container.scrollLeft + container.offsetWidth;
 
-    // Scroll to the calculated position with smooth animation
+    // Smooth scroll to the specified position
     container.scrollTo({
       left: scrollAmount,
       behavior: "smooth",
@@ -26,7 +25,7 @@ const ChannelHomeCrousel = ({ data }) => {
   };
 
   return (
-    <section className="crousel relative max-w-[1400px] ">
+    <section className="carousel relative max-w-[1400px]">
       {/* Left arrow */}
       <BsFillArrowLeftCircleFill
         className="absolute left-8 top-[43%] z-10 hidden cursor-pointer text-3xl text-[#b38e8e] md:block"
@@ -38,19 +37,22 @@ const ChannelHomeCrousel = ({ data }) => {
         onClick={() => carouselScrollHandler("right")}
       />
 
-      <h2 className="px-4 py-2 text-xl">Videos</h2>
-      {
-        <div
-          className="crouselItems flex w-full gap-3 overflow-auto px-4 py-2"
-          ref={crouselContainer}
-        >
-          {data?.map((video, index) => (
-            <RenderHomeContent video={video} key={index + video.id.videoId} />
-          ))}
-        </div>
-      }
+      {/* Carousel title */}
+      <h2 className="px-4 py-2 text-xl">{title}</h2>
+
+      {/* Carousel content */}
+      <div
+        className="carouselItems flex w-full gap-3 overflow-auto px-4 py-2"
+        ref={carouselContainer}
+      >
+        {/* Render each video content */}
+        {data?.map((item) => {
+          const videoId = item.id.videoId || item.id || "";
+          return <CarouselCard item={item} key={videoId} isPlaylist={title} />;
+        })}
+      </div>
     </section>
   );
 };
 
-export default ChannelHomeCrousel;
+export default Carousel;
