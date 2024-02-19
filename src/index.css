@@ -39,10 +39,9 @@ body::-webkit-scrollbar-thumb {
   object-position: center;
 }
 
-
 .image__container--crousel {
   position: relative;
-  width: 250px; /* Adjust the width as needed */
-  height: 140px; /* Adjust the height as needed */
+  width: 250px;
+  height: 140px;
   display: inline-block;
 }

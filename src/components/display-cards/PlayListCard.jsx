@@ -1,8 +1,9 @@
 import React from "react";
 import { RiMenuUnfoldFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
+import Img from "../lazy load/Img";
 
-const ChannelPlaylistsCard = ({ playlist }) => {
+const PlayListCard = ({ playlist }) => {
   const navigate = useNavigate();
 
   // Destructure necessary data from the playlist object
@@ -19,8 +20,8 @@ const ChannelPlaylistsCard = ({ playlist }) => {
 
   return (
     <div onClick={handleNavigation}>
-      <div className="img--area relative bg-gray-300">
-        <img src={thumbnail} className="relative h-[185px] w-full rounded-lg" />
+      <div className="image-container  rounded-lg bg-gray-300">
+        <Img src={thumbnail} className=" rounded-lg" />
         <div className="absolute bottom-2 right-3 z-10 flex items-center gap-[6px] rounded-sm bg-black bg-opacity-70 px-2 text-white">
           <RiMenuUnfoldFill />
           <span className="pb-[2px]">{itemCount}</span>
@@ -42,4 +43,4 @@ const ChannelPlaylistsCard = ({ playlist }) => {
   );
 };
 
-export default ChannelPlaylistsCard;
+export default PlayListCard;

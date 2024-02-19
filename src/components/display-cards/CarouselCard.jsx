@@ -32,6 +32,7 @@ const CarouselCard = ({ item, isPlaylist }) => {
 
   // Extract necessary video details
   const thumbnail = item?.snippet.thumbnails.medium.url || "";
+  const placeholderIMG = item?.snippet.thumbnails.default.url || "";
   const rawDuration = contentDetails?.duration || "";
   const rawView = statistics?.viewCount || "";
   const duration = rawDuration ? formatDuration(rawDuration) : "";
@@ -53,7 +54,12 @@ const CarouselCard = ({ item, isPlaylist }) => {
   return (
     <div onClick={handleNavigate}>
       <div className="image__container--crousel  rounded-md bg-gray-300">
-        <Img src={thumbnail} alt="" className="rounded-md" />
+        <Img
+          src={thumbnail}
+          alt=""
+          placeholderSrc={placeholderIMG}
+          className="rounded-md"
+        />
         {duration ? (
           <p className="absolute bottom-[8px] right-[6px] z-10 rounded-md bg-black bg-opacity-70 px-2 text-white">
             {duration}

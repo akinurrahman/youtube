@@ -7,9 +7,9 @@ import InfiniteScroll from "react-infinite-scroll-component";
 // Import custom components
 import Spinner from "../../../components/skeletons/Spinner";
 import ChannelLayout from "../../../components/channel/ChannelLayout";
-import ChannelPlaylistsCard from "../../../components/channel/ChannelPlaylistsCard";
-import PlaylistsSkeleton from "../../../components/skeletons/PlaylistsSkeleton";
 import DisplayNoContent from "../../../components/utilities/DisplayNoContent";
+import PlayListCard from "../../../components/display-cards/PlayListCard";
+import VideoSkeleton from "../../../components/skeletons/VideoSkeleton";
 
 const ChannelPlayLists = () => {
   const { channelId } = useParams();
@@ -41,9 +41,9 @@ const ChannelPlayLists = () => {
     <ChannelLayout>
       {/* Display loading skeleton while data is being fetched */}
       {isLoading && (
-        <div className="mx-4 grid gap-4 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <PlaylistsSkeleton key={index} />
+        <div className="mx-4 grid gap-3 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {Array.from({ length: 15 }).map((_, index) => (
+            <VideoSkeleton key={index} />
           ))}
         </div>
       )}
@@ -58,10 +58,7 @@ const ChannelPlayLists = () => {
         >
           <div className="mx-4 grid gap-4 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {playlists.map((playlist, index) => (
-              <ChannelPlaylistsCard
-                key={playlist.id + index}
-                playlist={playlist}
-              />
+              <PlayListCard key={playlist.id + index} playlist={playlist} />
             ))}
           </div>
         </InfiniteScroll>
