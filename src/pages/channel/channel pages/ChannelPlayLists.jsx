@@ -24,7 +24,6 @@ const ChannelPlayLists = () => {
           queryParams: {
             part: "snippet,contentDetails",
             channelId: channelId,
-            maxResults: 30,
             pageToken: pageParam,
             maxResults: 30,
           },
