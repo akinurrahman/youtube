@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosSearch, IoIosNotificationsOutline } from "react-icons/io";
 import { FaRegWindowClose } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
@@ -10,6 +10,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSearchQuery } from "../../redux/features/infoSlice";
 import Suggestions from "../search/Suggestions";
 import { IoIosArrowRoundBack } from "react-icons/io";
+
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import toast from "react-hot-toast";
+import { auth } from "../../../firebaseConfig";
 
 const Header = () => {
   const [menu, setMenu] = useState(false);
@@ -35,6 +39,39 @@ const Header = () => {
       dispatch(setSearchQuery(""));
     }
   };
+
+  // Function to handle sign-in with Firebase using pop-up
+  const handleSignIn = async () => {
+    try {
+      // Check if the user is already signed in
+      if (auth.currentUser) {
+        // If already signed in, sign out
+        await auth.signOut();
+      }
+
+      // Sign in with popup
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      toast.success("Successfully SignedIn");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const [userInfo, setUserInfo] = useState(null);
+  useEffect(() => {
+    // Check if a user is signed in
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUserInfo(user);
+      }
+    });
+
+    return () => {
+      // Clean up subscription when component unmounts
+      unsubscribe();
+    };
+  }, []);
 
   return (
     <header className={`mx-auto  flex h-10 flex-col items-center md:h-12`}>
@@ -76,7 +113,7 @@ const Header = () => {
               onKeyDown={handleKeyDown}
             />
             <div
-              onClick={()=>handleNavigate(searchQuery)}
+              onClick={() => handleNavigate(searchQuery)}
               className="flex h-full items-center justify-center rounded-r-3xl border-gray-300 bg-gray-300 px-4"
             >
               <IoIosSearch size={26} className="cursor-pointer" />
@@ -107,11 +144,24 @@ const Header = () => {
             className="hidden cursor-pointer sm:flex"
             size={26}
           />
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-            alt="user icon"
-            className="w-[30px] cursor-pointer"
-          />
+          {!userInfo ? (
+            <img
+              src={"https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+              alt="user icon"
+              className=" w-[35px] cursor-pointer rounded-full object-cover"
+              onClick={handleSignIn}
+            />
+          ) : (
+            <img
+              src={
+                userInfo.photoURL ||
+                "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+              }
+              alt="User Avatar"
+              className=" w-[35px] cursor-pointer rounded-full object-cover "
+              onClick={handleSignIn}
+            />
+          )}
         </section>
         {menu && <Hamburger />}
       </nav>
@@ -151,7 +201,7 @@ const Header = () => {
 
       {/* for suggestion section */}
       <section
-        className={`fixed   z-50  mt-12 w-full bg-white sm:mt-[53px] sm:w-[70%] md:mt-[65px] md:w-[60%] lg:w-[50%] xl:w-[40%] 2xl:w-[38%] rounded-xl`}
+        className={`fixed   z-50  mt-12 w-full rounded-xl bg-white sm:mt-[53px] sm:w-[70%] md:mt-[65px] md:w-[60%] lg:w-[50%] xl:w-[40%] 2xl:w-[38%]`}
       >
         <Suggestions />
       </section>

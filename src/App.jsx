@@ -13,10 +13,13 @@ import ChannelLives from "./pages/channel/channel pages/ChannelLives";
 import ChannelPlayLists from "./pages/channel/channel pages/ChannelPlayLists";
 import ChannelSearch from "./pages/channel/channel pages/ChannelSearch";
 import ChannelCommunities from "./pages/channel/channel pages/ChannelCommunities";
+import { Toaster } from "react-hot-toast";
+
 const App = () => {
   return (
     <Router>
       <Header />
+      <Toaster />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/testing" element={<Testing />} />
